@@ -1,13 +1,7 @@
+# -*- coding: utf-8 -*-
 import sys
 import os 
-import itertools
-from pathlib import Path
-import numpy as np
-import re
-from germalemma import GermaLemma
-from symspellpy import SymSpell,Verbosity
 from gensim.utils import save_as_line_sentence
-import spacy
 from text_preprocessing import *
 
 # from text_preprocessing import lemmatizer_plus
@@ -41,8 +35,8 @@ spell_checker.delete_entries(words_to_delete)
 class ProcessProtocols(object):
     def __init__(self, dirname):
         self.dirname = dirname
-        if not os.path.exists(f'{dirname}_processed'):
-            os.makedirs(f'{dirname}_processed')
+        if not os.path.exists('{}_processed'.format(dirname)):
+            os.makedirs('{}_processed'.format(dirname))
     def process_and_save(self):
         for file in os.listdir(self.dirname):
             file_name = os.path.splitext(os.path.basename(file))[0]
@@ -62,7 +56,7 @@ class ProcessProtocols(object):
             text = [spell_checker.correct(line) for line in text]
             text = [[tok.lower() for tok in line] for line in text]
 #             text = itertools.chain.from_iterable(text)
-            save_as_line_sentence(text, f'{self.dirname}_processed/{file_name}.txt')
+            save_as_line_sentence(text,'{}_processed/{}.txt'.format(self.dirname,file_name))
 
 if __name__ == "__main__":
 	try:
