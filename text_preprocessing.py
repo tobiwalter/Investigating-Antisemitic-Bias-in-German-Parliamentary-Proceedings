@@ -62,7 +62,7 @@ def charSplitting(i,groups,chainword="und"):
     if i == 1:
         if len(word4)>1:
             splitted = char_split.split_compound(word4)[0][-1].lower()
-            return "{}{} {} {}{} {} {}".format(tword1,word3.split("-")[1],chainword,word2,word3.split("-")[1],chainword,word3)
+            return "{}{} {} {}{} {} {}".format(word1,word3.split("-")[1],chainword,word2,word3.split("-")[1],chainword,word3)
         else:
             splitted = char_split.split_compound(word3)[0][-1].lower()
             return "{}{} {} {}{} {} {}".format(word1,splitted,chainword,word2,splitted,chainword,word3)
@@ -149,8 +149,8 @@ start_patterns = '|'.join(['Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
                             )
 end_patterns = '|'.join(['(Schluß|Schluss)(?: der Sitzung)?:? \d+.\d+ Uhr',
                         'Die (\n )Sitzung (\n )ist (\n )geschlossen'])
-start_pattern = re.compile(f"({start_patterns_2})", re.IGNORECASE)
-end_pattern = re.compile(f"({end_patterns_2})", re.IGNORECASE)
+start_pattern = re.compile(f"({start_patterns})", re.IGNORECASE)
+end_pattern = re.compile(f"({end_patterns})", re.IGNORECASE)
 def extract_protocol(doc):
 
    temp = ' \n '.join(doc) 
