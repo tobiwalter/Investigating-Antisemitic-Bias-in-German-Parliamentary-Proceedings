@@ -40,10 +40,11 @@ class ProcessProtocols(object):
         if not os.path.exists(f'{dirname}_processed'):
             os.makedirs(f'{dirname}_processed')
     def process_and_save(self):
+        logging.info('Start processing of files.')
         i = 0
         files_total = len(os.listdir(self.dirname))
+        logging.info(f'{files_total} files were found.')
         border = round(files_total / 10, 2)
-        logging.info('Start processing of files.')
         for file in os.listdir(self.dirname):
             file_name = os.path.splitext(os.path.basename(file))[0]
             text = open(os.path.join(self.dirname, file), encoding='utf-8').readlines()
