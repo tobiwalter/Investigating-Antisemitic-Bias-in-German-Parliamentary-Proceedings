@@ -1,6 +1,7 @@
 import sys
 import os 
 import itertools
+# -*- coding: utf-8 -*-
 from pathlib import Path
 import numpy as np
 import re
@@ -37,13 +38,15 @@ def replace_digits(doc):
 def reduce_numerical_sequences(doc): 
     return [re.sub(r'((0)\s?){2,}', '\\2 ', line).strip() for line in doc]
 
+def remove_empty_lines(doc):
+    return [line for line in doc if len(line) >0]
+
 def remove_dash_and_minus_signs(doc):
     # lone standing dash signs at beginning, middle and end of line
-    temp = [re.sub(r'\s(-|—|\s)*\s', ' ', line) for line in doc]
-    temp = [re.sub(r'^(-|—|\s)*\s', '', line) for line in temp]
-    temp = [re.sub(r'\b (-|—|\s)*$', '', line) for line in temp]
+    temp = [re.sub(r'\s(-|—|–|\s)+\s', ' ', line) for line in doc]
+    temp = [re.sub(r'^(-|—|–|\s)+\s', '', line) for line in temp]
+    temp = [re.sub(r'\b\s(-|—|–|\s)+$', '', line) for line in temp]
     return temp
-
 
 def charSplitting(i,groups,chainword="und"):
     
@@ -140,37 +143,37 @@ def expandCompoundToken(text, split_chars="-"):
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
 
+start_patterns = '|'.join(['Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
+                            'Ich (\n )eröffne (\n )die (\n )Sitzung',
+                            'Beginn:? \d+.\d+ Uhr']
+                            )
+end_patterns = '|'.join(['(Schluß|Schluss)(?: der Sitzung)?:? \d+.\d+ Uhr',
+                        'Die (\n )Sitzung (\n )ist (\n )geschlossen'])
+start_pattern = re.compile(f"({start_patterns_2})", re.IGNORECASE)
+end_pattern = re.compile(f"({end_patterns_2})", re.IGNORECASE)
 def extract_protocol(doc):
-    protocol = [] 
-    
-    sitzung = False
-    start_pattern = re.compile(r'Meine Damen und Herren',re.IGNORECASE)
-    end_pattern = re.compile(r'(?:Schluß|Sckluß) der Sitzung (?:um\s)?\d+ Uhr', re.IGNORECASE)
-    interrupted_pattern = re.compile(r'Die Sitzung wird um \d+ Uhr (?:\d+ Minute)?n? abgebrochen', re.IGNORECASE)
-#     else:
-#         start_pattern = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
-#                                   re.IGNORECASE)
-    for line in doc:
-        if not sitzung:
-            sitzung_start = start_pattern.search(line)
-            if sitzung_start:
-                sitzung = True
-                protocol.append(line)
-            continue
-        else:
-            if len(line) > 0:
-                protocol.append(line)   
-                # Check if this line marks the ending or interruption of a session
-                sitzung_end = end_pattern.search(line)
-                sitzung_abgebrochen = interrupted_pattern.search(line) # found the typo 'Sckluß' appearing in the text 
-                if sitzung_end or sitzung_abgebrochen:
-                    sitzung = False
-    
-    # If no start pattern was found, return doc as is 
-    if len(protocol) == 0:
-        return doc
-    return protocol
 
+   temp = ' \n '.join(doc) 
+   sitzung = False
+
+   # Search for start and end pattern
+   sitzung_start = start_pattern.search(temp)
+   sitzung_end = end_pattern.search(temp)
+   if sitzung_start:
+       # If both patterns found, return only text between start and end of the matching objects
+       if sitzung_end:
+           temp = temp[sitzung_start.start():sitzung_end.end()]
+   # If only start or end pattern found, use the found pattern as border for start/end
+       else: 
+           temp = temp[sitzung_start.start():]
+   elif sitzung_end:
+       temp = temp[:sitzung_end.end()]
+   # If none found, return unaltered text
+
+   # Split string by new-line character to transform protocol back to line format 
+   text_out = temp.split(' \n ')
+   return text_out
+   
 class GermanLemmatizer:
     def __init__(self):
         self.lm = spacy.load('de_core_news_sm', disable=['parser', 'ner'])
