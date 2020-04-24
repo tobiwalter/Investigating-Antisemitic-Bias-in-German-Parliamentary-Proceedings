@@ -20,7 +20,7 @@ def remove_linebreaks(doc):
     return [re.sub(r'[\n\t]', '', line).strip() for line in doc]
 
 def remove_punctuation(doc):    
-    pattern = re.compile('[%s]' % re.escape('!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„«»'))
+    pattern = re.compile('[%s]' % re.escape('!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„“«»'))
     return [re.sub(pattern,'', line).strip() for line in doc]
 
 def remove_double_spaces(doc):
@@ -147,18 +147,25 @@ def expandCompoundToken(text, split_chars="-"):
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
 
-start_patterns = '|'.join(['Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
-                            'Ich (\n )?eröffne (\n )?die (\n )?Sitzung',
-                            'Beginn:? \d+.\d+ Uhr']
-                            )
-end_patterns = '|'.join(['(Schluß|Schluss)(?: der Sitzung)?:? \d+.\d+ Uhr',
-                        'Die (\n )?Sitzung (\n )?ist (\n )?geschlossen'])
+start_patterns = '|'.join(
+                ['Ich eröffne die \d+ (\n )?Sitzung',
+                 'Die \d+ (\n )?Sitzung des (Deutschen)? (Bundestages|Bundestags) ist eröffnet',
+                 'Ich erkläre die \d+ (\n )?Sitzung des (Deutschen )?(Bundestages|Bundestags) für eröffnet',     
+                 'Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
+                 'Ich (\n )?eröffne (\n )?die (\n )?Sitzung',
+                 'Beginn:? \d+ Uhr']
+                        )
+end_patterns = '|'.join(
+                ['(Schluß|Schluss) der Sitzung \d+',
+                 'Die Sitzung ist geschlossen',
+                 'Ich schließe die (\n )?Sitzung'
+                    ])
+
 start_pattern = re.compile(f"({start_patterns})", re.IGNORECASE)
 end_pattern = re.compile(f"({end_patterns})", re.IGNORECASE)
 def extract_protocol(doc):
 
    temp = ' \n '.join(doc) 
-   sitzung = False
 
    # Search for start and end pattern
    sitzung_start = start_pattern.search(temp)

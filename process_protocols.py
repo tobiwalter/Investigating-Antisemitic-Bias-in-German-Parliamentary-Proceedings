@@ -48,10 +48,9 @@ class ProcessProtocols(object):
         for num in range(1,files_total+1):
             try:
                 text = open(os.path.join(self.dirname, f'{num}_sents.txt'), encoding='utf-8').readlines()
-                text = extract_protocol(text)
-                text = remove_linebreaks(text)
                 text = remove_punctuation(text)
                 text = remove_double_spaces(text)
+                text = extract_protocol(text)
                 text = remove_noisy_digits(text)
                 text = replace_digits(text)
                 text = remove_double_spaces(text)
@@ -66,7 +65,7 @@ class ProcessProtocols(object):
                 save_as_line_sentence(text, f'{self.dirname}_processed/{num}.txt')
                 i += 1
                 if i % border == 0:
-                  logging.info('Processing {:03.1f} percent finished'.format(float((i/(files_total)) * 100)))
+                  logging.info('Processing {:03.1f} percent finished'.format(int((i/(files_total)) * 100)))
 
             except FileNotFoundError:
                 print(f'File {num} was not found.')
