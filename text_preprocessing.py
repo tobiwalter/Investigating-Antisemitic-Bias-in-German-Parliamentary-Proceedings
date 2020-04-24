@@ -38,8 +38,12 @@ def replace_digits(doc):
 def reduce_numerical_sequences(doc): 
     return [re.sub(r'((0)\s?){2,}', '\\2 ', line).strip() for line in doc]
 
-def remove_empty_lines(doc):
-    return [line for line in doc if len(line) >0]
+def filter_lines(doc):
+    """Filter all lines that are empty or only a single char long"""
+    return [line for line in doc if len(line) >1]
+
+def lowercase(line):
+    return [tok.lower() for tok in line]
 
 def remove_dash_and_minus_signs(doc):
     # lone standing dash signs at beginning, middle and end of line
@@ -144,11 +148,11 @@ def expandCompoundToken(text, split_chars="-"):
     return new_text
 
 start_patterns = '|'.join(['Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
-                            'Ich (\n )eröffne (\n )die (\n )Sitzung',
+                            'Ich (\n )?eröffne (\n )?die (\n )?Sitzung',
                             'Beginn:? \d+.\d+ Uhr']
                             )
 end_patterns = '|'.join(['(Schluß|Schluss)(?: der Sitzung)?:? \d+.\d+ Uhr',
-                        'Die (\n )Sitzung (\n )ist (\n )geschlossen'])
+                        'Die (\n )?Sitzung (\n )?ist (\n )?geschlossen'])
 start_pattern = re.compile(f"({start_patterns})", re.IGNORECASE)
 end_pattern = re.compile(f"({end_patterns})", re.IGNORECASE)
 def extract_protocol(doc):

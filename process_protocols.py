@@ -12,7 +12,7 @@ ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 # import char_split
 
 tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
-# sys.path.append(tpath)
+# sys.path.append(tpath)b
 os.chdir(tpath)
 
 # Initialise lemmatizer
@@ -44,7 +44,7 @@ class ProcessProtocols(object):
         i = 0
         files_total = len(os.listdir(self.dirname))
         logging.info(f'{files_total} files were found.')
-        border = round(files_total / 10, 2)
+        border = round(files_total / 10)
         for num in range(1,files_total+1):
             try:
                 text = open(os.path.join(self.dirname, f'{num}_sents.txt'), encoding='utf-8').readlines()
@@ -54,16 +54,15 @@ class ProcessProtocols(object):
                 text = remove_double_spaces(text)
                 text = remove_noisy_digits(text)
                 text = replace_digits(text)
+                text = remove_double_spaces(text)
                 text = reduce_numerical_sequences(text)
                 text = remove_dash_and_minus_signs(text)
-                text = remove_double_spaces(text)
-                text = remove_empty_lines(text)
+                text = filter_lines(text)
                 text = [removeGermanChainWords(line) for line in text]
                 text = [expandCompoundToken(line) for line in text]
                 text = [lemmatizer.lemmatize(line) for line in text]
+                text = [lowercase(line)for line in text]
                 text = [spell_checker.correct(line) for line in text]
-                text = [[tok.lower() for tok in line] for line in text]
-      #             text = itertools.chain.from_iterable(text)
                 save_as_line_sentence(text, f'{self.dirname}_processed/{num}.txt')
                 i += 1
                 if i % border == 0:
