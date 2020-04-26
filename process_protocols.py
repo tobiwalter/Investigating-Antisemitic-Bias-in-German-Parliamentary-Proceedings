@@ -58,7 +58,7 @@ class ProcessProtocols(object):
                 text = remove_dash_and_minus_signs(text)
                 text = filter_lines(text)
                 text = [removeGermanChainWords(line) for line in text]
-                text = [expandCompoundToken(line) for line in text]
+                text = [remove_hyphens_pre_and_appending(line) for line in text]
                 text = [lemmatizer.lemmatize(line) for line in text]
                 text = [lowercase(line)for line in text]
                 text = [spell_checker.correct(line) for line in text]

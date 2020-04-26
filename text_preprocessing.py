@@ -1,14 +1,11 @@
-import sys
-import os 
-import itertools
 # -*- coding: utf-8 -*-
-from pathlib import Path
-import numpy as np
+import sys
+import os
 import re
-from datetime import datetime
 
 import spacy
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+
 sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'CharSplit')))
 import char_split
 
@@ -27,6 +24,9 @@ def remove_double_spaces(doc):
     return [re.sub('\s\s+',' ', line).strip() for line in doc]
 
 def remove_noisy_digits(doc):
+    """
+    Remove digit 1 appending or prepending to some words in the text due to faulty OCR
+    """
     temp = [re.sub(r'\b1(?P<quote>[A-Za-z]+)\b', '\g<quote>', line) for line in doc]
     temp = [re.sub(r'\b(?P<quote>[A-Za-z]+)1\b', '\g<quote>', line) for line in temp] 
     temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöü]+)1(?P<name>[A-Za-zßäöü]*)\b', '\g<quote> \g<name>', line) for line in temp]
@@ -36,17 +36,24 @@ def replace_digits(doc):
     return [re.sub(r'\d+',' 0 ' ,line).strip() for line in doc]
 
 def reduce_numerical_sequences(doc): 
+    """
+    If there are sequences of digits appearing, reduce to a single placeholder
+    """
     return [re.sub(r'((0)\s?){2,}', '\\2 ', line).strip() for line in doc]
 
 def filter_lines(doc):
-    """Filter all lines that are empty or only a single char long"""
+    """
+    Filter all lines that are empty or only a single char long
+    """
     return [line for line in doc if len(line) >1]
 
 def lowercase(line):
     return [tok.lower() for tok in line]
 
 def remove_dash_and_minus_signs(doc):
-    # lone standing dash signs at beginning, middle and end of line
+    """
+    remove lone standing dashes/hyphens and minus signs at beginning, middle and end of line
+    """
     temp = [re.sub(r'\s(-|—|–|\s)+\s', ' ', line) for line in doc]
     temp = [re.sub(r'^(-|—|–|\s)+\s', '', line) for line in temp]
     temp = [re.sub(r'\b\s(-|—|–|\s)+$', '', line) for line in temp]
@@ -56,93 +63,68 @@ def charSplitting(i,groups,chainword="und"):
     
     word1 = groups[0].replace(" ","")
     word2 = groups[1].replace(" ","")
+
     if len(groups) >= 4:
         word3 = str(groups[2]).replace(" ","")
-    if len(groups) >= 5:
-        word4 = str(groups[3]).replace(" ","")
+    
     if i == 0:
-        #print("{}{}".format(groups[0],groups[1]),groups[1])
-        return "{}{} {} {}".format(word1,word2.lower(),chainword,word2)
+        splitted = char_split.split_compound(word3)[0][-1].lower()
+        return " {}{} {} {}{} {} {}".format(word1,splitted,chainword,word2,splitted,chainword,word3)
     if i == 1:
-        if len(word4)>1:
-            splitted = char_split.split_compound(word4)[0][-1].lower()
-            return "{}{} {} {}{} {} {}".format(word1,word3.split("-")[1],chainword,word2,word3.split("-")[1],chainword,word3)
-        else:
-            splitted = char_split.split_compound(word3)[0][-1].lower()
-            return "{}{} {} {}{} {} {}".format(word1,splitted,chainword,word2,splitted,chainword,word3)
+        splitted = char_split.split_compound(word2)[0][-1].lower()
+        return " {}{} {} {}".format(word1,splitted,chainword,word2)
     if i == 2:
-        if len(word3)>1:
-            splitted = char_split.split_compound(word3)[0][-1].lower()
-            return "{}{} {} {}".format(word1,word2.split("-")[1],chainword,word2)
+         # if both gendered versions are named, use the male version for compound splitting because it usually gives better 
+        # resiults
+        if word1[-5:] == 'innen':
+            splitted = (char_split.split_compound(word1[:-5])[0][-2])
         else:
-            splitted = char_split.split_compound(word2)[0][-1].lower()
-            return "{}{} {} {}".format(word1,splitted,chainword,word2)
-        
-    if i == 3:
-        splitted = (char_split.split_compound(word1)[0][-2])
-        return "{} {} {}{}".format(word1, chainword, splitted, word2.lower())
+            splitted = (char_split.split_compound(word1)[0][-2])
+        return " {} {} {}{}".format(word1, chainword, splitted, word2.lower())
+
 
 def removeGermanChainWords(text):
     regex = []
-    # brackets with following word: usually belonging together in german: (Wirtschafts-)Informatik, building two words
-    regex.append(r"['(']{1}([A-Za-z0-9_äÄöÖüÜß]+).[')'](.?\w+)")
-    # list of combined words beloning together (3)
-    regex.append(r"([A-Za-z0-9_äÄöÖüÜß]+)[\s]?-[\s]?([A-Za-z0-9_äÄöÖüÜß]+)-[\s]?(?:und|oder|als auch|sowie|wie|bzw|&|,)+[\s]([A-Za-z0-9_äÄöÖüÜß]+-?([A-Za-z0-9_äÄöÖüÜß]+))")
-#     regex.append("([A-Za-z0-9_äÄöÖüÜß]+)-[,][' ']?([A-Za-z0-9_äÄöÖüÜß]+)-[' ']?[und|oder|sowie|&|,]+[' ']([A-Za-z0-9_äÄöÖüÜß]+-?([A-Za-z0-9_äÄöÖüÜß]+))")
-    # brackets with following word: usually belonging together in german: lv- oder kvbestandsfuehrungssystem, 
-    # building two words but we have to append the second part of the second word to the first word
-    regex.append(r"([A-Za-z0-9_äÄöÖüÜß]+)[' ']?-[' ']?(?:und|oder|als auch|wie|sowie|bzw|&)+[' ']([A-Za-z0-9_äÄöÖüÜß]+-?([A-Za-z0-9_äÄöÖüÜß]+))")            
-    # Reichsausgaben und -Einnahme(
-    regex.append(r"([A-Za-z0-9_äÄöÖüÜß]+)[' ']-?[' ']?(?:und|oder|als auch|wie|sowie|bzw|&)+[' ']-[' ']?([A-Za-z0-9_äÄöÖüÜß]+)")
-    # Wirtschafts-/Informatik
-    regex.append(r"([A-Za-z0-9_äÄöÖüÜß]+)-['']?['/','&',',']['']?([A-Za-z0-9_äÄöÖüÜß]+)")
-
+    # splitting up a combination of three hyphenated chain words, e.g.: Bildungs-, Sozial- und Innenpolitik: Bildungspolitik und Sozialpolitik und Innenpolitik 
+    regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[\s]?-[\s]?([A-ZÄÖÜ][a-zäöüß]+)-[\s]?(?:und|oder|als auch|sowie|wie|bzw|&|,)+[\s]([A-ZÄÖÜ][a-zäöüß]+)")
+    # hyphenated chain words building two words but we have to append the second part of the second word to the first word, e.g: Ein- und Ausfuhr -> Einfuhr und Ausfuhr 
+    regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[' ']?-[' ']?(?:und|oder|als auch|wie|sowie|bzw)+[' ']([A-ZÄÖÜ][a-zäöüß]+)")            
+    # in the less common case of hyphenated chain words with the hyphen at the second word, add the first part of first word to end of second, e.g.: Reichsausgaben und -Einnahme -> Reichsausgaben und Reichseinnahmen 
+    regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[' ']-?[' ']?(?:und|oder|als auch|wie|sowie|bzw)+[' ']-[' ']?([A-Za-zäöüßÄÖÜß]+)")
+    
     sentence = text
     m = re.search(regex[0],sentence)
     if m:
         findings = m.groups()
-        for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
+        for c in zip(findings[::3], findings[1::3], findings[2::3], range(0,len(findings),3)):
             sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(0,c))
         return sentence
-
-
+    
     m = re.search(regex[1],sentence)
     if m:
         findings = m.groups()
-        for c in zip(findings[::4], findings[1::4], findings[2::4], findings[3::4], range(0,len(findings),4)):
+        for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
             sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(1,c))
         return sentence
     
     m = re.search(regex[2],sentence)
     if m:
         findings = m.groups()
-        for c in zip(findings[::3], findings[1::3], findings[2::3], range(0,len(findings),3)):
+        for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
             sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(2,c))
         return sentence
     
-    m = re.search(regex[3],sentence)
-    if m:
-        findings = m.groups()
-        for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
-            sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(3,c))
-        return sentence
-            
     return sentence
 
-def expandCompoundToken(text, split_chars="-"):
-    '''Merges words like D-Mark to Dmark'''
+def remove_hyphens_pre_and_appending(text, split_chars="-"):
+    '''Remove prepending and appending hyphens from words -> They are either noise or the chain word could not be split'''
     new_text = text
     for t in text.split():
         parts = []
-        add = False   # signals if current part should be appended to previous part
         for p in t.split(split_chars):  # for each part p in compound token t
             if not p: continue  # skip empty part
-            if add and parts:   # append current part p to previous part
-                parts[-1] += p.lower()
             else:               # add p as separate token
                 parts.append(p)
-            add = len(p) <= 1   # if p only consists of a single character -> append the next p to it
-            
         if len(parts)>0:
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
@@ -156,7 +138,7 @@ start_patterns = '|'.join(
                  'Beginn:? \d+ Uhr']
                         )
 end_patterns = '|'.join(
-                ['(Schluß|Schluss)(?: der Sitzung)? \d+',
+                ['(Schluß|Schluss) der Sitzung \d+',
                  'Die Sitzung ist geschlossen',
                  'Ich schließe die (\n )?Sitzung'
                     ])
