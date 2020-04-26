@@ -156,7 +156,7 @@ start_patterns = '|'.join(
                  'Beginn:? \d+ Uhr']
                         )
 end_patterns = '|'.join(
-                ['(Schluß|Schluss) der Sitzung \d+',
+                ['(Schluß|Schluss)(?: der Sitzung)? \d+',
                  'Die Sitzung ist geschlossen',
                  'Ich schließe die (\n )?Sitzung'
                     ])
