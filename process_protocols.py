@@ -62,7 +62,7 @@ class ProcessProtocols(object):
                 text = [lemmatizer.lemmatize(line) for line in text]
                 text = [lowercase(line)for line in text]
                 text = [spell_checker.correct(line) for line in text]
-                save_as_line_sentence(text, f'{self.dirname}_processed/{num}.txt')
+                save_as_line_sentence(text, f'{self.dirname}_processed/{num}_sents.txt')
                 i += 1
                 if i % border == 0:
                   logging.info('Processing {:03.1f} percent finished'.format(int((i/(files_total)) * 100)))
