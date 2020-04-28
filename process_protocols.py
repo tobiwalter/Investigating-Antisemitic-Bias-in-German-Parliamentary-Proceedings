@@ -49,7 +49,12 @@ class ProcessProtocols(object):
                     text = remove_punctuation(text)
                     text = remove_double_spaces(text)
                     text = extract_protocol(text)
-                    save_as_line_sentence(text, f'{self.dirname}_processed/{num}_sents.txt')
+                    with open('f{self.dirname}_processed/{num}_sents.txt', 'w') as out_file:
+                        for line in text:
+                            f.write(line)
+                            f.write('\n')
+
+                    # save_as_line_sentence(text, f'{self.dirname}_processed/{num}_sents.txt')
                     i += 1
                     if i % border == 0:
                       logging.info('Processing {:03.1f} percent finished'.format(int((i/(files_total)) * 100)))
