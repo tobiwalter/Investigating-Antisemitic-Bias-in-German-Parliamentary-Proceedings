@@ -17,7 +17,7 @@ def remove_linebreaks(doc):
     return [re.sub(r'[\n\t]', '', line).strip() for line in doc]
 
 def remove_punctuation(doc):    
-    pattern = re.compile('[%s]' % re.escape('!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„“«»'))
+    pattern = re.compile('[%s]' % re.escape('x!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„“«»'))
     return [re.sub(pattern,'', line).strip() for line in doc]
 
 def remove_double_spaces(doc):
@@ -184,7 +184,14 @@ class GermanLemmatizer:
 class GermanSpellChecker:
     def __init__(self, dictionary_path, count_treshold=10, max_edit_distance=1):
         self.spell_checker = SymSpell(count_threshold=count_treshold, max_dictionary_edit_distance=max_edit_distance)
-        self.dictionary = self.spell_checker.load_dictionary(dictionary_path, 0, 1, separator = ' ', encoding='utf-8')
+        loaded = self.load_dictionary(dictionary_path)
+        if loaded:
+            print('Dictionary loaded!')
+        else:
+            print('Dictionary not loaded!')
+
+    def load_dictionary(self, dictionary_path):
+        self.spell_checker.load_dictionary(dictionary_path, 0, 1, separator = ' ', encoding='utf-8')
 
     def correct(self, doc, skip_token=r'\d+'):
         ''' Looks up top suggestion for each token in the document and return it'''
