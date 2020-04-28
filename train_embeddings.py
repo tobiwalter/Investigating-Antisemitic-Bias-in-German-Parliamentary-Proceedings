@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os 
 import logging
 import json
@@ -10,6 +11,8 @@ import argparse
 import time
 
 parser = argparse.ArgumentParser(description='Train word embedding models for Reichstag proceedings')
+parser.add_argument('--format', type=str, default='gensim',
+	help='Save word2vec model in word2vec or gensim format')
 parser.add_argument('--proceedings', type=str, help='folder containing pre-processed Reichstag proceedings docs')
 parser.add_argument('--model_path', type=str, help='path to store trained model')
 parser.add_argument('--vocab_path', type=str, help='path to store model vocab and indices')
@@ -43,7 +46,7 @@ class CreateCorpus(object):
                     yield sentence.split()
 
 # option 2)
-class ReichstagCorpus:
+class CreateSlice:
     
     def __init__(self, dirname):
         self.dirname = dirname
@@ -76,7 +79,11 @@ elapsed = time.time()
 logging.info(f'Training finished. Took {elapsed-start} s')
 logging.info(f'Vocab size: {len(model.wv.vocab)}')
 # Save model to disk
-model.wv.save_word2vec_format(args.model_path, binary=True)
+if args.format == 'w2v':
+	model.wv.save_word2vec_format(args.model_path, binary=True)
+else:
+	model.wv.save(args.model_path, mmap='r')
+
 
 # Save vocab to disk 
 save_vocab(model, args.vocab_path)
