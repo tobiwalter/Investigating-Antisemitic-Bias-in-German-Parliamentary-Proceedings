@@ -5,19 +5,14 @@ from gensim.utils import save_as_line_sentence
 from text_preprocessing import *
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
-# from text_preprocessing import lemmatizer_plus
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'CharSplit')))
-# import char_split
+
+# Initialise lemmatizer
 lemmatizer = GermanLemmatizer()
 # Initialise spelling correction instance 
-print(ROOT_DIR)
 spell_checker = GermanSpellChecker('dictionaries/de_full.txt')
-logging.info('Lemmatizer and spell checker loaded.')
-
-tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
-os.chdir(tpath)
+logging.info('Lemmatizer and spell checker loaded.' )
 
 # Add and delete certain dictionary entries 
 # TO-DO: load words from txt-list
@@ -30,6 +25,9 @@ words_to_delete = 'roth, sabbat, volksthums, volksthum'.split(', ')
 
 spell_checker.add_entries(words_to_add)
 spell_checker.delete_entries(words_to_delete)
+
+tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
+os.chdir(tpath)
 
 class ProcessProtocols(object):
     def __init__(self, dirname):
