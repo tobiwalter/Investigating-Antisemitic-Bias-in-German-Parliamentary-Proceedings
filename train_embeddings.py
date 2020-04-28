@@ -80,13 +80,13 @@ logging.info(f'Training finished. Took {elapsed-start} s')
 logging.info(f'Vocab size: {len(model.wv.vocab)}')
 # Save model to disk
 if args.format == 'w2v':
-	model.wv.save_word2vec_format(args.model_path, binary=True)
+	model.wv.save_word2vec_format(args.model_path + '.txt', binary=True)
 else:
-	model.wv.save(args.model_path, mmap='r')
+	model.wv.save(args.model_path)
 
 
 # Save vocab to disk 
-save_vocab(model, args.vocab_path)
+utils.save_vocab(model, args.vocab_path)
 
 
 
