@@ -5,14 +5,19 @@ from gensim.utils import save_as_line_sentence
 from text_preprocessing import *
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
+# from text_preprocessing import lemmatizer_plus
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-
-# Initialise lemmatizer
+# sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'CharSplit')))
+# import char_split
 lemmatizer = GermanLemmatizer()
 # Initialise spelling correction instance 
+print(ROOT_DIR)
 spell_checker = GermanSpellChecker('dictionaries/de_full.txt')
-logging.info('Lemmatizer and spell checker loaded.' )
+logging.info('Lemmatizer and spell checker loaded.')
+
+tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
+os.chdir(tpath)
 
 # Add and delete certain dictionary entries 
 # TO-DO: load words from txt-list
@@ -25,9 +30,6 @@ words_to_delete = 'roth, sabbat, volksthums, volksthum'.split(', ')
 
 spell_checker.add_entries(words_to_add)
 spell_checker.delete_entries(words_to_delete)
-
-tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
-os.chdir(tpath)
 
 class ProcessProtocols(object):
     def __init__(self, dirname):
@@ -47,17 +49,6 @@ class ProcessProtocols(object):
                     text = remove_punctuation(text)
                     text = remove_double_spaces(text)
                     text = extract_protocol(text)
-                    text = remove_noisy_digits(text)
-                    text = replace_digits(text)
-                    text = remove_double_spaces(text)
-                    text = reduce_numerical_sequences(text)
-                    text = remove_dash_and_minus_signs(text)
-                    text = filter_lines(text)
-                    text = [removeGermanChainWords(line) for line in text]
-                    text = [remove_hyphens_pre_and_appending(line) for line in text]
-                    text = [lemmatizer.lemmatize(line) for line in text]
-                    text = [lowercase(line)for line in text]
-                    text = [spell_checker.correct(line) for line in text]
                     save_as_line_sentence(text, f'{self.dirname}_processed/{num}_sents.txt')
                     i += 1
                     if i % border == 0:
