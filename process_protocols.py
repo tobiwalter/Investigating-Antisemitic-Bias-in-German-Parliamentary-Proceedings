@@ -10,17 +10,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 # sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'CharSplit')))
 # import char_split
-
-tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
-# sys.path.append(tpath)b
-os.chdir(tpath)
-
-# Initialise lemmatizer
 lemmatizer = GermanLemmatizer()
 # Initialise spelling correction instance 
+print(ROOT_DIR)
 spell_checker = GermanSpellChecker('dictionaries/de_full.txt')
-
 logging.info('Lemmatizer and spell checker loaded.')
+
+tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
+os.chdir(tpath)
 
 # Add and delete certain dictionary entries 
 # TO-DO: load words from txt-list
