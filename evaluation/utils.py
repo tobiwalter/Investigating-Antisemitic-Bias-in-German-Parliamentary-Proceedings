@@ -6,7 +6,6 @@ import codecs
 import numpy as np
 import pickle
 import os
-import gensim
 
 # IO
 
@@ -75,6 +74,24 @@ def load_embeddings(path, word2vec=True, rdf2vec=False):
         model = gensim.models.Word2Vec.load(path)
     return model
 
+def load_embedding_dict(vocab_path="", vector_path="", embeddings_path="", glove=False, postspec=False):
+  """
+  >>> _load_embedding_dict()
+  :param vocab_path:
+  :param vector_path:
+  :return: embd_dict
+  """
+  if embeddings_path != "":
+    embd_dict = utils.load_embeddings(embeddings_path)
+    return embd_dict
+  else:
+    embd_dict = {}
+    vocab = json.load(open(vocab_path, 'r'))
+    vectors = np.load(vector_path)
+    for term, index in vocab.items():
+      embd_dict[term] = vectors[index]
+    assert len(embd_dict) == len(vocab)
+    return embd_dict
 
 # WN
 
