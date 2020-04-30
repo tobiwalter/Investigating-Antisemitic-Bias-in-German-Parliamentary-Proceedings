@@ -20,14 +20,11 @@ tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
 os.chdir(tpath)
 
 # Add and delete certain dictionary entries 
-# TO-DO: load words from txt-list
-words_to_add = 'xxen, §, volkswirtschaftlich, anteilscheine, er_es, oberkirchenrat, lohnklasse, privathand, hinterbliebenenversicherung, \
-invalidenzahl, privatangestellten, invalidengesetz, tanach, zionistisch, oberkirchenrat, lutherisch, evangelisch-lutherisch, jesuitenorden, \
-, reichsfeind, undeutsch, antinational, antideutsch, überfremdung, deutschnationalen, viehfutter, inlandsgetreide, volksvermögen, \
-wirtschaftsinteressen, weingesetz, königstreu, landesausschuffes, beschneidung, landesfinanzamt, württembergisch, friedensvertrag, \
-reichsbank, reichspostverwaltung, friedensvertrag, regierungsbezirks, industriematerial, inlandswein'.split(', ')
-words_to_delete = 'roth, sabbat, volksthums, volksthum'.split(', ')
-
+with open('dictionaries/manual_additions.txt', 'r', encoding='utf-8') as f:
+    words_to_add = [word.strip() for word in f.readlines()]
+with open('dictionaries/manual_deletions.txt', 'r', encoding='utf-8') as f:
+    words_to_delete = [word.strip() for word in f.readlines()]
+    
 spell_checker.add_entries(words_to_add)
 spell_checker.delete_entries(words_to_delete)
 
