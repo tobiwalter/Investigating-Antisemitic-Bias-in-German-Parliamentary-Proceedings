@@ -63,11 +63,11 @@ def get_time_sims(embedding, word1, topn=15):
     return time_sims, lookups, nearests, sims
 
 
-def load_embeddings(filename=None):
+def load_embeddings(filename=None, n=5):
   start = time.time()
-  embeddings = SequentialEmbedding.load(filename, 5)
+  embeddings = SequentialEmbedding.load(filename, n)
   print(f"LOAD EMBEDDINGS TOOK {(time.time() - start)}")
-
+  return embeddings
 
 def clear_figure():
     plt.figure(figsize=(20,20))
@@ -88,17 +88,19 @@ def fit_tsne(values):
 numbers = {'1': 'one',
            '2': 'two',
            '3': 'three',
-           '4': 'four',
-           '5': 'five'}
+           '4': 'four'
+           }
 
 def assing_period(word):
     number = word.split("|")[1].strip() 
     return numbers.get(number)
 
-def plot_words(word1, words, fitted, cmap, sims):
+def plot_words(word1, words, fitted, cmap, sims, n):
     # TODO: remove this and just set the plot axes directly
     label = [assing_period(word) for word in words]
-    colors = [cmap(i - 1 + CMAP_MIN) for i in range(1,6)]
+    colors = [cmap(i - 1 + CMAP_MIN) for i in range(1,n)]
+    print(label)
+    print(colors)
     sns.scatterplot(fitted[:,0], fitted[:,1], alpha=0, hue=label, palette= colors)
     # plt.scatter(fitted[:,0], fitted[:,1], alpha=0, hue=label)
     plt.suptitle(f"{word1}", fontsize=30, y=0.1)
