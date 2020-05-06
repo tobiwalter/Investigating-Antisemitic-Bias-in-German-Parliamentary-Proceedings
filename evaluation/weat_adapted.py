@@ -75,10 +75,9 @@ class XWEAT(object):
       """
       WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant words
       """
-      targets_1 = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
-      targets_2 = ["jude", "jüdisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal",
-      "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
+      targets_1 = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland, bibel'.split(',')
+      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
@@ -87,10 +86,9 @@ class XWEAT(object):
       """
       WEAT 2 - terms representing catholicism and protestantism + sets of pleasant/unplesant words
       """
-      targets_1 = ["protestant", "protestantisch", "protestantismus", "evangelisch", "evangelium", "landeskirche", "lutherisch", "evangelisch-lutherisch", "oberkirchenrat", "reformiert"]
-      targets_2  = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "römisch-katholisch", "zentrumspartei"]
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal",
-      "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
+      targets_1 = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landebischof, lutherisch, diakonie".split(', ')
+      targets_2  = "katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie".split(', ')
+      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
@@ -99,11 +97,9 @@ class XWEAT(object):
       """
       WEAT 3 - terms representing protestantism and judaism + sets of pleasant/unplesant words
       """
-      targets_1 = ["protestant", "protestantisch", "protestantismus", "evangelisch", "evangelium", "landeskirche",
-      "lutherisch", "evangelisch-lutherisch", "oberkirchenrat", "reformiert"]
-      targets_2 = ["jude", "jüdisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal",
-      "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
+      targets_1 = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landebischof, lutherisch, diakonie".split(', ')
+      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
@@ -112,10 +108,9 @@ class XWEAT(object):
       """
       WEAT 4 - terms representing catholicism and judaism + sets of pleasant/unplesant words
       """
-      targets_1 = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "römisch-katholisch", "zentrumspartei"]
-      targets_2 = ["jude", "jüdisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal",
-      "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
+      targets_1 = 'katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie'.split(', ')
+      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
@@ -129,16 +124,14 @@ class XWEAT(object):
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-
-    # 
   def weat_6(self):
       """
       WEAT 6- terms representing patriotism and non-patriotism+ sets of pleasant/unplesant words
       """
-      targets_1 = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
-      targets_2 = ["jude", "jüdisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
-      attributes_1 = 'patriotisch, vaterlandsliebe, volksbewußtsein, volksgeist, germanische, deutschnational, nationalbewußtsein, vaterländisch, reichstreu, nationalgesinnt, deutschnational, königstreu'.split(', ')
-      attributes_2 = 'nichtdeutsch, fremdländisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverräter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, umstürzler'.split(', ')   
+      targets_1 = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland, bibel'.split(',')
+      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      attributes_1 = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
+      attributes_2 = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
 
       return targets_1, targets_2, attributes_1, attributes_2
 
