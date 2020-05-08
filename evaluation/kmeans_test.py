@@ -3,7 +3,7 @@ import csv
 import os 
 import glob
 from eval import eval_simlex, eval_k_means, eval_svm
-from weat import XWEAT, load_vocab_goran
+from weat import XWEAT
 from pathlib import Path
 import json
 import pickle 
@@ -12,7 +12,7 @@ import numpy as np
 from gensim.models import KeyedVectors
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
-working_path = os.path.abspath(os.path.join(debie_path, "../.."))
+working_path = os.path.abspath(os.path.join(debie_path, "../"))
 
 
 
@@ -29,7 +29,7 @@ def main():
   for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0]
       vocab = json.load(open(t[0], 'r'))
-      vectors =  KeyedVectors.load_word2vec_format(t[1], binary=True).vectors
+      vectors =  np.load(t[1])
       with open(os.path.join(debie_path, f'kmeans\\{file_name}.txt'), 'w') as f:
         for test in weat_tests:
           f.write(f'K-means score {test.__name__ }: ')

@@ -12,7 +12,7 @@ import argparse
 from gensim.models import KeyedVectors
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
-working_path = os.path.abspath(os.path.join(debie_path, "../.."))
+working_path = os.path.abspath(os.path.join(debie_path, "../"))
 
 # Get simlex pairs
 with open(os.path.join(debie_path, 'SimLex_ALL_Langs_TXT_Format\\MSimLex999_German.csv'), encoding = 'utf-8') as f:
@@ -40,7 +40,7 @@ def main():
     for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
       vocab = json.load(open(t[0], 'r'))
-      vectors =  KeyedVectors.load_word2vec_format(t[1], binary=True).vectors
+      vectors =  np.load(t[1])
       simlex_score = eval_simlex(simlex_pairs, vocab, vectors)
       f.write('{}: {}'.format(file_name,simlex_score))
       f.write('\n')

@@ -16,9 +16,8 @@ from eval import embedding_coherence_test, bias_analogy_test
 from weat import XWEAT
 
 
-debie_path = Path('C:\\Users\\Tobias\\Documents\\Uni Mannheim\\Master Thesis\\notebooks\\DEBIE\\evaluation')
-
-working_path = Path('C:\\Users\\Tobias\\Documents\\Uni Mannheim\\Master Thesis\\notebooks')
+debie_path = os.path.dirname(os.path.abspath(__file__))
+working_path = os.path.abspath(os.path.join(debie_path, "../"))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, 
 XWEAT().weat_6]
@@ -44,9 +43,9 @@ jewish_stereotypes_political = 'liberalistisch, modern, materialistisch, liberal
 
 jewish_occupations = 'Pfandleiher, Geldleiher, Kaufmann, Händler, Bankier, Finanzier, Steuereintreiber, Zöllner, Trödelhändler'.lower().split(', ') 
 
-volkstreu = 'patriotisch, vaterlandsliebe, volksbewußtsein, volksgeist, germanische, deutschnational, nationalbewußtsein, vaterländisch, reichstreu, nationalgesinnt, nationalstolz, deutschnational, königstreu'.split(', ')
+volkstreu = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
 
-volksuntreu = 'nichtdeutsch, fremdländisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverräter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, umstürzler'.split(', ')
+volksuntreu = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')
 
 
 EMB_DIM = 200
@@ -104,7 +103,8 @@ def main():
         # vectors = np.load(t[1], allow_pickle=True)
         # TO-DO: change from hardcoded value to emb_size 
         # vectors = np.loadtxt(t[1], skiprows=1 , usecols= (np.arange(1,EMB_DIM+1)))
-        vectors = KeyedVectors.load_word2vec_format(t[1], binary=True).vectors
+        # vectors = KeyedVectors.load_word2vec_format(t[1], binary=True).vectors
+        vectors = np.load(t[1])
         
         for test in weat_tests:
           f.write('{} {}: '.format(args.test_type, test.__name__ ))
