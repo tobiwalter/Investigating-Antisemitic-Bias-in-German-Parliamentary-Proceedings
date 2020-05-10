@@ -11,8 +11,7 @@ import argparse
 import time
 
 parser = argparse.ArgumentParser(description='Train word embedding models for Reichstag proceedings')
-parser.add_argument('--format', type=str, default='gensim',
-	help='Save word2vec model in word2vec or gensim format')
+parser.add_argument('--format', type=str, default='gensim', help='Save word2vec model in word2vec or gensim format')
 parser.add_argument('--proceedings', type=str, help='folder containing pre-processed Reichstag proceedings docs')
 parser.add_argument('--model_path', type=str, help='path to store trained model')
 parser.add_argument('--vocab_path', type=str, help='path to store model vocab and indices')
@@ -28,7 +27,8 @@ parser.add_argument('-ns', '--ns', type=int, default=5, help='number of samples 
 
 args = parser.parse_args()
 logging.basicConfig(
-    filename=args.model_path.strip() + '.result', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    filename=args.model_path.strip() + '.result', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO
+    )
 # option 1)
 #sentences = PathLineSentences(args.proceedings)
 
@@ -61,8 +61,15 @@ class CreateSlice:
 
 start = time.time()
 logging.info(f'Training started at: {start}')
+
+if args.proceedings.endswith('.txt'):
+    sentences = PathLineSentences(args.proceedings)
+else:
+    sentences = CreateCorpus(args.proceedings)
+
 if args.model_type == 'word2vec':
-	model = Word2Vec(sentences=CreateCorpus(args.proceedings), size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs, negative=args.ns)
+    
+	model = Word2Vec(sentences=sentences, size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs, negative=args.ns)
 
 elif args.model_type == 'fasttext':
 	model = FT_gensim(size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs,negative=args.ns)
@@ -82,7 +89,7 @@ logging.info(f'Vocab size: {len(model.wv.vocab)}')
 if args.format == 'w2v':
 	model.wv.save_word2vec_format(args.model_path + '.txt', binary=True)
 else:
-	model.wv.save(args.model_path)
+	model.wv.save(args.model_path,separately= ['vectors'])
 
 
 # Save vocab to disk 
