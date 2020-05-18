@@ -13,6 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'germalemmaplusplus')))
 from germalemmaplusplus.lemmatizer import GermaLemmaPlusPlus, Token, Sentence
 from symspellpy import SymSpell,Verbosity
 
+
 def remove_linebreaks(doc):
     return [re.sub(r'[\n\t]', '', line).strip() for line in doc]
 
@@ -21,7 +22,7 @@ def remove_punctuation(doc):
     return [re.sub(pattern,'', line).strip() for line in doc]
 
 def remove_double_spaces(doc):
-    return [re.sub('\s\s+',' ', line).strip() for line in doc]
+    return [re.sub('\s\s+',' ', lines).strip() for line in doc]
 
 def remove_noisy_digits(doc):
     """
@@ -74,7 +75,7 @@ def charSplitting(i,groups,chainword="und"):
         splitted = char_split.split_compound(word2)[0][-1].lower()
         return " {}{} {} {}".format(word1,splitted,chainword,word2)
     if i == 2:
-         # if both gendered versions are named, use the male version for compound splitting because it usually gives better 
+         # if both gendered versions are named, use the male version for compound splitting because it usually yields better results 
         # resiults
         if word1[-5:] == 'innen':
             splitted = (char_split.split_compound(word1[:-5])[0][-2])
@@ -87,6 +88,7 @@ def removeGermanChainWords(text):
     regex = []
     # splitting up a combination of three hyphenated chain words, e.g.: Bildungs-, Sozial- und Innenpolitik: Bildungspolitik und Sozialpolitik und Innenpolitik 
     regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[\s]?-[\s]?([A-ZÄÖÜ][a-zäöüß]+)-[\s]?(?:und|oder|als auch|sowie|wie|bzw|&|,)+[\s]([A-ZÄÖÜ][a-zäöüß]+)")
+
     # hyphenated chain words building two words but we have to append the second part of the second word to the first word, e.g: Ein- und Ausfuhr -> Einfuhr und Ausfuhr 
     regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[' ']?-[' ']?(?:und|oder|als auch|wie|sowie|bzw)+[' ']([A-ZÄÖÜ][a-zäöüß]+)")            
     # in the less common case of hyphenated chain words with the hyphen at the second word, add the first part of first word to end of second, e.g.: Reichsausgaben und -Einnahme -> Reichsausgaben und Reichseinnahmen 
@@ -129,6 +131,7 @@ def remove_hyphens_pre_and_appending(text, split_chars="-"):
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
 
+
 start_patterns = '|'.join(
                 ['Ich eröffne die \d+ (\n )?Sitzung',
                  'Die \d+ (\n )?Sitzung des (Deutschen)? (Bundestages|Bundestags) ist eröffnet',
@@ -166,6 +169,16 @@ def extract_protocol(doc):
    # Split string by new-line character to transform protocol back to line format 
    text_out = temp.split(' \n ')
    return text_out
+
+def removeUmlauts(text):
+    res = text.replace('ä', 'ae')
+    res = res.replace('ö', 'oe')
+    res = res.replace('ü', 'ue')
+    res = res.replace('Ä', 'Ae')
+    res = res.replace('Ö', 'Oe')
+    res = res.replace('Ü', 'Ue')
+    # res = res.replace('ß', 'ss')
+    return res  
    
 class GermanLemmatizer:
     def __init__(self):
@@ -192,6 +205,7 @@ class GermanSpellChecker:
 
     def load_dictionary(self, dictionary_path):
         return self.spell_checker.load_dictionary(dictionary_path, 0, 1, separator = ' ', encoding='utf-8')
+
 
     def correct(self, doc, skip_token=r'\d+'):
         ''' Looks up top suggestion for each token in the document and return it'''
