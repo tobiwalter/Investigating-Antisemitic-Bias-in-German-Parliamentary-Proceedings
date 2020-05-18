@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*_
+ # -*- coding: utf-8 -*_
 
 from nltk.corpus import wordnet as wn
 from sys import stdin
@@ -6,6 +6,36 @@ import codecs
 import numpy as np
 import pickle
 import os
+
+# word sets
+
+JEWISH_RT = 'rabbi, synagoge, koscher, sabbat, orthodox, judentum, jude, jüdisch, mose, talmud, israel, abraham, zionistisch'.split(', ')
+
+JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
+
+CHRISTIAN_RT = 'taufe, katholizismus, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, ostern, bibel'.split(', ')
+
+CHRISTIAN_BRD = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland'.split(', ')
+
+PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
+
+PROTESTANT_RT = 'protestant, protestantisch, protestantismus, evangelisch, evangelium, landeskirche, oberkirchenrat, lutherisch, evangelisch-lutherisch, reformiert'.split(', ')
+
+CATHOLIC_BRD = "katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie".split(', ')
+
+CATHOLIC_RT = 'katholizismus, katholisch, katholik, papst, römisch-katholisch, jesuiten, jesuitenorden, ultramontanismus, ultramontanen, zentrumspartei'.split(', ')
+
+# sets patriotic/non-patriotic words 
+
+VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewußtsein, volksgeist, germanische, deutschnational, nationalbewußtsein, \
+vaterländisch, reichstreu, nationalgesinnt, nationalstolz, königstreu'.split(', ')
+
+VOLKSUNTREU_RT = 'nichtdeutsch, fremdländisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverräter, reichsfeindlich, \
+unpatriotisch, antideutsch, deutschfeindlich, umstürzler'.split(', ')   
+
+VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
+
+VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
 
 # IO
 
@@ -203,5 +233,5 @@ def projection_bolukbasi(seed_words, vocab, vocab_inv, vecs_norm):
   order = np.argsort(scores)
   sorted_pairs = [(vocab_inv[i], scores[i]) for i in order]
   return sorted_pairs
-    
-    
+
+

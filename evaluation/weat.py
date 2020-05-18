@@ -12,6 +12,8 @@ import time
 import json
 from collections import OrderedDict
 import math
+from utils import *
+
 
 class XWEAT(object): 
   """
@@ -71,68 +73,97 @@ class XWEAT(object):
      else:
       raise NotImplementedError()
 
-  def weat_1(self):
+  def weat_1(self, protocol_type):
       """
-      WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant words
+      WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant wordargs.protocol_typeselfs
       """
-      targets_1 = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland, bibel'.split(', ')
-      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      if protocol_type == 'BT':
+        targets_1 = CHRISTIAN_BRD
+        targets_2 = JEWISH_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = CHRISTIAN_RT
+        targets_2 = JEWISH_BRD
+
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_2(self):
+  def weat_2(self, protocol_type):
       """
       WEAT 2 - terms representing catholicism and protestantism + sets of pleasant/unplesant words
       """
-      targets_1 = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
-      targets_2  = "katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie".split(', ')
+      if protocol_type == 'BRD':
+        targets_1 = PROTESTANT_BRD
+        targets_2  = CATHOLIC_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = PROTESTANT_RT
+        targets_2  = CATHOLIC_RT
+
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_3(self):
+  def weat_3(self, protocol_type):
       """
       WEAT 3 - terms representing protestantism and judaism + sets of pleasant/unplesant words
       """
-      targets_1 = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
-      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      if protocol_type == 'BRD':
+        targets_1 = PROTESTANT_BRD
+        targets_2 = JEWISH_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = PROTESTANT_RT
+        targets_2 = JEWISH_RT
+
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_4(self):
+  def weat_4(self, protocol_type):
       """
       WEAT 4 - terms representing catholicism and judaism + sets of pleasant/unplesant words
       """
-      targets_1 = 'katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie'.split(', ')
-      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
+      if protocol_type == 'BRD':
+        targets_1 = CATHOLIC_BRD
+        targets_2 = JEWISH_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = CATHOLIC_RT
+        targets_2 = JEWISH_RT
+
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
     # again african american vs european american names, but with different attributes
-  def weat_5(self):
+  def weat_5(self, protocol_type):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
-      targets_1 = ["klerus", "missionar", "bekenntnis", "apostel", "priester", "sakrament", "bischof", "baptist", "firmung", "pastor", "frömmigkeit", "fromm", "gottvertrauen"]
-      targets_2 = ["jude", "jüdisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
+
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual"," stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_6(self):
+  def weat_6(self, protocol_type):
       """
       WEAT 6- terms representing patriotism and non-patriotism+ sets of pleasant/unplesant words
       """
-      targets_1 = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland, bibel'.split(', ')
-      targets_2 = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat, holocaust'.split(', ')
-      attributes_1 = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
-      attributes_2 = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
+      if protocol_type == 'BT':
+        targets_1 = CHRISTIAN_BRD
+        targets_2 = JEWISH_BRD
+        attributes_1 = VOLKSTREU_BRD
+        attributes_2 = VOLKSUNTREU_BRD
 
+      if protocol_type == 'RT':
+        targets_1 = CHRISTIAN_RT
+        targets_2 = JEWISH_RT
+        attributes_1 = VOLKSTREU_RT
+        attributes_2 = VOLKSUNTREU_RT
       return targets_1, targets_2, attributes_1, attributes_2
 
   def similarity_precomputed_sims(self, w1, w2, type="cosine"):
@@ -261,6 +292,7 @@ def main():
     return s == 'True' or s == 'true'
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
+  parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
@@ -277,15 +309,15 @@ def main():
   weat = XWEAT()
 
   if args.test_number == 1:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.protocol_type)
   elif args.test_number == 2:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.protocol_type)
   elif args.test_number == 3:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.protocol_type)
   elif args.test_number == 4:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.protocol_type)
   elif args.test_number == 5:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5(args.protocol_type)
   elif args.test_number == 6:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_6()
   else:
