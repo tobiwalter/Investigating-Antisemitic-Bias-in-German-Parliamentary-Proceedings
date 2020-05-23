@@ -9,9 +9,9 @@ import os
 
 # word sets
 
-JEWISH_RT = 'rabbi, synagoge, koscher, sabbat, orthodox, judentum, jude, jüdisch, mose, talmud, israel, abraham, zionistisch'.split(', ')
+JEWISH_RT = 'rabbi, synagoge, koscher, sabbat, orthodox, judentum, jude, juedisch, mose, talmud, israel, abraham, zionistisch'.split(', ')
 
-JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, jüdisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
+JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, juedisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
 
 CHRISTIAN_RT = 'taufe, katholizismus, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, ostern, bibel'.split(', ')
 
@@ -21,21 +21,21 @@ PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskir
 
 PROTESTANT_RT = 'protestant, protestantisch, protestantismus, evangelisch, evangelium, landeskirche, oberkirchenrat, lutherisch, evangelisch-lutherisch, reformiert'.split(', ')
 
-CATHOLIC_BRD = "katholisch, katholik, papst, römisch-katholisch, enzyklika, päpstliche, bischofskonferenz, diözese, franziskus, kurie".split(', ')
+CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, paepstliche, bischofskonferenz, dioezese, franziskus, kurie".split(', ')
 
-CATHOLIC_RT = 'katholizismus, katholisch, katholik, papst, römisch-katholisch, jesuiten, jesuitenorden, ultramontanismus, ultramontanen, zentrumspartei'.split(', ')
+CATHOLIC_RT = 'katholizismus, katholisch, katholik, papst, roemisch-katholisch, jesuiten, jesuitenorden, ultramontanismus, ultramontanen, zentrumspartei'.split(', ')
 
 # sets patriotic/non-patriotic words 
 
-VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewußtsein, volksgeist, germanische, deutschnational, nationalbewußtsein, \
-vaterländisch, reichstreu, nationalgesinnt, nationalstolz, königstreu'.split(', ')
+VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanische, deutschnational, nationalbewusstsein, \
+vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
 
-VOLKSUNTREU_RT = 'nichtdeutsch, fremdländisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverräter, reichsfeindlich, \
-unpatriotisch, antideutsch, deutschfeindlich, umstürzler'.split(', ')   
+VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, \
+unpatriotisch, antideutsch, deutschfeindlich, umstuerzler'.split(', ')   
 
-VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
+VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanische, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot'.split(', ')
 
-VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
+VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
 
 # IO
 
