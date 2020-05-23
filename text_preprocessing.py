@@ -186,11 +186,7 @@ spelling_dict = open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 
 spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
 
 def harmonizeSpelling(text):
-    text_out = []
-    for tok in text:
-	    for k,v in spelling_dict.items():
-        	res = re.sub(k,v,tok)
-            text_out.append(res)
+    text_out = [re.sub(k,v,tok) for k,v in spelling_dict.items() for tok in text]
     return text_out
    
 class GermanLemmatizer:
