@@ -179,6 +179,17 @@ def removeUmlauts(text):
     res = res.replace('Ü', 'Ue')
     # res = res.replace('ß', 'ss')
     return res  
+
+open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
+spelling_dict = {lines.split()[0] : lines.split()[1] for line in spelling_dict}
+def harmonizeSpelling(text):
+    res = []
+    for tok in text:
+        if tok in spelling_dict:
+            res.append(spelling_dict[tok])
+        else:
+            res.append(tok)
+    return res
    
 class GermanLemmatizer:
     def __init__(self):
