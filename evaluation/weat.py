@@ -86,7 +86,7 @@ class XWEAT(object):
         targets_2 = JEWISH_RT
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "haß", "scheidung", "gefaengnis", "armut","haeßlich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -103,7 +103,7 @@ class XWEAT(object):
         targets_2  = CATHOLIC_RT
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "haß", "scheidung", "gefaengnis", "armut","haeßlich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -120,7 +120,7 @@ class XWEAT(object):
         targets_2 = JEWISH_RT
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "haß", "scheidung", "gefaengnis", "armut","haeßlich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -137,7 +137,7 @@ class XWEAT(object):
         targets_2 = JEWISH_RT
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "haß", "scheidung", "gefaengnis", "armut","haeßlich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
     # again african american vs european american names, but with different attributes
@@ -145,7 +145,7 @@ class XWEAT(object):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "haß", "scheidung", "gefaengnis", "armut","haeßlich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual"," stinken", "absturz", "verschmutzen"]
+      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual"," stinken", "absturz", "verschmutzen"]
       return targets_1, targets_2, attributes_1, attributes_2
 
 
