@@ -83,7 +83,7 @@ class XWEAT(object):
 
       if protocol_type == 'RT':
         targets_1 = CHRISTIAN_RT
-        targets_2 = JEWISH_BRD
+        targets_2 = JEWISH_RT
 
       attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnügen",  "sanft", "ehrlich", "glücklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
       attributes_2 = ["mißbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefängnis",  "angriff", "katastrophe", "haß", "scheidung", "gefängnis", "armut","häßlich", "krebs", "töten", "faul", "tragödie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
@@ -319,7 +319,7 @@ def main():
   elif args.test_number == 5:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5(args.protocol_type)
   elif args.test_number == 6:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_6()
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_6(args.protocol_type)
   else:
     raise ValueError("Only WEAT 1 to 6 are supported")
 
