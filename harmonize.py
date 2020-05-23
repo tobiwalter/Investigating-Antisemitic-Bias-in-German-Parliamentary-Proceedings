@@ -14,6 +14,8 @@ os.chdir(tpath)
 
 
 def harmonize(dirname):
+    if not os.path.exists(f'{dirname}_harmonized'):
+        os.makedirs(f'{dirname}_harmonized')
     logging.info('Start processing of files.')
     i = 0
     files_total = len(os.listdir(dirname))
@@ -23,8 +25,11 @@ def harmonize(dirname):
         try:
             text = open(os.path.join(dirname, f'{num}_sents.txt'),'r', encoding='utf-8').readlines()
             text = [harmonizeSpelling(line) for line in text]
-            save_as_line_sentence(text, f'{dirname}_harmonized/{num}_sents.txt')
-            i += 1
+            with open(f'{dirname}_harmonized/{num}_sents.txt', 'w', encoding='utf-8') as f:
+                for line in text:
+                    f.write(line)
+                    f.write('\n')
+                i += 1
             if i % border == 0:
               logging.info('Processing {:03.1f} percent finished'.format(int((i/files_total) * 100)))
 
@@ -37,6 +42,6 @@ if __name__ == "__main__":
   except IndexError as e: 
     print(e)
 
-process_and_save(dirname)
+harmonize(dirname)
 
 
