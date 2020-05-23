@@ -180,8 +180,9 @@ def removeUmlauts(text):
     # res = res.replace('ß', 'ss')
     return res  
 
-open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
-spelling_dict = {lines.split()[0] : lines.split()[1] for line in spelling_dict}
+spelling_dict = open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
+spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
+
 def harmonizeSpelling(text):
     res = []
     for tok in text:
