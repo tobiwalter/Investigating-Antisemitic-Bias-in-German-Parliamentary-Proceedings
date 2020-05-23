@@ -22,7 +22,7 @@ def remove_punctuation(doc):
     return [re.sub(pattern,'', line).strip() for line in doc]
 
 def remove_double_spaces(doc):
-    return [re.sub('\s\s+',' ', lines).strip() for line in doc]
+    return [re.sub('\s\s+',' ', line).strip() for line in doc]
 
 def remove_noisy_digits(doc):
     """
@@ -171,23 +171,27 @@ def extract_protocol(doc):
    return text_out
 
 def removeUmlauts(text):
-    res = text.replace('ä', 'ae')
-    res = res.replace('ö', 'oe')
-    res = res.replace('ü', 'ue')
-    res = res.replace('Ä', 'Ae')
-    res = res.replace('Ö', 'Oe')
-    res = res.replace('Ü', 'Ue')
-    # res = res.replace('ß', 'ss')
-    return res  
+    text_out = []
+    for tok in text:
+        res = tok.replace('ä', 'ae')
+        res = res.replace('ö', 'oe')
+        res = res.replace('ü', 'ue')
+        res = res.replace('Ä', 'Ae')
+        res = res.replace('Ö', 'Oe')
+        res = res.replace('Ü', 'Ue')
+        text_out.append(res)
+    return text_out
 
 spelling_dict = open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
 spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
 
 def harmonizeSpelling(text):
-    res = text
-    for k,v in spelling_dict.items():
-        res = re.sub(k,v,res)
-    return res
+    text_out = []
+    for tok in text:
+	    for k,v in spelling_dict.items():
+        	res = re.sub(k,v,tok)
+            text_out.append(res)
+    return text_out
    
 class GermanLemmatizer:
     def __init__(self):
