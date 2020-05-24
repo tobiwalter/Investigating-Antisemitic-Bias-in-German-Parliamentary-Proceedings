@@ -185,10 +185,14 @@ def removeUmlauts(text):
 spelling_dict = open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
 spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
 
+# def harmonizeSpelling(text):
+#     text_out = [re.sub(k,v,tok) for k,v in spelling_dict.items() for tok in text]
+#     return text_out
+
 def harmonizeSpelling(text):
-    text_out = [re.sub(k,v,tok) for k,v in spelling_dict.items() for tok in text]
+    text_out = [re.sub(tok,spelling_dict[tok],tok) if tok in spelling_dict else tok for tok in text]
+    
     return text_out
-   
 class GermanLemmatizer:
     def __init__(self):
         self.lm = spacy.load('de_core_news_sm', disable=['parser', 'ner'])
