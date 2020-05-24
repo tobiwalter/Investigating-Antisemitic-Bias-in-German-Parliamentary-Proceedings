@@ -118,12 +118,12 @@ def removeGermanChainWords(text):
     
     return sentence
 
-def remove_hyphens_pre_and_appending(text, split_chars="-"):
+def remove_hyphens_pre_and_appending(text, split_chars="-|—|–"):
     '''Remove prepending and appending hyphens from words -> They are either noise or the chain word could not be split'''
     new_text = text
     for t in text.split():
         parts = []
-        for p in t.split(split_chars):  # for each part p in compound token t
+        for p in re.split(split_chars, t) :  # for each part p in compound token t
             if not p: continue  # skip empty part
             else:               # add p as separate token
                 parts.append(p)
