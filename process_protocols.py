@@ -20,13 +20,13 @@ tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
 os.chdir(tpath)
 
 # Add and delete certain dictionary entries 
-with open('dictionaries/manual_additions.txt', 'r', encoding='utf-8') as f:
-    words_to_add = [word.strip() for word in f.readlines()]
-with open('dictionaries/manual_deletions.txt', 'r', encoding='utf-8') as f:
-    words_to_delete = [word.strip() for word in f.readlines()]
+#with open('dictionaries/manual_additions.txt', 'r', encoding='utf-8') as f:
+ #   words_to_add = [word.strip() for word in f.readlines()]
+#with open('dictionaries/manual_deletions.txt', 'r', encoding='utf-8') as f:
+ #   words_to_delete = [word.strip() for word in f.readlines()]
     
-spell_checker.add_entries(words_to_add)
-spell_checker.delete_entries(words_to_delete)
+#spell_checker.add_entries(words_to_add)
+#spell_checker.delete_entries(words_to_delete)
 
 class ProcessProtocols(object):
     def __init__(self, dirname):
@@ -61,7 +61,9 @@ class ProcessProtocols(object):
                     text = [remove_hyphens_pre_and_appending(line) for line in text]
                     text = [lemmatizer.lemmatize(line) for line in text]
                     text = [lowercase(line) for line in text]
-                    text = [spell_checker.correct(line) for line in text]
+                    text = [removeUmlauts(line) for line in text]
+                    text = [harmonizeSpelling(line) for line in text]
+                   # text = [spell_checker.correct(line) for line in text]
 
                     # with open(os.path.join(f'{self.dirname}_processed' , f'{num}_sents.txt'), 'w', encoding='utf-8') as out_file:
                     #     for line in text:
