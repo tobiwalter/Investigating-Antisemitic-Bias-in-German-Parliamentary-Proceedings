@@ -18,7 +18,7 @@ def remove_linebreaks(doc):
     return [re.sub(r'[\n\t]', '', line).strip() for line in doc]
 
 def remove_punctuation(doc):    
-    pattern = re.compile('[%s]' % re.escape('x!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„“«»'))
+    pattern = re.compile('[%s]' % re.escape('!"#$&\'()*+,./:;<=>?@®©[\\]^_`{|}~„“«»'))
     return [re.sub(pattern,'', line).strip() for line in doc]
 
 def remove_double_spaces(doc):
