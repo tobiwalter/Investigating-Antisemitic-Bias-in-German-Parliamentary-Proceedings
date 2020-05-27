@@ -127,8 +127,8 @@ class TWEC:
             self.compass = Word2Vec.load(os.path.join(self.opath, "compass.model"))
             print("Compass loaded from file.")
         else:
-            sentences = PathLineSentences(compass_text)
-            sentences.input_files = [s for s in sentences.input_files if not os.path.basename(s).startswith('.')]
+            sentences = CreateCompass(compass_text)
+            # sentences.input_files = [s for s in sentences.input_files if not os.path.basename(s).startswith('.')]
             print("Training the compass.")
             if compass_exists:
                 print("Compass will be overwritten after training")
@@ -142,7 +142,7 @@ class TWEC:
             return Exception("Missing Compass")
         print("Training temporal embeddings: slice {}.".format(slice_text))
 
-        sentences = LineSentence(slice_text)
+        sentences = CreateCompass(slice_text)
         model = self.train_model(sentences)
 
         model_name = os.path.splitext(os.path.basename(slice_text))[0]
