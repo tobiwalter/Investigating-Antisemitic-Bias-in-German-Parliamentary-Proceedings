@@ -5,6 +5,7 @@ from sys import stdin
 import codecs
 import numpy as np
 import pickle
+import json
 import os
 
 # word sets
