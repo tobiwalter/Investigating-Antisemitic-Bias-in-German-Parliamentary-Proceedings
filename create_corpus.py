@@ -5,10 +5,14 @@ import os
 from datetime import datetime
 import locale
 from representations.utils import save_corpus
+import dateparser
+
+ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
+os.chdir(tpath)
 
 # Process the protocols and create corpus
-
-locale.setlocale(locale.LC_ALL, 'de_DE')
+#locale.setlocale(locale.LC_ALL, 'de_DE')
 FIRST_DATES = {
     1: '22 Oktober 1889',
     2: '3 Dezember 1895',
@@ -28,7 +32,7 @@ def sort_corpus(number):
     corpus_and_dates = []
     
     # We know the first date by manually looking into the corpus
-    last_date = datetime.strptime(FIRST_DATES.get(number),'%d %B %Y')
+    last_date = dateparser.parse(FIRST_DATES.get(number))
     period_start = PERIODS.get(number).get('start')
     period_end = PERIODS.get(number).get('end')
     
@@ -40,15 +44,14 @@ def sort_corpus(number):
         match = re.search(r'\d+ Sitzung (?:am )?(?:Montag |Dienstag |Mittwoch |Donnerstag |Freitag |Sonnabend |Sonntag )?(?:den )?(\d+ (?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember) \d{4})', " ".join(text))
         if match:
             date = match.groups()[0]
-            try:
-                date = datetime.strptime(date,'%d %B %Y')
-                
-                # out of period range due to OCR error 
+            date = dateparser.parse(date)
+            # date = datetime.strptime(date,'%d %B %Y')
+            # out of period range due to OCR error
+            if date is not None:
                 if date < period_start or date > period_end:
                     date = last_date
-                
+            else:
             # if there is a value error (e.g. as an OCR error -> 38 Januar instead of 28 Januar), impute with last date
-            except ValueError:
                 date = last_date
                 
             # Store the last valid date to impute instances for which no date was found
