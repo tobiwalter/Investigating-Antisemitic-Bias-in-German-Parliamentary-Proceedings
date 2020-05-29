@@ -28,9 +28,9 @@ def remove_noisy_digits(doc):
     """
     Remove digit 1 appending or prepending to some words in the text due to faulty OCR
     """
-    temp = [re.sub(r'\b1(?P<quote>[A-Za-z]+)\b', '\g<quote>', line) for line in doc]
-    temp = [re.sub(r'\b(?P<quote>[A-Za-z]+)1\b', '\g<quote>', line) for line in temp] 
-    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöü]+)1(?P<name>[A-Za-zßäöü]*)\b', '\g<quote> \g<name>', line) for line in temp]
+    temp = [re.sub(r'\b1(?P<quote>[A-Za-zßäöüÄÖÜ]+)\b', '\g<quote>', line) for line in doc]
+    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)1\b', '\g<quote>', line) for line in temp] 
+    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)1(?P<name>[A-Za-zßäöüÄÖÜ]*)\b', '\g<quote> \g<name>', line) for line in temp]
     return temp
 
 def replace_digits(doc):
@@ -131,45 +131,6 @@ def remove_hyphens_pre_and_appending(text, split_chars="-|—|–"):
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
 
-
-start_patterns = '|'.join(
-                ['Ich eröffne die \d+ (\n )?Sitzung',
-                 'Die \d+ (\n )?Sitzung des (Deutschen)? (Bundestages|Bundestags) ist eröffnet',
-                 'Ich erkläre die \d+ (\n )?Sitzung des (Deutschen )?(Bundestages|Bundestags) für eröffnet',     
-                 'Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
-                 'Ich (\n )?eröffne (\n )?die (\n )?Sitzung',
-                 'Beginn:? \d+ Uhr']
-                        )
-end_patterns = '|'.join(
-                ['(Schluß|Schluss) der Sitzung \d+',
-                 'Die Sitzung ist geschlossen',
-                 'Ich schließe die (\n )?Sitzung'
-                    ])
-
-start_pattern = re.compile(f"({start_patterns})", re.IGNORECASE)
-end_pattern = re.compile(f"({end_patterns})", re.IGNORECASE)
-def extract_protocol(doc):
-
-   temp = ' \n '.join(doc) 
-
-   # Search for start and end pattern
-   sitzung_start = start_pattern.search(temp)
-   sitzung_end = end_pattern.search(temp)
-   if sitzung_start:
-       # If both patterns found, return only text between start and end of the matching objects
-       if sitzung_end:
-           temp = temp[sitzung_start.start():sitzung_end.end()]
-   # If only start or end pattern found, use the found pattern as border for start/end
-       else: 
-           temp = temp[sitzung_start.start():]
-   elif sitzung_end:
-       temp = temp[:sitzung_end.end()]
-   # If none found, return unaltered text
-
-   # Split string by new-line character to transform protocol back to line format 
-   text_out = temp.split(' \n ')
-   return text_out
-
 def removeUmlauts(text):
     text_out = []
     for tok in text:
@@ -233,3 +194,123 @@ class GermanSpellChecker:
     def delete_entries(self,list):
         for word in list:
             self.spell_checker.delete_dictionary_entry(word)
+
+
+start_patterns_bundestag = '|'.join(
+                ['Ich eröffne die \d+ (\n )?Sitzung',
+                 'Die \d+ (\n )?Sitzung des (Deutschen)? (Bundestages|Bundestags) ist eröffnet',
+                 'Ich erkläre die \d+ (\n )?Sitzung des (Deutschen )?(Bundestages|Bundestags) für eröffnet',     
+                 'Die (\n )?Sitzung (\n )?ist (\n )?eröffnet',
+                 'Ich (\n )?eröffne (\n )?die (\n )?Sitzung',
+                 'Beginn:? \d+ Uhr']
+                        )
+end_patterns_bundestag = '|'.join(
+                ['(Schluß|Schluss) der Sitzung \d+',
+                 'Die Sitzung ist geschlossen',
+                 'Ich schließe die (\n )?Sitzung'
+                    ])
+
+start_pattern_bundestag = re.compile(f"({start_patterns_bundestag})", re.IGNORECASE)
+end_pattern_bundestag = re.compile(f"({end_patterns_bundestag})", re.IGNORECASE)
+def extract_protocol(doc):
+
+   temp = ' \n '.join(doc) 
+
+   # Search for start and end pattern
+   sitzung_start = start_pattern_bundestag.search(temp)
+   sitzung_end = end_pattern_bundestag.search(temp)
+   if sitzung_start:
+       # If both patterns found, return only text between start and end of the matching objects
+       if sitzung_end:
+           temp = temp[sitzung_start.start():sitzung_end.end()]
+   # If only start or end pattern found, use the found pattern as border for start/end
+       else: 
+           temp = temp[sitzung_start.start():]
+   elif sitzung_end:
+       temp = temp[:sitzung_end.end()]
+   # If none found, return unaltered text
+
+   # Split string by new-line character to transform protocol back to line format 
+   text_out = temp.split(' \n ')
+   return text_out
+
+
+start_patterns_reichstag = '|'.join(
+               ['(Z|I)ch eröffne die (\d+ |erste )?(\n )?Sitzung',
+                'Di(e|s) (\d+ |erste )?(\n )?Sitzung (\n )?ist (\n )?erö(f|s)(f|s)net',
+                'Die Sitzung-ist eröffnet',
+                'eröffne ich (hiermit )?die Sitzung',
+                'Ich eröffne die \d+$',
+                '(Z|I)ch erkläre die (\d+ |erste )?Sitzung für eröffnet']
+                       )
+
+restart_patterns_reichstag = '|'.join(
+               ['Die (\n )?Sitzung (\n )?ist wieder (\n )?eröffnet',
+                'Ich eröffne die Sitzung wieder',
+                'Ich eröffne die Sitzung von neuem',
+                'Ich eröffne die Sitzung noch einmal'
+               ])
+                       
+end_patterns_reichstag = '|'.join(
+               ['(Schluß|Schluss|Sckluß) der Sitzung (um )?\d+ Uhr',
+                'Die Sitzung ist geschlossen',
+                'Die Sitzung ist geschloffen',
+                'Ich schließe die (\n )?Sitzung'
+                   ])
+
+# Use whatever comes first as start of the session protocol
+start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
+restart_pattern_reichstag = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
+end_pattern_reichstag = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
+
+# Chop whole corpus into documents by searching for keywords 'Die Sitzung ist eröffnet' and 'Schluss der Sitzung' ob
+# Save one document per meeting
+def extract_meeting_protocols_reichstag(lines,number):
+    i = 0
+    sitzung = False
+    
+    if not os.path.exists('./protocols_{}'.format(number)):
+        os.makedirs('./protocols_{}'.format(number))
+    temp_doc = None
+    
+    if number > 3:                 
+        start_pattern_reichstag = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
+                                  re.IGNORECASE)
+
+    for line in lines:
+        sitzung_restart = restart_pattern_reichstag.search(line)
+        sitzung_start = start_pattern_reichstag.search(line)
+        sitzung_end = end_pattern_reichstag.search(line)
+        sitzung_abgebrochen = re.search(r'Die Sitzung wird um \d+ Uhr (?:\d+ Minute)?n? abgebrochen', line,
+                               re.IGNORECASE)
+        
+        if sitzung_restart:
+            sitzung = True
+            temp_doc.write(line)
+            temp_doc.write('\n')
+            continue
+        if sitzung_start:
+            i += 1
+            if i % 100 == 0:
+                logging.info('{i} documents extracted')
+            
+            sitzung = True
+            temp_doc = open('./protocols_{}/doc_{}.txt'.format(number,i), 'w',  encoding='utf-8')
+            temp_doc.write(line)
+            temp_doc.write('\n')
+            continue
+        if sitzung_end or sitzung_abgebrochen:
+            if temp_doc is not None:
+                temp_doc.write(line)
+                temp_doc.write('\n')
+                sitzung = False
+                continue
+
+        if sitzung:
+            if len(line) > 1:
+                temp_doc.write(line)   
+                temp_doc.write('\n')
+    
+    logging.info('Screening done!')
+    logging.info('{i} documents extracted in total.')
+    temp_doc.close()
