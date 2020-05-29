@@ -3,6 +3,7 @@ import json
 import pickle
 from pathlib import Path
 import os
+import codecs
 
 DATA_FOLDER = Path('./data')
 MODELS_FOLDER = Path('./obj')
@@ -94,9 +95,17 @@ class CreateCorpus:
                 for line in text:
                     yield line
 
-def save_corpus(corpus, filepath):
-    with open(str(MODELS_FOLDER / filepath) + '.pkl', 'wb') as f:
-        pickle.dump(corpus, f, pickle.HIGHEST_PROTOCOL)
+def write_lines(path, list):
+    f = codecs.open(path, "w", encoding='utf8')
+    for l in list:
+        f.write(str(l) + "\n")
+    f.close()
+
+def save_corpus(corpus, corpus_path):
+    if not os.path.exists(str(DATA_FOLDER/ corpus_path)):
+        os.makedirs(str(DATA_FOLDER/ corpus_path))
+    for num,doc in enumerate(corpus):
+        write_lines(str(DATA_FOLDER/ corpus_path / f'{num+1}_sents.txt'), doc)
 
 def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
