@@ -10,21 +10,21 @@ import os
 
 # word sets
 
-JEWISH_RT = 'rabbi, synagoge, koscher, sabbat, orthodox, judentum, jude, juedisch, mose, talmud, israel, abraham, zionistisch'.split(', ')
+JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
 JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, juedisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
 
-CHRISTIAN_RT = 'taufe, katholizismus, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, ostern, bibel'.split(', ')
+CHRISTIAN_RT = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
 
 CHRISTIAN_BRD = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland'.split(', ')
 
 PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
 
-PROTESTANT_RT = 'protestant, protestantisch, protestantismus, evangelisch, evangelium, landeskirche, oberkirchenrat, lutherisch, evangelisch-lutherisch, reformiert'.split(', ')
+PROTESTANT_RT = ["protestant", "protestantisch", "protestantismus", "evangelisch", "evangelium", "landeskirche", "lutherisch", "evangelisch-lutherisch", "oberkirchenrat", "reformiert"]
 
 CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, paepstliche, bischofskonferenz, dioezese, franziskus, kurie".split(', ')
 
-CATHOLIC_RT = 'katholizismus, katholisch, katholik, papst, roemisch-katholisch, jesuiten, jesuitenorden, ultramontanismus, ultramontanen, zentrumspartei'.split(', ')
+CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "römisch-katholisch", "zentrumspartei"]
 
 # sets patriotic/non-patriotic words 
 
