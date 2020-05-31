@@ -11,21 +11,21 @@ VOCAB_FOLDER = DATA_FOLDER / 'vocab'
 
 # term sets
 
-JEWISH_RT = 'rabbi, synagoge, koscher, sabbat, orthodox, judentum, jude, juedisch, mose, talmud, israel, abraham, zionistisch'.split(', ')
+JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
-JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, juedisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
+JEWISH_BRD = 'judentum, jude, juedisch, israel, israels, israeli, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
 
-CHRISTIAN_RT = 'taufe, katholizismus, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, ostern, bibel'.split(', ')
+CHRISTIAN_RT = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
 
-CHRISTIAN_BRD = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland'.split(', ')
+CHRISTIAN_BRD = 'christ, christlich, christentum, evangelisch, evangelium, jesus, katholisch, kirche, pfarrer, taufe, abendland'.split(', ')
 
 PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
 
-PROTESTANT_RT = 'protestant, protestantisch, protestantismus, evangelisch, evangelium, landeskirche, oberkirchenrat, lutherisch, evangelisch-lutherisch, reformiert'.split(', ')
+PROTESTANT_RT = ["protestant", "protestantisch", "protestantismus", "evangelisch", "evangelium", "landeskirche", "lutherisch", "evangelisch-lutherisch", "oberkirchenrat", "reformiert"]
 
 CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, paepstliche, bischofskonferenz, dioezese, franziskus, kurie".split(', ')
 
-CATHOLIC_RT = 'katholizismus, katholisch, katholik, papst, roemisch-katholisch, jesuiten, jesuitenorden, ultramontanismus, ultramontanen, zentrumspartei'.split(', ')
+CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "römisch-katholisch", "zentrumspartei"]
 
 PLEASANT = 'streicheln, Freiheit, Gesundheit, Liebe, Frieden, Freude, Freund, Himmel, loyal, Vergnuegen, Diamant, sanft, ehrlich, \
 gluecklich, Regenbogen, Diplom, Geschenk, Ehre, Wunder, Sonnenaufgang, Familie, Lachen, Paradies, Ferien'.lower().split(', ') 
@@ -111,7 +111,7 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
-    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:    
+    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:    git
         f.write(json_repr)
 
 def load_corpus(filepath):
