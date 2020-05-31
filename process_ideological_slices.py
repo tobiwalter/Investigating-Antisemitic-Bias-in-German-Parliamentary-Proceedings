@@ -35,7 +35,7 @@ class ProcessProtocols(object):
     def process_and_save(self):
         logging.info('Start processing of file.')
         try:
-             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8').readlines()
+             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8', errors='ignore').readlines()
              text = remove_punctuation(text)
              text = remove_double_spaces(text)
              text = remove_noisy_digits(text)
@@ -51,7 +51,7 @@ class ProcessProtocols(object):
              logging.info('Lemmatizing finished')
              text = [lowercase(line) for line in text]
              text = [spell_checker.correct(line) for line in text]
-             save_as_line_sentence(text, f'{self.input[:-4]}_processed')
+             save_as_line_sentence(text, f'{self.input}_processed.txt')
              logging.info('Processing finished')
 
         except FileNotFoundError:
