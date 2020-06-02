@@ -24,7 +24,7 @@ class ProcessProtocols(object):
     def process_and_save(self):
         logging.info('Start processing of file.')
         try:
-             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8').readlines()
+             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8', errors='ignore').readlines()
              text = remove_punctuation(text)
              text = remove_double_spaces(text)
              text = remove_noisy_digits(text)
