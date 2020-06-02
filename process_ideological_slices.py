@@ -12,18 +12,7 @@ ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 lemmatizer = GermanLemmatizer()
 
-# Initialise spelling correction instance 
-spell_checker = GermanSpellChecker('dictionaries/de_full.txt')
-logging.info('Lemmatizer and spell checker loaded.')
-
-# Add and delete certain dictionary entries 
-with open('dictionaries/manual_additions.txt', 'r', encoding='utf-8') as f:
-    words_to_add = [word.strip() for word in f.readlines()]
-with open('dictionaries/manual_deletions.txt', 'r', encoding='utf-8') as f:
-    words_to_delete = [word.strip() for word in f.readlines()]
-
-spell_checker.add_entries(words_to_add)
-spell_checker.delete_entries(words_to_delete)
+logging.info('Lemmatizer loaded.')
 
 tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
 os.chdir(tpath)
@@ -50,8 +39,12 @@ class ProcessProtocols(object):
              text = [lemmatizer.lemmatize(line) for line in text]
              logging.info('Lemmatizing finished')
              text = [lowercase(line) for line in text]
-             text = [spell_checker.correct(line) for line in text]
-             save_as_line_sentence(text, f'{self.input[:-4]}_processed')
+             text = [removeUmlauts(line) for line in text]
+             text = [harmonizeSpelling(line) for line in text_preprocessing]
+             if self.input.endswith('.txt'):
+                save_as_line_sentence(text, f'{self.input[:-4]}_processed.txt')
+             else:
+                save_as_line_sentence(text, f'{self.input}_processed.txt')
              logging.info('Processing finished')
 
         except FileNotFoundError:
