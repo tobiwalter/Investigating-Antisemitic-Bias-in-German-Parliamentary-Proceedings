@@ -268,13 +268,14 @@ def extract_meeting_protocols_reichstag(lines,number):
         os.makedirs('./protocols_{}'.format(number))
     temp_doc = None
     
-    start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
     restart_pattern_reichstag = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
     end_pattern_reichstag = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
 
     if number > 3:                 
         start_pattern_reichstag = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
                                   re.IGNORECASE)
+    else:
+        start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
 
 
     for line in lines:
