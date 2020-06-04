@@ -12,11 +12,11 @@ import os
 
 JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelit", "rothschild", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
-JEWISH_BRD = 'synagoge, koscher, orthodox, judentum, jude, juedisch, israel, israels, israeli, rabbiner, zentralrat'.split(', ')
+JEWISH_BRD = 'judentum, jude, juedisch, israel, israels, israeli, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
 
 CHRISTIAN_RT = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
 
-CHRISTIAN_BRD = 'taufe, christentum, evangelisch, evangelium, jesus, christ, christlich, katholisch, kirche, pfarrer, abendland'.split(', ')
+CHRISTIAN_BRD = 'christ, christlich, christentum, evangelisch, evangelium, jesus, katholisch, kirche, pfarrer, taufe, abendland'.split(', ')
 
 PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
 
@@ -24,17 +24,41 @@ PROTESTANT_RT = ["protestant", "protestantisch", "protestantismus", "evangelisch
 
 CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, paepstliche, bischofskonferenz, dioezese, franziskus, kurie".split(', ')
 
-CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "roemisch-katholisch", "zentrumspartei"]
+CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "römisch-katholisch", "zentrumspartei"]
+
+PLEASANT = 'streicheln, Freiheit, Gesundheit, Liebe, Frieden, Freude, Freund, Himmel, loyal, Vergnuegen, Diamant, sanft, ehrlich, \
+gluecklich, Regenbogen, Diplom, Geschenk, Ehre, Wunder, Sonnenaufgang, Familie, Lachen, Paradies, Ferien'.lower().split(', ') 
+
+UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergiften, stinken, Angriff, Katastrophe, Hass, \
+verschmutzen, Tragoedie, Scheidung, Gefaengnis, Armut, haesslich, Krebs, toeten, faul, erbrechen, Qual'.lower().split(', ') 
 
 # sets patriotic/non-patriotic words 
 
-VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanische, deutschnational, nationalbewusstsein, vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
+VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanische, deutschnational, nationalbewusstsein, \
+vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
 
-VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, umstuerzler'.split(', ')   
+VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, \
+unpatriotisch, antideutsch, deutschfeindlich, umstuerzler'.split(', ')   
 
 VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanische, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot'.split(', ')
 
 VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')   
+
+OUTSIDER_WORDS = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beaengstigend, hinterlistig, energisch, truegerisch, \
+neidisch, gierig, abscheulich, verachtenswert, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'\
+.lower().split(', ') 
+
+JEWISH_STEREOTYPES_NOUNS = 'Gier, Wucherer, Drueckeberger, Kriegsgewinnler, Macht, Einfluss, Kriegstreiber, Luegner, \
+Weltherrschaft, Kommunismus, Kapitalismus, Liberalismus, Aussenseiter'.lower().split(', ')
+
+JEWISH_STEREOTYPES_CHARACTER = 'egoistisch, fremd, dekadent, hasserfuellt, habgierig, geldgierig, penetrant, hinterlistig, \
+intellektuell, pervers, hinterhaeltig, betruegerisch, gebeugt, bucklig'.split(', ')
+
+JEWISH_STEREOTYPES_POLITICAL = 'liberalistisch, modern, materialistisch, liberal, undeutsch, unpatriotisch, saekular, \
+sozialistisch, links, bolschewistisch'.split(', ')
+
+JEWISH_OCCUPATIONS = 'Pfandleiher, Geldleiher, Kaufmann, Haendler, Bankier, Finanzier, Steuereintreiber, Zoellner, \
+Troedelhaendler'.lower().split(', ') 
 
 # IO
 
