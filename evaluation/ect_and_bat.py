@@ -15,7 +15,6 @@ from gensim.models import KeyedVectors
 from eval import embedding_coherence_test, bias_analogy_test
 from weat import XWEAT
 from utils import *
-from notebooks.representations.utils import *
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
 working_path = os.path.abspath(os.path.join(debie_path, "../"))
