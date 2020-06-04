@@ -102,7 +102,7 @@ def removeGermanChainWords(text):
             sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(0,c))
         return sentence
     
-    m = re.search(regex[1g],sentence)
+    m = re.search(regex[1],sentence)
     if m:
         findings = m.groups()
         for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
