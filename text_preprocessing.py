@@ -102,7 +102,7 @@ def removeGermanChainWords(text):
             sentence = sentence.replace(sentence[m.start(c[-1]):m.end(c[-1])], charSplitting(0,c))
         return sentence
     
-    m = re.search(regex[1],sentence)
+    m = re.search(regex[1g],sentence)
     if m:
         findings = m.groups()
         for c in zip(findings[::2], findings[1::2], range(0,len(findings),2)):
@@ -258,11 +258,6 @@ end_patterns_reichstag = '|'.join(
                 'Ich schließe die (\n )?Sitzung'
                    ])
 
-# Use whatever comes first as start of the session protocol
-start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
-restart_pattern_reichstag = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
-end_pattern_reichstag = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
-
 # Chop whole corpus into documents by searching for keywords 'Die Sitzung ist eröffnet' and 'Schluss der Sitzung' ob
 # Save one document per meeting
 def extract_meeting_protocols_reichstag(lines,number):
@@ -273,9 +268,14 @@ def extract_meeting_protocols_reichstag(lines,number):
         os.makedirs('./protocols_{}'.format(number))
     temp_doc = None
     
+    start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
+    restart_pattern_reichstag = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
+    end_pattern_reichstag = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
+
     if number > 3:                 
         start_pattern_reichstag = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
                                   re.IGNORECASE)
+
 
     for line in lines:
         sitzung_restart = restart_pattern_reichstag.search(line)
