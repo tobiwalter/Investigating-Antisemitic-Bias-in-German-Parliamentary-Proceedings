@@ -111,7 +111,11 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
+<<<<<<< Updated upstream
     with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:
+=======
+    with open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f: 
+>>>>>>> Stashed changes
         f.write(json_repr)
 
 def load_corpus(filepath):

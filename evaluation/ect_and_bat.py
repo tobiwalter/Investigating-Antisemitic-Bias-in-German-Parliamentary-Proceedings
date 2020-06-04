@@ -14,7 +14,8 @@ from pathlib import Path
 from gensim.models import KeyedVectors
 from eval import embedding_coherence_test, bias_analogy_test
 from weat import XWEAT
-
+from utils import *
+from notebooks.representations.utils import *
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
 working_path = os.path.abspath(os.path.join(debie_path, "../"))
@@ -24,29 +25,6 @@ XWEAT().weat_6]
 
 sys.path.append(os.path.abspath(debie_path))
 # Target and attribute sets 
-
-pleasant = 'streicheln, Freiheit, Gesundheit, Liebe, Frieden, Freude, Freund, Himmel, loyal, Vergnügen, Diamant, sanft, ehrlich, glücklich, Regenbogen, Diplom, Geschenk, Ehre, Wunder, Sonnenaufgang, Familie, Lachen, Paradies, Ferien'\
-.lower().split(', ') 
-
-unpleasant = 'Mißbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergiften, stinken, Angriff, Katastrophe, Haß, verschmutzen, Tragödie, Scheidung, Gefängnis, Armut, häßlich, Krebs, töten, faul, erbrechen, Qual'\
-.lower().split(', ') 
-
-outsider_words = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beängstigend, hinterlistig, energisch, trügerisch, neidisch, gierig, abscheulich, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'.lower().split(', ') 
-
-jewish_stereotypes = 'Gier, habgierig, geldgierig, hinterlistig, intellektuell, Wucherer, Macht, Einfluß, Kriegstreiber, pervers, Lügner, Weltherrschaft, Kommunismus, Kapitalismus, hinterhältig, betrügerisch, gebeugt, bucklig'.lower().split(', ') 
-
-jewish_stereotypes_nouns = 'Gier, Wucherer, Drückeberger, Kriegsgewinnler, Macht, Einfluß, Kriegstreiber, Lügner, Weltherrschaft, Kommunismus, Kapitalismus, Liberalismus, Außenseiter'.lower().split(', ')
-
-jewish_stereotypes_character = 'egoistisch, fremd, dekadent, haßerfüllt, habgierig, geldgierig, penetrant, hinterlistig, intellektuell, pervers, hinterhältig, betrügerisch, gebeugt, bucklig'.split(', ')
-
-jewish_stereotypes_political = 'liberalistisch, modern, materialistisch, liberal, undeutsch, unpatriotisch, säkular, sozialistisch, links, bolschewistisch'.split(', ')
-
-jewish_occupations = 'Pfandleiher, Geldleiher, Kaufmann, Händler, Bankier, Finanzier, Steuereintreiber, Zöllner, Trödelhändler'.lower().split(', ') 
-
-volkstreu = 'patriotisch, vaterlandsliebe, germanische, nationalbewußstein, vaterländisch, nationalgefühl, volkstum, patriotismus, patriot'.split(', ')
-
-volksuntreu = 'nichtdeutsch, vaterlandslos, landesverräter, antideutsch, heimatlos, separatistische, staatsfeindliche, fremd, staatenlos'.split(', ')
-
 
 EMB_DIM = 200
 
@@ -73,6 +51,7 @@ def run_ect(emb_size, vectors, vocab, weat_targets, attributes):
 
 def main():
   parser = argparse.ArgumentParser(description="Running BAT or ECT")
+  parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
   parser.add_argument('--test_type', type=str, help='Run BAT or ECT', required=True)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=True)
   parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file or file pattern in case of multiple files", required=True)
@@ -83,20 +62,32 @@ def main():
   vocab_files = glob.glob(str(working_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(working_path / args.vector_file_pattern))
 
-  attribute_sets = {
-        'pleasant_unplesant' : pleasant + unpleasant,
-        'volkstreu_volksuntreu' : volkstreu + volksuntreu,
-        'outsider_words' : outsider_words,
-        'jewish_nouns' : jewish_stereotypes_nouns,
-        'jewish_character' : jewish_stereotypes_character,
-        'jewish_political' : jewish_stereotypes_political,
-        'jewish_occupations' : jewish_occupations
-        }
+  if args.protocol_type == 'RT':
+    attribute_sets = {
+          'pleasant_unplesant' : PLEASANT + UNPLEASANT,
+          'volkstreu_volksuntreu' : VOLKSTREU_RT + VOLKSUNTREU_RT,
+          'outsider_words' : outsider_words,
+          'jewish_nouns' : jewish_stereotypes_nouns,
+          'jewish_character' : jewish_stereotypes_character,
+          'jewish_political' : jewish_stereotypes_political,
+          'jewish_occupations' : jewish_occupations
+          }
+
+  if args.protocol_type == 'BRD':
+    attribute_sets = {
+          'pleasant_unplesant' : PLEASANT + UNPLEASANT,
+          'volkstreu_volksuntreu' : VOLKSTREU_BRD + VOLKSUNTREU_BRD,
+          'outsider_words' : outsider_words,
+          'jewish_nouns' : jewish_stereotypes_nouns,
+          'jewish_character' : jewish_stereotypes_character,
+          'jewish_political' : jewish_stereotypes_political,
+          'jewish_occupations' : jewish_occupations
+          }
 
   if args.output_file:
     with codecs.open(str(debie_path) + args.output_file, "w", "utf8") as f:
       for t in zip(vocab_files, vector_files):
-        file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
+        file_name = os.path.splitext(os.path.basename(t[0]))[0]
         f.write(file_name + ':')
         f.write("\n")
         vocab = json.load(open(t[0], 'r'))

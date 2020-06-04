@@ -23,7 +23,7 @@ from gensim.models.fasttext import FastText
 from sklearn.decomposition import PCA
 
 # import internals
-import utils
+import representations.utils
 import json
 import heapq
 
@@ -33,8 +33,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT_DIR)
 
 class ReichstagEmbeddings:
-  model_folder = Path('twec/model/old_trim')
-  vocab_folder = Path('twec/vocab')
+  model_folder = Path('twec/model/Bundestag')
+  vocab_folder = Path('twec/vocab/Bundestag')
 # For now: no method to train word vectors, only to load them --> training is done by executing train_embeddings.py
   def __init__(self, model, index, normalize=True):
     self.emb = model.wv
@@ -54,7 +54,11 @@ class ReichstagEmbeddings:
 
   @classmethod
   def load(cls, path):
-    model =  KeyedVectors.load_word2vec_format(str(cls.model_folder / path) + '.txt', binary=True)
+    try:
+      model =  KeyedVectors.load_word2vec_format(str(cls.model_folder / path) + '.txt', binary=True)
+    except FileNotFoundError:
+      model =  KeyedVectors.load(str(cls.model_folder / path) + '.model')
+
     index = json.load(open(str(cls.vocab_folder / path) + '.json', "r"))
     return cls(model, index)
 

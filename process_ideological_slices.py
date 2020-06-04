@@ -18,13 +18,13 @@ tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
 os.chdir(tpath)
 
 class ProcessProtocols(object):
-    def __init__(self, input):
+    def __init__(self, input)
         self.input = input
 
     def process_and_save(self):
         logging.info('Start processing of file.')
         try:
-             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8', errors='ignore').readlines()
+             text = open(os.path.join(tpath, self.input),'r', encoding='utf-8').readlines()
              text = remove_punctuation(text)
              text = remove_double_spaces(text)
              text = remove_noisy_digits(text)

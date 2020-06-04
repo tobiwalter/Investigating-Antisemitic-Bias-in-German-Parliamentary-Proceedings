@@ -36,7 +36,7 @@ def main():
   args = parser.parse_args()
   vocab_files = glob.glob(os.path.join(working_path, args.vocab_file))
   vector_files = glob.glob(os.path.join(working_path,args.vector_file))
-  with open(os.path.join(debie_path, args.output_file), 'w') as f:
+  with open(os.path.join(debie_path, f'simlex/{args.output_file}'), 'w') as f:
     for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
       vocab = json.load(open(t[0], 'r'))
