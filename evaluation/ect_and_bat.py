@@ -17,7 +17,8 @@ from weat import XWEAT
 from utils import *
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
-working_path = os.path.abspath(os.path.join(debie_path, "../"))
+vocab_path = Path((os.path.join(debie_path, "../data/vocab")))
+models_path = Path((os.path.join(debie_path, "../models")))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, 
 XWEAT().weat_6]
@@ -58,30 +59,31 @@ def main():
  
   args = parser.parse_args()
 
-  vocab_files = glob.glob(str(working_path / args.vocab_file_pattern))
-  vector_files = glob.glob(str(working_path / args.vector_file_pattern))
+  vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
+  vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
 
   if args.protocol_type == 'RT':
     attribute_sets = {
           'pleasant_unplesant' : PLEASANT + UNPLEASANT,
           'volkstreu_volksuntreu' : VOLKSTREU_RT + VOLKSUNTREU_RT,
-          'outsider_words' : outsider_words,
-          'jewish_nouns' : jewish_stereotypes_nouns,
-          'jewish_character' : jewish_stereotypes_character,
-          'jewish_political' : jewish_stereotypes_political,
-          'jewish_occupations' : jewish_occupations
+          'outsider_words' : OUTSIDER_WORDS,
+          'jewish_nouns' : JEWISH_STEREOTYPES_NOUNS,
+          'jewish_character' : JEWISH_STEREOTYPES_CHARACTER,
+          'jewish_political' : JEWISH_STEREOTYPES_POLITICAL ,
+          'jewish_occupations' : JEWISH_OCCUPATIONS
           }
 
   if args.protocol_type == 'BRD':
     attribute_sets = {
           'pleasant_unplesant' : PLEASANT + UNPLEASANT,
           'volkstreu_volksuntreu' : VOLKSTREU_BRD + VOLKSUNTREU_BRD,
-          'outsider_words' : outsider_words,
-          'jewish_nouns' : jewish_stereotypes_nouns,
-          'jewish_character' : jewish_stereotypes_character,
-          'jewish_political' : jewish_stereotypes_political,
-          'jewish_occupations' : jewish_occupations
+          'outsider_words' : OUTSIDER_WORDS,
+          'jewish_nouns' : JEWISH_STEREOTYPES_NOUNS,
+          'jewish_character' : JEWISH_STEREOTYPES_CHARACTER,
+          'jewish_political' : JEWISH_STEREOTYPES_POLITICAL ,
+          'jewish_occupations' : JEWISH_OCCUPATIONS 
           }
+
 
   if args.output_file:
     with codecs.open(str(debie_path) + args.output_file, "w", "utf8") as f:
@@ -98,7 +100,7 @@ def main():
         
         for test in weat_tests:
           f.write('{} {}: '.format(args.test_type, test.__name__ ))
-          weat_targets = test()
+          weat_targets = test(args.protocol_type)
 
           if args.test_type == 'BAT':
             result = run_bat(vectors, vocab, weat_targets) 
