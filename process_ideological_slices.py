@@ -18,7 +18,7 @@ tpath = os.path.abspath(os.path.join(ROOT_DIR, "data"))
 os.chdir(tpath)
 
 class ProcessProtocols(object):
-    def __init__(self, input)
+    def __init__(self, input):
         self.input = input
 
     def process_and_save(self):
