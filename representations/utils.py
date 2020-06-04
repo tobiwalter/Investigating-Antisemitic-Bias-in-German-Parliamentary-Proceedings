@@ -84,16 +84,19 @@ class CreateCorpus:
     """
     Read in pre-process files before feeding them to word2vec model 
     """
-    def __init__(self,top_dir):
+    def __init__(self,top_dir, profiling=False):
         self.top_dir = top_dir
-        
+        self.profiling = profiling
     """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
     def __iter__(self):
         for root, dirs, files in os.walk(self.top_dir):
             for file in filter(lambda file: file.endswith('.txt'), files):
                 text = open(os.path.join(root, file), encoding='utf-8').readlines()
-                for line in text:
-                    yield line
+                if self.profiling:
+                    yield text
+                else:
+                    for line in text:
+                        yield line
 
 def write_lines(path, list):
     f = codecs.open(path, "w", encoding='utf8')
@@ -111,11 +114,7 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
-<<<<<<< Updated upstream
-    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:
-=======
     with open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f: 
->>>>>>> Stashed changes
         f.write(json_repr)
 
 def load_corpus(filepath):
