@@ -11,7 +11,7 @@ VOCAB_FOLDER = DATA_FOLDER / 'vocab'
 
 # term sets
 
-JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelis", "koscher", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
+JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelit", "rothschild", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
 JEWISH_BRD = 'judentum, jude, juedisch, israel, israels, israeli, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
 
@@ -111,7 +111,7 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
-    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:    git
+    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:
         f.write(json_repr)
 
 def load_corpus(filepath):
