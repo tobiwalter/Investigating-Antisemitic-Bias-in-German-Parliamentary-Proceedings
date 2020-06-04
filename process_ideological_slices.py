@@ -40,7 +40,7 @@ class ProcessProtocols(object):
              logging.info('Lemmatizing finished')
              text = [lowercase(line) for line in text]
              text = [removeUmlauts(line) for line in text]
-             text = [harmonizeSpelling(line) for line in text_preprocessing]
+             text = [harmonizeSpelling(line) for line in text]
              if self.input.endswith('.txt'):
                 save_as_line_sentence(text, f'{self.input[:-4]}_processed.txt')
              else:
