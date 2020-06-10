@@ -12,10 +12,11 @@ import argparse
 from gensim.models import KeyedVectors
 
 debie_path = os.path.dirname(os.path.abspath(__file__))
-working_path = os.path.abspath(os.path.join(debie_path, "../"))
+vocab_path = Path((os.path.join(debie_path, "../data/vocab")))
+models_path = Path((os.path.join(debie_path, "../models")))
 
 # Get simlex pairs
-with open(os.path.join(debie_path, 'SimLex_ALL_Langs_TXT_Format\\MSimLex999_German.csv'), encoding = 'utf-8') as f:
+with open(os.path.join(debie_path, 'MSimLex999_German.csv'), encoding = 'utf-8') as f:
 
     text = f.readlines()
 
@@ -29,13 +30,14 @@ simlex_pairs.pop(0)
 
 def main():
   parser = argparse.ArgumentParser(description="Running Simlex test")
-  parser.add_argument("--vocab_file", type=str, default=None, help="vocab path file", required=True)
-  parser.add_argument("--vector_file", type=str, default=None, help="vector path file", required=True)
+  parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file", required=True)
+  parser.add_argument("--vector_file_pattern", type=str, default=None, help="vector path file", required=True)
   parser.add_argument("--output_file", type=str, default=None, help="file to write output to", required=True)
 
   args = parser.parse_args()
-  vocab_files = glob.glob(os.path.join(working_path, args.vocab_file))
-  vector_files = glob.glob(os.path.join(working_path,args.vector_file))
+  vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
+  vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
+
   with open(os.path.join(debie_path, f'simlex/{args.output_file}'), 'w') as f:
     for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
