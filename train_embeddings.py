@@ -4,9 +4,9 @@ import logging
 import json
 from pathlib import Path
 import multiprocessing as mp
-from gensim.models.word2vec import Word2Vec, PathLineSentences
+from gensim.models.word2vec import Word2Vec, LineSentence
 from gensim.models.fasttext import FastText as FT_gensim
-import utils
+from representations import utils
 import argparse
 import time
 
@@ -63,7 +63,7 @@ start = time.time()
 logging.info(f'Training started at: {start}')
 
 if args.proceedings.endswith('.txt'):
-    sentences = PathLineSentences(args.proceedings)
+    sentences = LineSentence(args.proceedings)
 else:
     sentences = CreateCorpus(args.proceedings)
 
