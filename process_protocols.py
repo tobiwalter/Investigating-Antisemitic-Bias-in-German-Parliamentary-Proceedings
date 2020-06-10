@@ -28,7 +28,7 @@ class ProcessProtocols(object):
         border = round(files_total / 10)
         for num in range(1,files_total+1):
             if not os.path.isfile(os.path.join(f'{self.dirname}_processed' , f'{num}_sents.txt')):
-               try:
+                try:
                     text = open(os.path.join(self.dirname, f'{num}_sents.txt'),'r', encoding='utf-8').readlines()
                     text = remove_punctuation(text)
                     text = remove_double_spaces(text)
