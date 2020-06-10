@@ -1,0 +1,3 @@
+konservatismus_NS:
+BAT weat_1: 0.4444444444444444
+BAT weat_2: 

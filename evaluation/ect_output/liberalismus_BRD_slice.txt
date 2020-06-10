@@ -1,0 +1,71 @@
+liberalismus_BRD:
+ECT weat_1: Config: pleasant_unplesant and 200
+Result: SpearmanrResult(correlation=0.8378133494412565, pvalue=2.4493374125071113e-12)
+Config: volkstreu_volksuntreu and 200
+Result: SpearmanrResult(correlation=0.8095238095238096, pvalue=0.014902667686230067)
+Config: outsider_words and 200
+Result: SpearmanrResult(correlation=0.7708978328173374, pvalue=0.00018055675377341644)
+Config: jewish_nouns and 200
+Result: SpearmanrResult(correlation=0.8181818181818182, pvalue=0.0020831448404786904)
+Config: jewish_character and 200
+Result: SpearmanrResult(correlation=0.9642857142857145, pvalue=0.0004541491691941689)
+Config: jewish_political and 200
+Result: SpearmanrResult(correlation=0.8571428571428573, pvalue=0.01369732661532562)
+Config: jewish_occupations and 200
+Result: SpearmanrResult(correlation=0.7999999999999999, pvalue=0.20000000000000007)
+ECT weat_2: Config: pleasant_unplesant and 200
+Result: SpearmanrResult(correlation=0.9317426759287224, pvalue=1.2136761760238264e-19)
+Config: volkstreu_volksuntreu and 200
+Result: SpearmanrResult(correlation=0.9761904761904763, pvalue=3.3143960262001043e-05)
+Config: outsider_words and 200
+Result: SpearmanrResult(correlation=0.9277605779153767, pvalue=2.9679222772500766e-08)
+Config: jewish_nouns and 200
+Result: SpearmanrResult(correlation=0.9181818181818183, pvalue=6.661451941355563e-05)
+Config: jewish_character and 200
+Result: SpearmanrResult(correlation=0.9285714285714288, pvalue=0.0025194724037946874)
+Config: jewish_political and 200
+Result: SpearmanrResult(correlation=1.0, pvalue=0.0)
+Config: jewish_occupations and 200
+Result: SpearmanrResult(correlation=0.39999999999999997, pvalue=0.6)
+ECT weat_3: Config: pleasant_unplesant and 200
+Result: SpearmanrResult(correlation=0.7286318332829961, pvalue=3.038963405117029e-08)
+Config: volkstreu_volksuntreu and 200
+Result: SpearmanrResult(correlation=0.09523809523809526, pvalue=0.8225054302036114)
+Config: outsider_words and 200
+Result: SpearmanrResult(correlation=0.7275541795665634, pvalue=0.0006215020932519374)
+Config: jewish_nouns and 200
+Result: SpearmanrResult(correlation=0.22727272727272727, pvalue=0.501535667604937)
+Config: jewish_character and 200
+Result: SpearmanrResult(correlation=0.6785714285714287, pvalue=0.0937502539598313)
+Config: jewish_political and 200
+Result: SpearmanrResult(correlation=0.7857142857142859, pvalue=0.03623846267982713)
+Config: jewish_occupations and 200
+Result: SpearmanrResult(correlation=0.39999999999999997, pvalue=0.6)
+ECT weat_4: Config: pleasant_unplesant and 200
+Result: SpearmanrResult(correlation=0.709604349139233, pvalue=9.955775249480748e-08)
+Config: volkstreu_volksuntreu and 200
+Result: SpearmanrResult(correlation=0.11904761904761905, pvalue=0.7788857260523797)
+Config: outsider_words and 200
+Result: SpearmanrResult(correlation=0.6656346749226005, pvalue=0.0025683279602937087)
+Config: jewish_nouns and 200
+Result: SpearmanrResult(correlation=0.4727272727272727, pvalue=0.14199852020631992)
+Config: jewish_character and 200
+Result: SpearmanrResult(correlation=0.8571428571428573, pvalue=0.01369732661532562)
+Config: jewish_political and 200
+Result: SpearmanrResult(correlation=0.7857142857142859, pvalue=0.03623846267982713)
+Config: jewish_occupations and 200
+Result: SpearmanrResult(correlation=1.0, pvalue=0.0)
+ECT weat_6: Config: pleasant_unplesant and 200
+Result: SpearmanrResult(correlation=0.8378133494412565, pvalue=2.4493374125071113e-12)
+Config: volkstreu_volksuntreu and 200
+Result: SpearmanrResult(correlation=0.8095238095238096, pvalue=0.014902667686230067)
+Config: outsider_words and 200
+Result: SpearmanrResult(correlation=0.7708978328173374, pvalue=0.00018055675377341644)
+Config: jewish_nouns and 200
+Result: SpearmanrResult(correlation=0.8181818181818182, pvalue=0.0020831448404786904)
+Config: jewish_character and 200
+Result: SpearmanrResult(correlation=0.9642857142857145, pvalue=0.0004541491691941689)
+Config: jewish_political and 200
+Result: SpearmanrResult(correlation=0.8571428571428573, pvalue=0.01369732661532562)
+Config: jewish_occupations and 200
+Result: SpearmanrResult(correlation=0.7999999999999999, pvalue=0.20000000000000007)

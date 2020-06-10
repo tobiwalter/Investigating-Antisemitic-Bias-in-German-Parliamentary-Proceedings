@@ -1,0 +1,5 @@
+K-means score weat_1: 0.5199999999999997
+K-means score weat_2: 0.5500000000000004
+K-means score weat_3: 0.571428571428572
+K-means score weat_4: 0.571428571428572
+K-means score weat_6: 0.5199999999999997
