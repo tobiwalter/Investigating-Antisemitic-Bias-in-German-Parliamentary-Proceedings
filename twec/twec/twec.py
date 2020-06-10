@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Main module."""
-
-# -*- coding: utf-8 -*-
-
-"""Main module."""
-from gensim.models.word2vec import Word2Vec, LineSentence, PathLineSentences
+from gensim.models.word2vec import Word2Vec, PathLineSentences
 from gensim.models import KeyedVectors
 from gensim import utils
 import os
@@ -26,12 +22,23 @@ class CreateCompass(object):
                 text = open(os.path.join(root, file), encoding='utf-8').readlines()
                 for sentence in text:
                     yield sentence.split()
-                        
+
+class CreateSlice:
+    
+    def __init__(self, dirname):
+        self.dirname = str(DATA_FOLDER / dirname)
+
+    def __iter__(self):
+        for fn in os.listdir(self.dirname):
+            text = open(os.path.join(self.dirname, fn), encoding='utf-8').readlines()
+            for sentence in text:
+                yield sentence.split()
+
 class TWEC:
     """
     Handles alignment between multiple slices of temporal text
     """
-    def __init__(self, size=100, sg=0, siter=5, diter=5, ns=10, window=5, alpha=0.025,
+    def __init__(self, size=100, sg=0, siter=5, diter=5, ns=5, window=5, alpha=0.025,
                             hs=0,min_count=5, workers=2, test = "test", opath="model", init_mode="hidden"):
         """
 
@@ -142,7 +149,8 @@ class TWEC:
             return Exception("Missing Compass")
         print("Training temporal embeddings: slice {}.".format(slice_text))
 
-        sentences = CreateCompass(slice_text)
+        sentences = PathLineSentences(slice_text)
+        print(len(sentences.input_files))
         model = self.train_model(sentences)
 
         model_name = os.path.splitext(os.path.basename(slice_text))[0]
