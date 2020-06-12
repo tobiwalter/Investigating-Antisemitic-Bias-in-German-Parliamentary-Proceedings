@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 import time
@@ -63,11 +64,11 @@ def get_time_sims(embedding, word1, topn=15):
     return time_sims, lookups, nearests, sims
 
 
-def load_embeddings(filename=None, n=5):
-  start = time.time()
-  embeddings = SequentialEmbedding.load(filename, n)
-  print(f"LOAD EMBEDDINGS TOOK {(time.time() - start)}")
-  return embeddings
+# def load_embeddings(filename=None, n=5):
+#   start = time.time()
+#   embeddings = SequentialEmbedding.load(filename, n)
+#   print(f"LOAD EMBEDDINGS TOOK {(time.time() - start)}")
+#   return embeddings
 
 def clear_figure():
     plt.figure(figsize=(20,20))
@@ -88,7 +89,8 @@ def fit_tsne(values):
 numbers = {'1': 'one',
            '2': 'two',
            '3': 'three',
-           '4': 'four'
+           '4': 'four',
+           '5': 'five'
            }
 
 def assing_period(word):
