@@ -33,8 +33,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT_DIR)
 
 class ReichstagEmbeddings:
-  model_folder = Path('twec/model')
-  vocab_folder = Path('twec/vocab')
+  model_folder = Path('../models')
+  vocab_folder = Path('../data/vocab')
 # For now: no method to train word vectors, only to load them --> training is done by executing train_embeddings.py
   def __init__(self, model, index, normalize=True):
     self.emb = model.wv
