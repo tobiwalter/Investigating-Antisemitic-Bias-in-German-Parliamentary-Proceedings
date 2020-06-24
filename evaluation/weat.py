@@ -144,8 +144,16 @@ class XWEAT(object):
   def weat_5(self, protocol_type):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
 
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual"," stinken", "absturz", "verschmutzen"]
+      if protocol_type == 'BT':
+        targets_1 = CHRISTIAN_BRD
+        targets_2 = JEWISH_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = CHRISTIAN_RT
+        targets_2 = JEWISH_RT
+
+      attributes_1 = ECONOMIC_PRO
+      attributes_2 = ECONOMIC_CON
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -164,6 +172,22 @@ class XWEAT(object):
         targets_2 = JEWISH_RT
         attributes_1 = VOLKSTREU_RT
         attributes_2 = VOLKSUNTREU_RT
+      return targets_1, targets_2, attributes_1, attributes_2
+
+
+  def weat_7(self, protocol_type):
+      # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
+
+      if protocol_type == 'BT':
+        targets_1 = CHRISTIAN_BRD
+        targets_2 = JEWISH_BRD
+
+      if protocol_type == 'RT':
+        targets_1 = CHRISTIAN_RT
+        targets_2 = JEWISH_RT
+
+      attributes_1 = CONSPIRATORIAL_PRO
+      attributes_2 = CONSPIRATORIAL_CON
       return targets_1, targets_2, attributes_1, attributes_2
 
   def similarity_precomputed_sims(self, w1, w2, type="cosine"):

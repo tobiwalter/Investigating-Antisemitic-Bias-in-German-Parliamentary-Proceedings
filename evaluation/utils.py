@@ -40,6 +40,14 @@ VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, 
 
 VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos'.split(', ')   
 
+ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos,  genuegsam, großmut, uneigennuetzig, sparsam, bourgeoisie, großmut, bescheiden'.split(', ')
+
+ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, eigennuetzig, verschwenderisch, proletariat, habsucht, wucher'.split(', ')
+
+CONSPIRATORIAL_PRO = 'treu, moralisch, ehrlich, loyal, aufrichtig, ehrenwert, offensichtlich, machtlos, ohnmacht'.split(', ')
+
+CONSPIRATORIAL_CON = 'untreu, unmoralisch, unehrlich, verraeterisch, hinterlistig, betruegerisch, geheim, einflussreich, macht'.split(', ')
+
 OUTSIDER_WORDS = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beaengstigend, hinterlistig, energisch, truegerisch, \
 neidisch, gierig, abscheulich, verachtenswert, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'\
 .lower().split(', ') 
