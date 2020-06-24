@@ -389,3 +389,6 @@ bundesrathsverordnung bundesratsverordnung
 zollbundesrath zollbundesrat
 bundesrathsmitglied bundesratsmitglied
 bundesrathsvorlage bundesratsvorlage
+raffe rasse
+raffenhaß rassenhass 
+rassenhaß rassenhass
