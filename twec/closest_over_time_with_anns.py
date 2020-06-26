@@ -19,16 +19,21 @@ if __name__ == "__main__":
     parser.add_argument('-w','--words', nargs='+', help='List of words to plot', required=True)
     parser.add_argument("-n", "--neighbors", type=int, default=15, help="Number of neighbors to plot", required=True)
     parser.add_argument("-p", "--protocol_type", type=str, default=None, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True) 
-
+    parser.add_argument('--twec', dest='twec', action='store_true')
     args = parser.parse_args()
     words = args.words
     n = args.neighbors
 
     if args.protocol_type == 'RT':
-      embeddings = SequentialEmbedding.load('Reichstag/slice',5)
-
+      if args.twec:
+          embeddings = SequentialEmbedding.load('twec/Reichstag/slice',5)
+      else:
+          embeddings = SequentialEmbedding.load('rt_slice',5)
     if args.protocol_type == 'BT':
-      embeddings = SequentialEmbedding.load('Bundestag/slice',4)    
+      if args.twec:
+          embeddings = SequentialEmbedding.load('twec/Bundestag/slice',4)
+      else:
+          embeddings = SequentialEmbedding.load('slice_h',4)    
 
     for word1 in words:
         helpers.clear_figure()
@@ -48,10 +53,14 @@ if __name__ == "__main__":
 
           if annotations:
               helpers.plot_annotations(annotations)
+          
+          if args.twec:
+              helpers.savefig(f"{args.protocol_type}/twec/{word1}_annotated_{n}")
+          else:
+              helpers.savefig(f"{args.protocol_type}/{word1}_annotate_{n}")
 
-          helpers.savefig(f"{args.protocol_type}/{word1}_annotated_{n}")
           for year, sim in time_sims.items():
               print(year, sim)
         except KeyError:
-          print(f'{word1} is not in the embedding space.')
+            print(f'{word1}  is not in the embedding space.')
 

@@ -344,6 +344,9 @@ def main():
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5(args.protocol_type)
   elif args.test_number == 6:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_6(args.protocol_type)
+  elif args.test_number == 7:
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_7(args.protocol_type)
+   
   else:
     raise ValueError("Only WEAT 1 to 6 are supported")
 

@@ -24,12 +24,10 @@ def harmonize(dirname):
     for num in range(1,files_total+1):
         try:
             text = open(os.path.join(dirname, f'{num}_sents.txt'),'r', encoding='utf-8').readlines()
+            text = [line.split() for line in text]
             text = [harmonizeSpelling(line) for line in text]
-            with open(f'{dirname}_harmonized/{num}_sents.txt', 'w', encoding='utf-8') as f:
-                for line in text:
-                    f.write(line)
-                    f.write('\n')
-                i += 1
+            save_as_line_sentence(text, f'{dirname}_harmonized/{num}_sents.txt')
+            i += 1
             if i % border == 0:
               logging.info('Processing {:03.1f} percent finished'.format(int((i/files_total) * 100)))
 
@@ -43,5 +41,3 @@ if __name__ == "__main__":
     print(e)
 
 harmonize(dirname)
-
-

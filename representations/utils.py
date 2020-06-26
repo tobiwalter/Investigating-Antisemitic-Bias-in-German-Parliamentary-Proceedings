@@ -117,6 +117,16 @@ def save_corpus(corpus, corpus_path):
     with open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f: 
         f.write(json_repr)
 
+
+def save_vocab(model, filepath):
+    words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
+    index = {w: i for i, w in enumerate(words)}
+    json_repr = json.dumps(index)
+    with open(str(VOCAB_FOLDER /    filepath) + '.json',"w", encoding='utf-8') as f:
+        f.write(json_repr)
+
+
+
 def load_corpus(filepath):
     with open(str(MODELS_FOLDER / filepath), 'rb') as f:
         corpus = pickle.load(f)

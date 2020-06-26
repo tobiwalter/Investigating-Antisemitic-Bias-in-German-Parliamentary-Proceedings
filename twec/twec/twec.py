@@ -149,8 +149,8 @@ class TWEC:
             return Exception("Missing Compass")
         print("Training temporal embeddings: slice {}.".format(slice_text))
 
-        sentences = PathLineSentences(slice_text)
-        print(len(sentences.input_files))
+        sentences = CreateCompass(slice_text)
+        #print(len(sentences.input_files))
         model = self.train_model(sentences)
 
         model_name = os.path.splitext(os.path.basename(slice_text))[0]
