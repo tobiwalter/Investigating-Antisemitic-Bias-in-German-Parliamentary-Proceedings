@@ -63,13 +63,13 @@ class LabelPropagation:
   #                       columns = ['position_score'])
 
   def t_test(self, targets_1, targets_2):
-        t2, p2 = stats.ttest_ind(self.scores[targets_1], self.scores[targets_2], equal_var=True)
-        logging.info("t = " + str(t2))
-        logging.info("p = " + str(p2))
-	return (t2,p2)
+    t2, p2 = stats.ttest_ind(self.scores[targets_1], self.scores[targets_2], equal_var=True)
+    logging.info("t = " + str(t2))
+    logging.info("p = " + str(p2))
+    return (t2,p2)
 
   def load_scores(self, path):
-	self.scores = np.load(path)
+    self.scores = np.load(path)
 
 def main():
 
@@ -90,7 +90,7 @@ def main():
   start = time.time()
   logging.info(f'Start label propagation at {start}')
  # lp.propagate()
-  lp.load_scores('fu_scores/kaiserreich_1.npy)
+  lp.load_scores('fu_scores/kaiserreich_1.npy')
  # lp.save_scores(args.output_file)
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
