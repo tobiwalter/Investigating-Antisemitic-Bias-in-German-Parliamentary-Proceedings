@@ -2,15 +2,14 @@ from collections import Counter
 import numpy as np
 from scipy import sparse
 import argparse
-import codecs
 import logging
-import os
 import json
-from representations.utils import CreateCorpus, create_attribute_sets
+from representations.utils import CreateCorpus
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 def get_unigrams(corpus, min_count=5):
     unigram_counts = Counter()
+    logging.info(f'Get unigrams')
     for ii, sent in enumerate(corpus):
         if ii % 200000 == 0:
             logging.info(f'finished {ii/len(corpus):.2%} of corpus')
@@ -36,6 +35,7 @@ def get_skipgram_counts(corpus, tok2indx, indx2tok):
 
     for ix, sent in enumerate(corpus):
         tokens = [tok2indx[tok] for tok in sent if tok in tok2indx]
+        logging.info(f'Get skipgram counts')
         for ii_word, word in enumerate(tokens):
             ii_contexts = [
                 ii for ii in range(len(tokens)) 
@@ -55,6 +55,7 @@ def create_coo_mat(skipgram_counts):
     col_indxs = []
     values = []
     ii = 0
+    logging.info(f'Create co-occurence matrix')
     for (tok1, tok2), sg_count in skipgram_counts.items():
         ii += 1
         if ii % 1000000 == 0:
@@ -84,6 +85,7 @@ def create_ppmi_mat(coo_mat, skipgram_counts):
     nca_denom = np.sum(sum_over_words_alpha)
 
     ii = 0
+    logging.info(f'Create PPMI matrix')
     for (tok_word, tok_context), sg_count in skipgram_counts.items():
         ii += 1
         if ii % 1000000 == 0:
@@ -113,17 +115,6 @@ def create_ppmi_mat(coo_mat, skipgram_counts):
     sppmi_mat = sparse.csr_matrix((sppmi_values, (row_indxs, col_indxs)))    
     return ppmi_mat, sppmi_mat
 
-def convert_attribute_set(label):
-    if label == 'sentiment':
-      return ('pleasant', 'unpleasant')
-    elif label == 'patriotism':
-      return ('volkstreu', 'volksuntreu')
-    elif label == 'economic':
-      return ('economic_pro', 'economic_con')
-    elif label == 'conspiratorial':
-      return ('conspiratorial_pro', 'conspiratorial_con')
-
-
 def main():
   parser = argparse.ArgumentParser(description="Compute PPMI matrix")
   parser.add_argument("--corpus", type=str, help="Corpus path", required=True)
@@ -133,13 +124,11 @@ def main():
 
   args = parser.parse_args()
   sentences = list(CreateCorpus(args.corpus))
-  unigrams = get_unigrams(sentences)
+  unigrams = get_unigrams_sorted(sentences)
   attributes = create_attribute_sets(unigrams, kind=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
 
   tok2indx, indx2tok = get_indices(unigrams, attributes[att_1], attributes[att_2])
-  with codecs.open(f'tok2indx/{args.output_file}.json',"w", encoding='utf-8') as f:
-      f.write(json.dumps(tok2indx))
   skipgrams = get_skipgram_counts(sentences, tok2indx, indx2tok)
   coo_mat = create_coo_mat(skipgrams)
   ppmi_mat, sppmi_mat = create_ppmi_mat(coo_mat, skipgrams)
@@ -148,14 +137,14 @@ def main():
   if not os.path.exists('matrices'):
     os.makedirs('matrices')
     
-  sparse.save_npz(f'matrices/ppmi_{args.output_file}.npz', ppmi_mat, compressed=True)
-  sparse.save_npz(f'matrices/sppmi_{args.output_file}.npz', sppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/ppmi_{args.corpus}.npz', ppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/sppmi_{args.corpus}.npz', sppmi_mat, compressed=True)
 
   # Save token-2-index dictionaries
   if not os.path.exists('tok2indx'):
     os.makedirs('tok2indx')
-#  with codecs.open(f'tok2indx/{output_file}.json',"w", encoding='utf-8') as f:
- #     f.write(json.dumps(tok2indx))
+  with codecs.open(f'tok2indx/{args.corpus}.json',"w", encoding='utf-8') as f:
+      f.write(json.dumps(tok2indx))
 
 
 if __name__ == "__main__":

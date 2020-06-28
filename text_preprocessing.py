@@ -2,17 +2,17 @@
 import sys
 import os
 import re
-
 import spacy
+
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'CharSplit')))
 import char_split
 
-sys.path.append(os.path.abspath(os.path.join(ROOT_DIR,  'germalemmaplusplus')))
+sys.path.append(os.path.abspath(os.path.join(ROOT_DIR, 'germalemmaplusplus')))
 from germalemmaplusplus.lemmatizer import GermaLemmaPlusPlus, Token, Sentence
-from symspellpy import SymSpell,Verbosity
 
+# Text processing functions
 
 def remove_linebreaks(doc):
     return [re.sub(r'[\n\t]', '', line).strip() for line in doc]
@@ -26,11 +26,11 @@ def remove_double_spaces(doc):
 
 def remove_noisy_digits(doc):
     """
-    Remove digit 1 appending or prepending to some words in the text due to faulty OCR
+    Remove digits appending, prepending or in the middle of some words (probably due to faulty OCR)
     """
-    temp = [re.sub(r'\b1(?P<quote>[A-Za-zßäöüÄÖÜ]+)\b', '\g<quote>', line) for line in doc]
-    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)1\b', '\g<quote>', line) for line in temp] 
-    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)1(?P<name>[A-Za-zßäöüÄÖÜ]*)\b', '\g<quote> \g<name>', line) for line in temp]
+    temp = [re.sub(r'\b\d(?P<quote>[A-Za-zßäöüÄÖÜ]+)\b', '\g<quote>', line) for line in doc]
+    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)\d\b', '\g<quote>', line) for line in temp] 
+    temp = [re.sub(r'\b(?P<quote>[A-Za-zßäöüÄÖÜ]+)\d(?P<name>[A-Za-zßäöüÄÖÜ]*)\b', '\g<quote> \g<name>', line) for line in temp]
     return temp
 
 def replace_digits(doc):
@@ -42,9 +42,9 @@ def reduce_numerical_sequences(doc):
     """
     return [re.sub(r'((0)\s?){2,}', '\\2 ', line).strip() for line in doc]
 
-def filter_lines(doc):
+def filter_doc(doc):
     """
-    Filter all lines that are empty or only a single char long
+    Filter all doc that are empty or only a single character long
     """
     return [line for line in doc if len(line) >1]
 
@@ -61,6 +61,9 @@ def remove_dash_and_minus_signs(doc):
     return temp
 
 def charSplitting(i,groups,chainword="und"):
+    """
+    helper function for removeGermanChainwords
+    """
     
     word1 = groups[0].replace(" ","")
     word2 = groups[1].replace(" ","")
@@ -85,6 +88,9 @@ def charSplitting(i,groups,chainword="und"):
 
 
 def removeGermanChainWords(text):
+    """
+    split up German chain words in their constituent terms
+    """
     regex = []
     # splitting up a combination of three hyphenated chain words, e.g.: Bildungs-, Sozial- und Innenpolitik: Bildungspolitik und Sozialpolitik und Innenpolitik 
     regex.append(r"\s([A-ZÄÖÜ][a-zäöüß]+)[\s]?-[\s]?([A-ZÄÖÜ][a-zäöüß]+)-[\s]?(?:und|oder|als auch|sowie|wie|bzw|&|,)+[\s]([A-ZÄÖÜ][a-zäöüß]+)")
@@ -118,8 +124,10 @@ def removeGermanChainWords(text):
     
     return sentence
 
-def remove_hyphens_pre_and_appending(text, split_chars="-|—|–"):
-    '''Remove prepending and appending hyphens from words -> They are either noise or the chain word could not be split'''
+def remove_hyphens(text, split_chars="-|—|–"):
+    """
+    After removing chain words, remove prepending and appending hyphens from words -> They are either noise or the chain word could not be split
+    """
     new_text = text
     for t in text.split():
         parts = []
@@ -143,17 +151,17 @@ def removeUmlauts(text):
         text_out.append(res)
     return text_out
 
-spelling_dict = open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readlines()
+
+spelling_dict = codecs.open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readdoc()
 spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
 
-# def harmonizeSpelling(text):
-#     text_out = [re.sub(k,v,tok) for k,v in spelling_dict.items() for tok in text]
-#     return text_out
-
 def harmonizeSpelling(text):
+    """
+    Harmonize all words in the dictionary to uniform spelling
+    """ 
     text_out = [re.sub(tok,spelling_dict[tok],tok) if tok in spelling_dict else tok for tok in text]
-    
     return text_out
+
 class GermanLemmatizer:
     def __init__(self):
         self.lm = spacy.load('de_core_news_sm', disable=['parser', 'ner'])
@@ -210,20 +218,20 @@ end_patterns_bundestag = '|'.join(
                  'Ich schließe die (\n )?Sitzung'
                     ])
 
-start_pattern_bundestag = re.compile(f"({start_patterns_bundestag})", re.IGNORECASE)
-end_pattern_bundestag = re.compile(f"({end_patterns_bundestag})", re.IGNORECASE)
+bundestag_start = re.compile(f"({start_patterns_bundestag})", re.IGNORECASE)
+bundestag_end = re.compile(f"({end_patterns_bundestag})", re.IGNORECASE)
 def extract_protocol(doc):
 
    temp = ' \n '.join(doc) 
 
    # Search for start and end pattern
-   sitzung_start = start_pattern_bundestag.search(temp)
-   sitzung_end = end_pattern_bundestag.search(temp)
+   sitzung_start = bundestag_start.search(temp)
+   sitzung_end = bundestag_end.search(temp)
    if sitzung_start:
        # If both patterns found, return only text between start and end of the matching objects
        if sitzung_end:
            temp = temp[sitzung_start.start():sitzung_end.end()]
-   # If only start or end pattern found, use the found pattern as border for start/end
+        # If only start or end pattern found, use the found pattern as border for start/end
        else: 
            temp = temp[sitzung_start.start():]
    elif sitzung_end:
@@ -246,6 +254,7 @@ start_patterns_reichstag = '|'.join(
 
 restart_patterns_reichstag = '|'.join(
                ['Die (\n )?Sitzung (\n )?ist wieder (\n )?eröffnet',
+
                 'Ich eröffne die Sitzung wieder',
                 'Ich eröffne die Sitzung von neuem',
                 'Ich eröffne die Sitzung noch einmal'
@@ -258,9 +267,12 @@ end_patterns_reichstag = '|'.join(
                 'Ich schließe die (\n )?Sitzung'
                    ])
 
-# Chop whole corpus into documents by searching for keywords 'Die Sitzung ist eröffnet' and 'Schluss der Sitzung' ob
-# Save one document per meeting
-def extract_meeting_protocols_reichstag(lines,number):
+def extract_meeting_protocols_reichstag(doc,number):
+    """
+    param doc: document to process
+    param number: which of the 4 original documents to process
+    """
+
     i = 0
     sitzung = False
     
@@ -268,20 +280,20 @@ def extract_meeting_protocols_reichstag(lines,number):
         os.makedirs('./protocols_{}'.format(number))
     temp_doc = None
     
-    restart_pattern_reichstag = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
-    end_pattern_reichstag = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
+    reichstag_restart = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
+    reichstag_end = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
 
-    if number > 3:                 
-        start_pattern_reichstag = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
+    if number == 3:                 
+        reichstag_start = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
                                   re.IGNORECASE)
     else:
-        start_pattern_reichstag = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
+        reichstag_start = re.compile(f"({start_patterns_reichstag})", re.IGNORECASE)
 
 
-    for line in lines:
-        sitzung_restart = restart_pattern_reichstag.search(line)
-        sitzung_start = start_pattern_reichstag.search(line)
-        sitzung_end = end_pattern_reichstag.search(line)
+    for line in doc:
+        sitzung_restart = reichstag_restart.search(line)
+        sitzung_start = reichstag_start.search(line)
+        sitzung_end = reichstag_end.search(line)
         sitzung_abgebrochen = re.search(r'Die Sitzung wird um \d+ Uhr (?:\d+ Minute)?n? abgebrochen', line,
                                re.IGNORECASE)
         
@@ -296,7 +308,7 @@ def extract_meeting_protocols_reichstag(lines,number):
                 logging.info('{i} documents extracted')
             
             sitzung = True
-            temp_doc = open('./protocols_{}/doc_{}.txt'.format(number,i), 'w',  encoding='utf-8')
+            temp_doc = codecs.open('./protocols_{}/doc_{}.txt'.format(number,i), 'w',  encoding='utf-8')
             temp_doc.write(line)
             temp_doc.write('\n')
             continue

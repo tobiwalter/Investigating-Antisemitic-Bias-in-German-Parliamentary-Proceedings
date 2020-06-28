@@ -1,4 +1,4 @@
-from representations.utils import create_target_sets, create_attribute_sets, inverse, convert_attribute_set
+from utils import create_target_sets, create_attribute_sets, inverse, convert_attribute_set
 from scipy import sparse, stats
 import os
 import numpy as np
@@ -81,6 +81,7 @@ def main():
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
+  
   lp = LabelPropagation.load(args.ppmi, args.index)
   attributes = create_attribute_sets(lp.index, kind=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)

@@ -1,19 +1,19 @@
+import sys
+sys.path.append('./..')
+from utils import *
+print(PLEASANT)
+
 import numpy as np
 import random
 from itertools import filterfalse
 from itertools import combinations
 import codecs
-import utils
 import os
-import pickle
 import logging
 import argparse
 import time
-import json
 from collections import OrderedDict
 import math
-from utils import *
-
 
 class XWEAT(object): 
   """
@@ -29,7 +29,7 @@ class XWEAT(object):
       self.embedding_matrix = None
 
   def set_embd_dict(self, embd_dict):
-    self.embd_dict = embd_dict
+      self.embd_dict = embd_dict
 
 
   def convert_by_vocab(self, items):
@@ -60,7 +60,6 @@ class XWEAT(object):
   def mat_normalize(self,mat, norm_order=2, axis=1):
     return mat / np.transpose([np.linalg.norm(mat, norm_order, axis)])
 
-
   def cosine(self, a, b):
     norm_a = self.mat_normalize(a)
     norm_b = self.mat_normalize(b)
@@ -81,12 +80,12 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_1 = PLEASANT 
+      attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -98,12 +97,11 @@ class XWEAT(object):
         targets_1 = PROTESTANT_BRD
         targets_2  = CATHOLIC_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
-
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+        attributes_1 = PLEASANT 
+        attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -115,12 +113,12 @@ class XWEAT(object):
         targets_1 = PROTESTANT_BRD
         targets_2 = JEWISH_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = PROTESTANT_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_1 = PLEASANT 
+      attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -132,12 +130,12 @@ class XWEAT(object):
         targets_1 = CATHOLIC_BRD
         targets_2 = JEWISH_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = CATHOLIC_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = ["freiheit", "gesundheit", "liebe", "frieden", "freude", "freund", "himmel", "loyal", "vergnuegen",  "sanft", "ehrlich", "gluecklich", "geschenk", "ehre", "wunder", "familie", "lachen", "ferien","paradies","sonnenaufgang", "streicheln", "diplom", "diamant", "regenbogen"]
-      attributes_2 = ["missbrauch", "schmutz", "mord", "krankheit", "tod", "trauer", "vergiften","gefaengnis",  "angriff", "katastrophe", "hass", "scheidung", "gefaengnis", "armut","haesslich", "krebs", "toeten", "faul", "tragoedie", "erbrechen", "qual", "stinken", "absturz", "verschmutzen"]
+      attributes_1 = PLEASANT 
+      attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
     # again african american vs european american names, but with different attributes
@@ -148,7 +146,7 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
@@ -167,7 +165,7 @@ class XWEAT(object):
         attributes_1 = VOLKSTREU_BRD
         attributes_2 = VOLKSUNTREU_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
         attributes_1 = VOLKSTREU_RT
@@ -182,7 +180,7 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
-      if protocol_type == 'RT':
+      elif protocol_type == 'RT':
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
@@ -253,7 +251,7 @@ class XWEAT(object):
       :return: all
       """
       all = []
-      for i in range(1, 6):
+      for i in range(1, 8):
         t1, t2, a1, a2 = getattr(self, "weat_" + str(i))()
         all = all + t1 + t2 + a1 + a2
       all = set(all)
@@ -316,7 +314,7 @@ def main():
     return s == 'True' or s == 'true'
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
-  parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
+  parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
@@ -348,7 +346,7 @@ def main():
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_7(args.protocol_type)
    
   else:
-    raise ValueError("Only WEAT 1 to 6 are supported")
+    raise ValueError("Only WEAT 1 to 7 are supported")
 
   if args.lower:
     targets_1 = [t.lower() for t in targets_1]
@@ -358,9 +356,9 @@ def main():
 
   elif args.is_vec_format:
     logging.info("Embeddings are in vec format")
-    embd_dict = utils.load_embeddings(args.embeddings)
+    embd_dict = load_embeddings(args.embeddings)
   else:
-    embd_dict = utils.load_embedding_dict(vocab_path=args.embedding_vocab, vector_path=args.embedding_vectors, glove=False)
+    embd_dict = load_embedding_dict(vocab_path=args.embedding_vocab, vector_path=args.embedding_vectors, glove=False)
   weat.set_embd_dict(embd_dict)
 
   logging.info("Running test")
@@ -381,10 +379,3 @@ def main():
 
 if __name__ == "__main__":
   main()
-
-
-
-
-
-
-

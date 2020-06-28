@@ -1,9 +1,7 @@
 import numpy as np
 from scipy import stats
 from sklearn.cluster import KMeans
-from sklearn import svm
 import random
-import json
 
 def eval_simlex(simlex, vocab, vecs):
   '''
@@ -62,57 +60,6 @@ def eval_k_means(t1_list, t2_list, vecs, vocab):
     acc1 = len([i for i in range(len(preds)) if preds[i] == items[i][1]]) / len(preds)
     acc2 = len([i for i in range(len(preds)) if preds[i] == items[i][2]]) / len(preds)
     scores.append(max(acc1, acc2))
-  return sum(scores) / len(scores)
-
-def eval_svm(train_first, train_second, test_first, test_second, vecs_train, vecs_test, vocab_train, vocab_test):
-  '''
-  Implicit bias evaluation
-  :param train_first: t1 training data term list
-  :param train_second: t2 training data term list
-  :param test_first: t1 test data term list
-  :param test_second: t2 test data term list
-  :param vecs_train: vector matrix corresponding to the training data (index2vec)
-  :param vecs_test: vector matrix corresponding to the test data (index2vec)
-  :param vocab_train: vocab dict corresponding to the train data (term2index)
-  :param vocab_test: vocab dict corresponding to the test data (term2index)
-  :return: score over 20 runs
-  '''
-  
-  # training data preparation
-  X_train = []
-  y_train = []
-
-  train = [(w, 0) for w in train_first if w in vocab_train] + [(w, 1) for w in train_second if w in vocab_train]
-  print("SVM train words: " + str(len(train)))
-
-  scores = []
-  for i in range(20):
-    print("Iterataion" + str(i+1))
-    random.shuffle(train)
-  
-    for p in train:
-      w = p[0]; l = p[1];
-      X_train.append(vecs_train[vocab_train[w]])
-      y_train.append(l)
-  
-    # training SVM (rbf kernel)
-    clf = svm.SVC(gamma = 'scale')
-    clf.fit(X_train, y_train)
-  
-    # prediction data preparation
-    X_test = []
-    y_test = []
-    test = [(w, 0) for w in test_first if w in vocab_test] + [(w, 1) for w in test_second if w in vocab_test]
-    #print("SVM test words: " + str(len(test)))
-    for p in test:
-      w = p[0]; l = p[1];
-      X_test.append(vecs_test[vocab_test[w]])
-      y_test.append(l)
-
-    preds = clf.predict(X_test)
-    correct = [i for i in range(len(y_test)) if y_test[i] == preds[i]]
-    acc = len(correct) / len(preds)
-    scores.append(acc)
   return sum(scores) / len(scores)
 
 
