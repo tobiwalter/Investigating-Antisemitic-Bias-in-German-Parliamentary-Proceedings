@@ -3,56 +3,34 @@ import sys
 import os
 import time
 import seaborn as sns
-
-ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-
-tpath = os.path.abspath(os.path.join(ROOT_DIR, "../"))
-print(tpath)
-sys.path.append(tpath)
-os.chdir(tpath)
-
 import numpy as np
 import matplotlib.pyplot as plt
 import collections
 from sklearn.manifold import TSNE
 
+ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+tpath = os.path.abspath(os.path.join(ROOT_DIR, "../"))
+sys.path.append(tpath)
+os.chdir(tpath)
 from SequentialEmbeddings import SequentialEmbedding
-
-
-def get_words():
-    WORDS = [ "jude" ]
-    if len(sys.argv) == 2:
-        WORDS = sys.argv[1:]
-    elif len(sys.argv) > 2:
-        WORDS = sys.argv[1:-1]
-
-
-    return WORDS
-
-def get_n():
-    N = 15
-    if len(sys.argv) > 2:
-        N = sys.argv[-1]
-
-    return N
 
 CMAP_MIN=0
 def get_cmap(n, name='Set1'):
     return plt.cm.get_cmap(name, n+CMAP_MIN)
 
-# this is based on embedding.py get_time_sims
-def get_time_sims(embedding, word1, topn=15):
+def get_time_sims(seq_embedding, word1, topn=15):
     start = time.time()
     time_sims = collections.OrderedDict()
     lookups = {}
     nearests = {}
     sims = {}
-    for period, embed in embedding.embeds.items():
+    for period, embed in seq_embedding.embeds.items():
         nearest = []
         nearests[f"{word1}|{period}"]= nearest
         time_sims[period] = []
 
-        for sim, word in embed.closest(word1, n=topn):
+        for word, sim in embed.wv.most_similar(word1, topn=topn):
           ww = f"{word}|{period}"
           nearest.append((sim, ww))
           if sim > 0.3:
@@ -64,12 +42,6 @@ def get_time_sims(embedding, word1, topn=15):
     return time_sims, lookups, nearests, sims
 
 
-# def load_embeddings(filename=None, n=5):
-#   start = time.time()
-#   embeddings = SequentialEmbedding.load(filename, n)
-#   print(f"LOAD EMBEDDINGS TOOK {(time.time() - start)}")
-#   return embeddings
-
 def clear_figure():
     plt.figure(figsize=(20,20))
     plt.clf()
@@ -77,7 +49,6 @@ def clear_figure():
 def fit_tsne(values):
     if not values:
         return
-
     start = time.time()
     mat = np.array(values)
     model = TSNE(n_components=2, random_state=0, learning_rate=150, init='pca')
