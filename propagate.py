@@ -81,35 +81,32 @@ def main():
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
-  attributes = create_attribute_sets(args.index, kind=args.protocol_type)
-  att_1, att_2 = convert_attribute_set(args.attribute_specifications)
-  
   lp = LabelPropagation.load(args.ppmi, args.index)
+  attributes = create_attribute_sets(lp.index, kind=args.protocol_type)
+  att_1, att_2 = convert_attribute_set(args.attribute_specifications)
   lp.create_labels(attributes[att_1], attributes[att_2])
-
   start = time.time()
-  logging.info(f'Start label propagation at {start}')
- # lp.propagate()
-  lp.load_scores('fu_scores/kaiserreich_1.npy')
- # lp.save_scores(args.output_file)
+  logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
+  lp.propagate()
+  #lp.load_scores('fu_scores/kaiserreich_1.npy')
+  lp.save_scores(args.output_file)
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
   targets = create_target_sets(lp.index, kind=args.protocol_type)
   bias_term_indices = lp.get_bias_term_indices(targets)
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
-  with codecs.open(f'{args.output_file}.txt', "w", "utf8") as f:
+  with codecs.open(f'fu_scores/{args.output_file}.txt', "w", "utf8") as f:
     for k,v in bias_term_scores.items():
-      f.write(f'Mean score {k}: {v.mean()}')
-      f.write(f'Median score {k}: {np.percentile(v, 50)}')
-      f.write(f'Std {k}: {v.std()}\n')
+      f.write(f'Mean score {k}: {v.mean()}\n')
+      f.write(f'Median score {k}: {np.percentile(v, 50)}\n')
+      f.write(f'Std {k}: {v.std()}\n\n')
 
     f.write('T-tests:\n')
     for t1,t2 in [('christian', 'jewish'), ('protestant', 'catholic'),
     ('protestant', 'jewish'), ('catholic', 'jewish')]:
       logging.info(f't-test for {t1} and {t2}:\n')
       t,p = lp.t_test(bias_term_indices[t1], bias_term_indices[t2])
-      logging.info(t,p)
       f.write(f't-test for {t1} and {t2}:\n')
       f.write(f'test statistic: {t}, ')
       f.write(f'p-value: {p}\n')

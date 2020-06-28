@@ -2,9 +2,11 @@ from collections import Counter
 import numpy as np
 from scipy import sparse
 import argparse
+import codecs
 import logging
+import os
 import json
-from representations.utils import CreateCorpus
+from representations.utils import CreateCorpus, create_attribute_sets
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 def get_unigrams(corpus, min_count=5):
@@ -127,14 +129,17 @@ def main():
   parser.add_argument("--corpus", type=str, help="Corpus path", required=True)
   parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
   parser.add_argument("--attribute_specifications", type=str, help='Which attribute set to be used for subsequent label propagation - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--output_file", type=str, help='Output file to store matrix')
 
   args = parser.parse_args()
   sentences = list(CreateCorpus(args.corpus))
-  unigrams = get_unigrams_sorted(sentences)
+  unigrams = get_unigrams(sentences)
   attributes = create_attribute_sets(unigrams, kind=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
 
   tok2indx, indx2tok = get_indices(unigrams, attributes[att_1], attributes[att_2])
+  with codecs.open(f'tok2indx/{args.output_file}.json',"w", encoding='utf-8') as f:
+      f.write(json.dumps(tok2indx))
   skipgrams = get_skipgram_counts(sentences, tok2indx, indx2tok)
   coo_mat = create_coo_mat(skipgrams)
   ppmi_mat, sppmi_mat = create_ppmi_mat(coo_mat, skipgrams)
@@ -143,14 +148,14 @@ def main():
   if not os.path.exists('matrices'):
     os.makedirs('matrices')
     
-  sparse.save_npz(f'matrices/ppmi_{corpus}.npz', ppmi_mat, compressed=True)
-  sparse.save_npz(f'matrices/sppmi_{corpus}.npz', sppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/ppmi_{args.output_file}.npz', ppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/sppmi_{args.output_file}.npz', sppmi_mat, compressed=True)
 
   # Save token-2-index dictionaries
   if not os.path.exists('tok2indx'):
     os.makedirs('tok2indx')
-  with codecs.open(f'tok2indx/{corpus}.json',"w", encoding='utf-8') as f:
-      f.write(json.dumps(tok2indx))
+#  with codecs.open(f'tok2indx/{output_file}.json',"w", encoding='utf-8') as f:
+ #     f.write(json.dumps(tok2indx))
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import json
 import pickle
 from pathlib import Path
 import os
+import numpy as np 
 import codecs
 import numba
 
@@ -114,7 +115,7 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
-    with codecs.open((VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f:
+    with codecs.open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f:
         f.write(json_repr)
 
 
@@ -157,6 +158,15 @@ def create_attribute_sets(word_vectors, kind):
 
     return attribute_sets
 
+def convert_attribute_set(label):
+    if label == 'sentiment':
+      return ('pleasant', 'unpleasant')
+    elif label == 'patriotism':
+      return ('volkstreu', 'volksuntreu')
+    elif label == 'economic':
+      return ('economic_pro', 'economic_con')
+    elif label == 'conspiratorial':
+      return ('conspiratorial_pro', 'conspiratorial_con')
 
 def create_target_sets(word_vectors, kind): 
     """
