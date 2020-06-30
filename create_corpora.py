@@ -14,37 +14,37 @@ os.chdir(tpath)
 
 # These are the dates of the first protocol in each of the 4 original "YYYY.corr.seg" Reichstag documents - as oen can see, the first document is not in the right order
 START_DATES = {
-    1: '22 Oktober 1889',
-    2: '3 Dezember 1895',
-    3: '6 Februar 1919',
-    4: '21 März 1933'
+    1895: '22 Oktober 1889',
+    1918: '3 Dezember 1895',
+    1933: '6 Februar 1919',
+    1942: '21 März 1933'
 }
 
 # These are the actual periods for each of the 4 original "YYYY.corr.seg" Reichstag documents with start and end dates 
 
 PERIODS = {
-    1: {'start' : datetime(1867,2,24), 'end' : datetime(1895,5,24)},
-    2: {'start' : datetime(1895,12,3), 'end' : datetime(1918,10,26)},
-    3: {'start' : datetime(1919,2,6), 'end' : datetime(1932,12,9)},
-    4: {'start' : datetime(1933,3,21), 'end' : datetime(1942,4,26)},    
+    1895: {'start' : datetime(1867,2,24), 'end' : datetime(1895,5,24)},
+    1918: {'start' : datetime(1895,12,3), 'end' : datetime(1918,10,26)},
+    1933: {'start' : datetime(1919,2,6), 'end' : datetime(1932,12,9)},
+    1942: {'start' : datetime(1933,3,21), 'end' : datetime(1942,4,26)},    
 }
 
-def sort_corpus(number):
+def sort_corpus(year):
     """As at least the first document is not in the right order, let's create a function that sorts each corpus
 
-    param number: which of the 4 original corpora shall be sorted
+    param year: which of the 4 original corpora shall be sorted
     """
 
     # Initialize a list that stores each protocol with its corresponding date 
     corpus_and_dates = []
     
     # The variable last_date keeps track of the last valid date encountered by the function in order to keep a chronological ordering - it is initialized with the start date in each corpus  
-    last_date = dateparser.parse(START_DATES.get(number))
-    period_start = PERIODS.get(number).get('start')
-    period_end = PERIODS.get(number).get('end')
+    last_date = dateparser.parse(START_DATES.get(year))
+    period_start = PERIODS.get(year).get('start')
+    period_end = PERIODS.get(year).get('end')
     
     # Retrieve files in chronological order of creation
-    for file in sorted(glob.glob('./protocols_{}/doc_*.txt'.format(number)), key=os.path.getmtime):
+    for file in sorted(glob.glob(f'./protocols_{year}/doc_*.txt'), key=os.path.getmtime):
         text = codecs.open(file, 'r', encoding='utf-8').readlines()
         text = [line.strip() for line in text]
         # For each protocol, check if a date can be extracted
@@ -82,7 +82,7 @@ def sort_corpus(number):
 
 def main():
 
-	# Sort all original Reichstag corpora and create balanced slices in terms of number of protocols per slice
+	# Sort all original Reichstag corpora and create balanced slices in terms of year of protocols per slice
 	corpus_1 = sort_corpus(1)
 	corpus_2 = sort_corpus(2)
 	corpus_3 = sort_corpus(3)

@@ -267,7 +267,8 @@ end_patterns_reichstag = '|'.join(
                 'Ich schließe die (\n )?Sitzung'
                    ])
 
-def extract_meeting_protocols_reichstag(doc,number):
+PATH_TO_STORE = 'protocols'
+def extract_meeting_protocols_reichstag(doc, PATH_TO_STORE):
     """
     param doc: document to process
     param number: which of the 4 original documents to process
@@ -276,14 +277,15 @@ def extract_meeting_protocols_reichstag(doc,number):
     i = 0
     sitzung = False
     
-    if not os.path.exists('./protocols_{}'.format(number)):
-        os.makedirs('./protocols_{}'.format(number))
+    # Store in folder protocols_YEAR, e.g. protocols_1895
+    if not os.path.exists(f'{PATH_TO_STORE}_{doc[:4]}'):
+        os.makedirs(f'{PATH_TO_STORE_{doc[:4]}}')
     temp_doc = None
     
     reichstag_restart = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
     reichstag_end = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
 
-    if number == 3:                 
+    if doc[:4] == '1942':                 
         reichstag_start = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
                                   re.IGNORECASE)
     else:
@@ -308,7 +310,7 @@ def extract_meeting_protocols_reichstag(doc,number):
                 logging.info('{i} documents extracted')
             
             sitzung = True
-            temp_doc = codecs.open('./protocols_{}/doc_{}.txt'.format(number,i), 'w',  encoding='utf-8')
+            temp_doc = codecs.open(f'{PATH_TO_STORE_{doc[:4]}}/doc_{i}.txt', 'w',  encoding='utf-8')
             temp_doc.write(line)
             temp_doc.write('\n')
             continue
