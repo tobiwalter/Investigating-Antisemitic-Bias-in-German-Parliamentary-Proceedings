@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
-import os 
 import logging
-import json
-from pathlib import Path
 import multiprocessing as mp
 from gensim.models.word2vec import Word2Vec, LineSentence
 from gensim.models.fasttext import FastText as FT_gensim
-from representations import utils
+from representations.utils import CreateCorpus, save_vocab
 import argparse
 import time
 
-parser = argparse.ArgumentParser(description='Train word embedding models for Reichstag proceedings')
-parser.add_argument('--format', type=str, default='gensim', help='Save word2vec model in word2vec or gensim format')
-parser.add_argument('--proceedings', type=str, help='folder containing pre-processed Reichstag proceedings docs')
+parser = argparse.ArgumentParser(description='Train word embedding models for parliamentary proceedings')
+parser.add_argument('--format', type=str, default='gensim', help='Save word2vec model in original word2vec or gensim format')
+parser.add_argument('--proceedings', type=str, help='folder containing pre-processed Reichstag proceedings documents')
 parser.add_argument('--model_path', type=str, help='path to store trained model')
 parser.add_argument('--vocab_path', type=str, help='path to store model vocab and indices')
-parser.add_argument('--model_type', type=str, default='word2vec', help='type of embedding space to train embeddings')
+parser.add_argument('--model_type', type=str, default='word2vec', help='type of embedding space to train (word2vec or fasttext')
 parser.add_argument('-s', '--size', type=int, default=200, help='dimension of word embeddings')
 parser.add_argument('-w', '--window', type=int, default=5, help='window size to define context of each word')
 parser.add_argument('-m', '--min_count', type=int, default=5, help='minimum frequency of a word to be included in vocab')
@@ -27,37 +24,7 @@ parser.add_argument('-ns', '--ns', type=int, default=5, help='number of samples 
 
 args = parser.parse_args()
 logging.basicConfig(
-    filename=args.model_path.strip() + '.result', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO
-    )
-# option 1)
-#sentences = PathLineSentences(args.proceedings)
-
-class CreateCorpus(object):
-    
-    def __init__(self,top_dir):
-        self.top_dir = top_dir
-        
-    """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
-    def __iter__(self):
-        for root, dirs, files in os.walk(self.top_dir):
-            for file in filter(lambda file: file.endswith('.txt'), files):
-                text = open(os.path.join(root, file), encoding='utf-8').readlines()
-                for sentence in text:
-                    yield sentence.split()
-
-# option 2)
-class CreateSlice:
-    
-    def __init__(self, dirname):
-        self.dirname = dirname
-
-    def __iter__(self):
-        for fn in os.listdir(self.dirname):
-            text = open(os.path.join(self.dirname, fn)).readlines()
-            for sentence in text:
-                yield sentence.split()
-
-# sentences = ReichstagCorpus(args.proceedings)
+    filename=args.model_path.strip() + '.result', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 start = time.time()
 logging.info(f'Training started at: {start}')
@@ -70,7 +37,6 @@ else:
 if args.model_type == 'word2vec':
     
 	model = Word2Vec(sentences=sentences, size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs, negative=args.ns)
-
 elif args.model_type == 'fasttext':
 	model = FT_gensim(size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs,negative=args.ns)
 
@@ -91,18 +57,5 @@ if args.format == 'w2v':
 else:
 	model.wv.save(args.model_path,separately= ['vectors'])
 
-
 # Save vocab to disk 
-utils.save_vocab(model, args.vocab_path)
-
-
-
-
-
-
-
-
-
-
-
-
+save_vocab(model, args.vocab_path)
