@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
-"""Main module."""
-from gensim.models.word2vec import Word2Vec, PathLineSentences
-from gensim.models import KeyedVectors
+import sys
+sys.path.append('./..')
+from utils import CreateCorpus
+from gensim.models.word2vec import Word2Vec
 from gensim import utils
 import os
 import numpy as np
@@ -10,31 +10,7 @@ import glob
 import logging
 import copy
 
-class CreateCompass(object):
-    
-    def __init__(self,top_dir):
-        self.top_dir = top_dir
-        
-    """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
-    def __iter__(self):
-        for root, dirs, files in os.walk(self.top_dir):
-            for file in filter(lambda file: file.endswith('.txt'), files):
-                text = open(os.path.join(root, file), encoding='utf-8').readlines()
-                for sentence in text:
-                    yield sentence.split()
-
-class CreateSlice:
-    
-    def __init__(self, dirname):
-        self.dirname = str(DATA_FOLDER / dirname)
-
-    def __iter__(self):
-        for fn in os.listdir(self.dirname):
-            text = open(os.path.join(self.dirname, fn), encoding='utf-8').readlines()
-            for sentence in text:
-                yield sentence.split()
-
-class TWEC:
+class TWEC: 
     """
     Handles alignment between multiple slices of temporal text
     """
@@ -134,7 +110,7 @@ class TWEC:
             self.compass = Word2Vec.load(os.path.join(self.opath, "compass.model"))
             print("Compass loaded from file.")
         else:
-            sentences = CreateCompass(compass_text)
+            sentences = CreateCorpus(compass_text)
             # sentences.input_files = [s for s in sentences.input_files if not os.path.basename(s).startswith('.')]
             print("Training the compass.")
             if compass_exists:
@@ -149,7 +125,7 @@ class TWEC:
             return Exception("Missing Compass")
         print("Training temporal embeddings: slice {}.".format(slice_text))
 
-        sentences = CreateCompass(slice_text)
+        sentences = CreateCorpus(slice_text)
         #print(len(sentences.input_files))
         model = self.train_model(sentences)
 
@@ -203,8 +179,6 @@ class TWEC:
             nll = sum(llhd[n_tfn]) / (nwords)
             nlls.append(nll)
             print("Slice {} {}\n\t- Posterior log probability {:.4f}\n\tNormalized log likelihood {:.4f}".format(n_tfn,
-                                                                                                                 tfn,
-                                                                                                                 mplp,
-                                                                                                                 nll))
+   ))
         print("Mean posterior log probability: {:.4f}".format(sum(mplps) / (len(mplps))))
         print("Mean normalized log likelihood: {:.4f}".format(sum(nlls) / (len(nlls))))
