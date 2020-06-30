@@ -115,7 +115,7 @@ def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
     json_repr = json.dumps(index)
-    with codecs.open((VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f:
+    with codecs.open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f:
         f.write(json_repr)
 
 

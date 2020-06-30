@@ -1,3 +1,4 @@
+import sys
 import os 
 from text_preprocessing import remove_punctuation, remove_double_spaces, remove_noisy_digits, remove_dash_and_minus_signs, extract_meeting_protocols_reichstag
 import logging
@@ -17,10 +18,5 @@ text = remove_noisy_digits(text)
 text = remove_dash_and_minus_signs(text)
 
 if __name__ == "__main__":
-  try:
-    number = int(sys.argv[2])
-  except IndexError as e: 
-    print(e)
-
-extract_meeting_protocols_reichstag(text,number)
+	extract_meeting_protocols_reichstag(text,sys.argv[1][:4])
 		

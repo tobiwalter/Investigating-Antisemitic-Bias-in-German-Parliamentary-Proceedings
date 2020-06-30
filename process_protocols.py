@@ -19,21 +19,17 @@ class ProcessProtocols(object):
     Apply text preprocessing pipeline on a folder of protocols
     """
 
-    def __init__(self, dirname, brd=False):
+    def __init__(self, dirname, protocol_type):
         """
         param dirname: name of directory to process
-        param brd: whether to process an instance of BRD protocols
+        param protocol_type: whether to process an instance of Reichstag/BRD
         """
         self.dirname = dirname
-        self.brd = brd
+        self.kind = protocol_type
         if not os.path.exists(f'{dirname}_processed'):  
             os.makedirs(f'{dirname}_processed')
     def process_and_save(self):
         logging.info(f'Start processing of files from folder {dirname}')
-        if self.brd:
-            logging.info(f'Processing protocols from BRD period')
-        else:
-            logging.info(f'Processing protocols from Reichstag period')
         i = 0
         files_total = len(os.listdir(self.dirname))
         logging.info(f'{files_total} files were found.')
@@ -53,7 +49,7 @@ class ProcessProtocols(object):
                     text = replace_digits(text)
                     text = remove_double_spaces(text)
                     text = reduce_numerical_sequences(text)
-                    text = filter_lines(text)
+                    text = filter_doc(text)
                     text = [removeGermanChainWords(line) for line in text]
                     text = [remove_hyphens(line) for line in text]
                     text = [lemmatizer.lemmatize(line) for line in text]
@@ -71,11 +67,11 @@ class ProcessProtocols(object):
 if __name__ == "__main__":
   try:
     dirname = sys.argv[1]
-    kind = sys.argv[2]
+    protocol_type = sys.argv[2]
   except IndexError as e: 
     print(e)
   
-  ProcessProtocols(dirname, kind).process_and_save()
+  ProcessProtocols(dirname, protocol_type).process_and_save()
 
 
 

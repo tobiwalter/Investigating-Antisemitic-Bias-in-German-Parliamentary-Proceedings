@@ -3,6 +3,9 @@ import sys
 import os
 import re
 import spacy
+import codecs
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,7 +47,7 @@ def reduce_numerical_sequences(doc):
 
 def filter_doc(doc):
     """
-    Filter all doc that are empty or only a single character long
+    Filter all lines that are empty or only a single character long
     """
     return [line for line in doc if len(line) >1]
 
@@ -152,13 +155,13 @@ def removeUmlauts(text):
     return text_out
 
 
-spelling_dict = codecs.open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r').readdoc()
+spelling_dict = codecs.open(os.path.join(ROOT_DIR, 'dictionaries/harmonize_dict.txt'), 'r')
 spelling_dict = {line.split()[0] : line.split()[1] for line in spelling_dict}
 
 def harmonizeSpelling(text):
     """
     Harmonize all words in the dictionary to uniform spelling
-    """ 
+    """
     text_out = [re.sub(tok,spelling_dict[tok],tok) if tok in spelling_dict else tok for tok in text]
     return text_out
 
@@ -268,7 +271,7 @@ end_patterns_reichstag = '|'.join(
                    ])
 
 PATH_TO_STORE = 'protocols'
-def extract_meeting_protocols_reichstag(doc, PATH_TO_STORE):
+def extract_meeting_protocols_reichstag(doc, year):
     """
     param doc: document to process
     param number: which of the 4 original documents to process
@@ -278,14 +281,14 @@ def extract_meeting_protocols_reichstag(doc, PATH_TO_STORE):
     sitzung = False
     
     # Store in folder protocols_YEAR, e.g. protocols_1895
-    if not os.path.exists(f'{PATH_TO_STORE}_{doc[:4]}'):
-        os.makedirs(f'{PATH_TO_STORE_{doc[:4]}}')
+    if not os.path.exists(f'{PATH_TO_STORE}_{year}'):
+        os.makedirs(f'{PATH_TO_STORE}_{year}')
     temp_doc = None
     
     reichstag_restart = re.compile(f"({restart_patterns_reichstag})", re.IGNORECASE)
     reichstag_end = re.compile(f"({end_patterns_reichstag})", re.IGNORECASE)
 
-    if doc[:4] == '1942':                 
+    if year == '1942':                 
         reichstag_start = re.compile(r'Die Sitzung wird um \d+ Uhr(?:\s\d+ Minute)?n?(?:\sabends)? durch den Präsidenten eröffnet',
                                   re.IGNORECASE)
     else:
@@ -310,7 +313,7 @@ def extract_meeting_protocols_reichstag(doc, PATH_TO_STORE):
                 logging.info('{i} documents extracted')
             
             sitzung = True
-            temp_doc = codecs.open(f'{PATH_TO_STORE_{doc[:4]}}/doc_{i}.txt', 'w',  encoding='utf-8')
+            temp_doc = codecs.open(f'{PATH_TO_STORE}_{year}/doc_{i}.txt', 'w',  encoding='utf-8')
             temp_doc.write(line)
             temp_doc.write('\n')
             continue
@@ -327,5 +330,5 @@ def extract_meeting_protocols_reichstag(doc, PATH_TO_STORE):
                 temp_doc.write('\n')
     
     logging.info('Screening done!')
-    logging.info('{i} documents extracted in total.')
+    logging.info(f'{i} documents extracted in total.')
     temp_doc.close()

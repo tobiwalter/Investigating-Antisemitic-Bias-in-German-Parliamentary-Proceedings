@@ -30,7 +30,7 @@ class ProcessProtocols(object):
              text = replace_digits(text)
              text = remove_double_spaces(text)
              text = reduce_numerical_sequences(text)
-             text = filter_lines(text)
+             text = filter_doc(text)
              text = [removeGermanChainWords(line) for line in text]
              logging.info('Chainword splitting finished')
              text = [remove_hyphens(line) for line in text]

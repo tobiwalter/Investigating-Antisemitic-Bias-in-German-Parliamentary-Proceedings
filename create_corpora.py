@@ -2,6 +2,7 @@
 import glob
 import re
 import os
+import codecs
 from datetime import datetime
 import dateparser
 from representations.utils import save_corpus
@@ -83,10 +84,10 @@ def sort_corpus(year):
 def main():
 
 	# Sort all original Reichstag corpora and create balanced slices in terms of year of protocols per slice
-	corpus_1 = sort_corpus(1)
-	corpus_2 = sort_corpus(2)
-	corpus_3 = sort_corpus(3)
-	corpus_4 = sort_corpus(4)
+	corpus_1 = sort_corpus(1895)
+	corpus_2 = sort_corpus(1918)
+	corpus_3 = sort_corpus(1933)
+	corpus_4 = sort_corpus(1942)
 
 	full_corpus = corpus_1 + corpus_2 + corpus_3 + corpus_4
 
