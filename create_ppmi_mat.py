@@ -4,7 +4,9 @@ from scipy import sparse
 import argparse
 import logging
 import json
-from representations.utils import CreateCorpus
+import os
+import codecs
+from utils import CreateCorpus, create_attribute_sets, convert_attribute_set
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 def get_unigrams(corpus, min_count=5):
@@ -32,10 +34,9 @@ def get_indices(unigram_counts, targets_1, targets_2):
 
 def get_skipgram_counts(corpus, tok2indx, indx2tok):
     skipgram_counts = Counter()
-
+    logging.info('Get skipgram counts')
     for ix, sent in enumerate(corpus):
         tokens = [tok2indx[tok] for tok in sent if tok in tok2indx]
-        logging.info(f'Get skipgram counts')
         for ii_word, word in enumerate(tokens):
             ii_contexts = [
                 ii for ii in range(len(tokens)) 
@@ -124,7 +125,7 @@ def main():
 
   args = parser.parse_args()
   sentences = list(CreateCorpus(args.corpus))
-  unigrams = get_unigrams_sorted(sentences)
+  unigrams = get_unigrams(sentences)
   attributes = create_attribute_sets(unigrams, kind=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
 
@@ -137,13 +138,13 @@ def main():
   if not os.path.exists('matrices'):
     os.makedirs('matrices')
     
-  sparse.save_npz(f'matrices/ppmi_{args.corpus}.npz', ppmi_mat, compressed=True)
-  sparse.save_npz(f'matrices/sppmi_{args.corpus}.npz', sppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/ppmi_{args.output_file}.npz', ppmi_mat, compressed=True)
+  sparse.save_npz(f'matrices/sppmi_{args.output_file}.npz', sppmi_mat, compressed=True)
 
   # Save token-2-index dictionaries
   if not os.path.exists('tok2indx'):
     os.makedirs('tok2indx')
-  with codecs.open(f'tok2indx/{args.corpus}.json',"w", encoding='utf-8') as f:
+  with codecs.open(f'tok2indx/{args.output_file}.json',"w", encoding='utf-8') as f:
       f.write(json.dumps(tok2indx))
 
 

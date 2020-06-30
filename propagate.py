@@ -46,7 +46,7 @@ class LabelPropagation:
   def save_scores(self, path):
     if not os.path.exists('fu_scores'):
       os.makedirs('fu_scores')
-    np.save(f'fu_scores/{path}', self.scores)
+    np.save(f'fu_scores/{path}.npy', self.scores)
 
   def get_bias_term_indices(self, targets):
      return {k: [self.index[word] - len(self.labels) for word in v] for k,v in targets.items()}
@@ -86,6 +86,7 @@ def main():
   attributes = create_attribute_sets(lp.index, kind=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
   lp.create_labels(attributes[att_1], attributes[att_2])
+  print(lp.labels)
   start = time.time()
   logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
   lp.propagate()
@@ -94,6 +95,7 @@ def main():
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
   targets = create_target_sets(lp.index, kind=args.protocol_type)
+  print(targets)
   bias_term_indices = lp.get_bias_term_indices(targets)
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
