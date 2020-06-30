@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('./..')
+from utils import load_vocab, load_vectors
 import os
 from eval import eval_simlex
 from pathlib import Path

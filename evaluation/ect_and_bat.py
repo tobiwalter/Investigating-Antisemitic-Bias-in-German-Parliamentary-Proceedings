@@ -45,7 +45,7 @@ def run_ect(vectors, vocab, weat_terms, attributes):
 
 def main():
   parser = argparse.ArgumentParser(description="Running BAT or ECT")
-  parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
+  parser.add_argument("--test_type", type=str, help="Whether to run BAT or ECT test", required=True)
   parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=True)
   parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file or file pattern in case of multiple files", required=True)
@@ -58,6 +58,8 @@ def main():
 
   attribute_sets = {
           'pleasant_unplesant' : PLEASANT + UNPLEASANT,
+	  'conspiratorial' : CONSPIRATORIAL_PRO + CONSPIRATORIAL_CON,
+	  'economic' : ECONOMIC_PRO + ECONOMIC_CON,
           'outsider_words' : OUTSIDER_WORDS,
           'jewish_nouns' : JEWISH_STEREOTYPES_NOUNS,
           'jewish_character' : JEWISH_STEREOTYPES_CHARACTER,

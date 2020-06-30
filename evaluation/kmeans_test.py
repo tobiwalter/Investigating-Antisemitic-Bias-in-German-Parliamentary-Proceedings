@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('./..')
+from utils import load_vocab, load_vectors
 import os 
 import glob
 from eval import eval_k_means
@@ -9,8 +12,8 @@ import argparse
 import numpy as np
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-vocab_path = Path((os.path.join(ROOT_DIR, "./data/vocab")))
-models_path = Path((os.path.join(ROOT_DIR, "./models")))
+vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
+models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, XWEAT().weat_6]
 
@@ -24,6 +27,8 @@ def main():
 
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
+  print(vocab_files)
+  print(vector_files)
   for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0]
       vocab = load_vocab(t[0])

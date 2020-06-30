@@ -1,8 +1,6 @@
 import sys
 sys.path.append('./..')
 from utils import *
-print(PLEASANT)
-
 import numpy as np
 import random
 from itertools import filterfalse
@@ -76,7 +74,7 @@ class XWEAT(object):
       """
       WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant wordargs.protocol_typeselfs
       """
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
@@ -93,15 +91,16 @@ class XWEAT(object):
       """
       WEAT 2 - terms representing catholicism and protestantism + sets of pleasant/unplesant words
       """
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = PROTESTANT_BRD
         targets_2  = CATHOLIC_BRD
 
       elif protocol_type == 'RT':
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
-        attributes_1 = PLEASANT 
-        attributes_2 = UNPLEASANT
+
+      attributes_1 = PLEASANT 
+      attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -109,7 +108,7 @@ class XWEAT(object):
       """
       WEAT 3 - terms representing protestantism and judaism + sets of pleasant/unplesant words
       """
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = PROTESTANT_BRD
         targets_2 = JEWISH_BRD
 
@@ -126,7 +125,7 @@ class XWEAT(object):
       """
       WEAT 4 - terms representing catholicism and judaism + sets of pleasant/unplesant words
       """
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = CATHOLIC_BRD
         targets_2 = JEWISH_BRD
 
@@ -142,7 +141,7 @@ class XWEAT(object):
   def weat_5(self, protocol_type):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
 
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
@@ -159,7 +158,7 @@ class XWEAT(object):
       """
       WEAT 6- terms representing patriotism and non-patriotism+ sets of pleasant/unplesant words
       """
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
         attributes_1 = VOLKSTREU_BRD
@@ -176,7 +175,7 @@ class XWEAT(object):
   def weat_7(self, protocol_type):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
 
-      if protocol_type == 'BT':
+      if protocol_type == 'BRD':
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
 
