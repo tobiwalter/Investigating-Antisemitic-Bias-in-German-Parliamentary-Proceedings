@@ -1,0 +1,114 @@
+2020-06-30 13:37:31,332 : INFO : Training started at: 1593517051.332771
+2020-06-30 13:37:31,333 : INFO : collecting all words and their counts
+2020-06-30 13:37:31,333 : INFO : collected 0 word types from a corpus of 0 raw words and 0 sentences
+2020-06-30 13:37:31,333 : INFO : Loading a fresh vocabulary
+2020-06-30 13:37:31,333 : INFO : effective_min_count=5 retains 0 unique words (0% of original 0, drops 0)
+2020-06-30 13:37:31,333 : INFO : effective_min_count=5 leaves 0 word corpus (0% of original 0, drops 0)
+2020-06-30 13:37:31,333 : INFO : deleting the raw counts dictionary of 0 items
+2020-06-30 13:37:31,334 : INFO : sample=0.001 downsamples 0 most-common words
+2020-06-30 13:37:31,334 : INFO : downsampling leaves estimated 0 word corpus (0.0% of prior 0)
+2020-06-30 13:37:31,334 : INFO : estimated required memory for 0 words and 200 dimensions: 0 bytes
+2020-06-30 13:37:31,334 : INFO : resetting layer weights
+2020-06-30 13:39:30,952 : INFO : Training started at: 1593517170.9525156
+2020-06-30 13:39:57,316 : INFO : Training started at: 1593517197.3165822
+2020-06-30 13:39:57,317 : INFO : collecting all words and their counts
+2020-06-30 13:39:57,317 : INFO : collected 0 word types from a corpus of 0 raw words and 0 sentences
+2020-06-30 13:39:57,317 : INFO : Loading a fresh vocabulary
+2020-06-30 13:39:57,317 : INFO : effective_min_count=5 retains 0 unique words (0% of original 0, drops 0)
+2020-06-30 13:39:57,317 : INFO : effective_min_count=5 leaves 0 word corpus (0% of original 0, drops 0)
+2020-06-30 13:39:57,317 : INFO : deleting the raw counts dictionary of 0 items
+2020-06-30 13:39:57,318 : INFO : sample=0.001 downsamples 0 most-common words
+2020-06-30 13:39:57,318 : INFO : downsampling leaves estimated 0 word corpus (0.0% of prior 0)
+2020-06-30 13:39:57,318 : INFO : estimated required memory for 0 words and 200 dimensions: 0 bytes
+2020-06-30 13:39:57,318 : INFO : resetting layer weights
+2020-06-30 13:46:15,318 : INFO : Training started at: 1593517575.318437
+2020-06-30 13:46:15,639 : INFO : collecting all words and their counts
+2020-06-30 13:46:15,639 : INFO : PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2020-06-30 13:46:15,662 : INFO : PROGRESS: at sentence #10000, processed 93917 words, keeping 9240 word types
+2020-06-30 13:46:15,690 : INFO : collected 18000 word types from a corpus of 253559 raw words and 19127 sentences
+2020-06-30 13:46:15,691 : INFO : Loading a fresh vocabulary
+2020-06-30 13:46:15,702 : INFO : effective_min_count=5 retains 4690 unique words (26% of original 18000, drops 13310)
+2020-06-30 13:46:15,702 : INFO : effective_min_count=5 leaves 233206 word corpus (91% of original 253559, drops 20353)
+2020-06-30 13:46:15,715 : INFO : deleting the raw counts dictionary of 18000 items
+2020-06-30 13:46:15,715 : INFO : sample=0.001 downsamples 45 most-common words
+2020-06-30 13:46:15,715 : INFO : downsampling leaves estimated 168502 word corpus (72.3% of prior 233206)
+2020-06-30 13:46:15,723 : INFO : estimated required memory for 4690 words and 200 dimensions: 9849000 bytes
+2020-06-30 13:46:15,723 : INFO : resetting layer weights
+2020-06-30 13:46:16,488 : INFO : training model with 1 workers on 4690 vocabulary and 200 features, using sg=0 hs=0 sample=0.001 negative=5 window=5
+2020-06-30 13:46:16,987 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:16,987 : INFO : EPOCH - 1 : training on 253559 raw words (168372 effective words) took 0.5s, 341194 effective words/s
+2020-06-30 13:46:17,475 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:17,475 : INFO : EPOCH - 2 : training on 253559 raw words (168464 effective words) took 0.5s, 349311 effective words/s
+2020-06-30 13:46:17,979 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:17,979 : INFO : EPOCH - 3 : training on 253559 raw words (168295 effective words) took 0.5s, 337849 effective words/s
+2020-06-30 13:46:18,500 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:18,500 : INFO : EPOCH - 4 : training on 253559 raw words (168487 effective words) took 0.5s, 324415 effective words/s
+2020-06-30 13:46:18,996 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:18,997 : INFO : EPOCH - 5 : training on 253559 raw words (168529 effective words) took 0.5s, 343418 effective words/s
+2020-06-30 13:46:18,997 : INFO : training on a 1267795 raw words (842147 effective words) took 2.5s, 335678 effective words/s
+2020-06-30 13:46:18,997 : INFO : Training finished. Took 3.679047107696533 s
+2020-06-30 13:46:18,997 : INFO : Vocab size: 4690
+2020-06-30 13:46:18,997 : INFO : saving Word2VecKeyedVectors object under models/ns, separately ['vectors']
+2020-06-30 13:46:18,998 : INFO : storing np array 'vectors' to models/ns.vectors.npy
+2020-06-30 13:46:19,036 : INFO : not storing attribute vectors_norm
+2020-06-30 13:46:19,045 : INFO : saved models/ns
+2020-06-30 13:46:45,591 : INFO : Training started at: 1593517605.5916138
+2020-06-30 13:46:45,640 : INFO : collecting all words and their counts
+2020-06-30 13:46:45,640 : INFO : PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2020-06-30 13:46:45,656 : INFO : PROGRESS: at sentence #10000, processed 93917 words, keeping 9240 word types
+2020-06-30 13:46:45,683 : INFO : collected 18000 word types from a corpus of 253559 raw words and 19127 sentences
+2020-06-30 13:46:45,683 : INFO : Loading a fresh vocabulary
+2020-06-30 13:46:45,695 : INFO : effective_min_count=5 retains 4690 unique words (26% of original 18000, drops 13310)
+2020-06-30 13:46:45,695 : INFO : effective_min_count=5 leaves 233206 word corpus (91% of original 253559, drops 20353)
+2020-06-30 13:46:45,707 : INFO : deleting the raw counts dictionary of 18000 items
+2020-06-30 13:46:45,707 : INFO : sample=0.001 downsamples 45 most-common words
+2020-06-30 13:46:45,707 : INFO : downsampling leaves estimated 168502 word corpus (72.3% of prior 233206)
+2020-06-30 13:46:45,715 : INFO : estimated required memory for 4690 words and 200 dimensions: 9849000 bytes
+2020-06-30 13:46:45,715 : INFO : resetting layer weights
+2020-06-30 13:46:46,471 : INFO : training model with 1 workers on 4690 vocabulary and 200 features, using sg=0 hs=0 sample=0.001 negative=5 window=5
+2020-06-30 13:46:46,966 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:46,966 : INFO : EPOCH - 1 : training on 253559 raw words (168372 effective words) took 0.5s, 344137 effective words/s
+2020-06-30 13:46:47,460 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:47,461 : INFO : EPOCH - 2 : training on 253559 raw words (168464 effective words) took 0.5s, 344489 effective words/s
+2020-06-30 13:46:47,946 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:47,946 : INFO : EPOCH - 3 : training on 253559 raw words (168295 effective words) took 0.5s, 350725 effective words/s
+2020-06-30 13:46:48,485 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:48,486 : INFO : EPOCH - 4 : training on 253559 raw words (168487 effective words) took 0.5s, 313634 effective words/s
+2020-06-30 13:46:48,984 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 13:46:48,984 : INFO : EPOCH - 5 : training on 253559 raw words (168529 effective words) took 0.5s, 341806 effective words/s
+2020-06-30 13:46:48,985 : INFO : training on a 1267795 raw words (842147 effective words) took 2.5s, 335030 effective words/s
+2020-06-30 13:46:48,985 : INFO : Training finished. Took 3.393601655960083 s
+2020-06-30 13:46:48,985 : INFO : Vocab size: 4690
+2020-06-30 13:46:48,985 : INFO : saving Word2VecKeyedVectors object under models/ns, separately ['vectors']
+2020-06-30 13:46:48,985 : INFO : storing np array 'vectors' to models/ns.vectors.npy
+2020-06-30 13:46:49,017 : INFO : not storing attribute vectors_norm
+2020-06-30 13:46:49,064 : INFO : saved models/ns
+2020-06-30 14:27:31,593 : INFO : Training started at: 1593520051.5937262
+2020-06-30 14:27:31,733 : INFO : collecting all words and their counts
+2020-06-30 14:27:31,733 : INFO : PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2020-06-30 14:27:31,752 : INFO : PROGRESS: at sentence #10000, processed 93917 words, keeping 9240 word types
+2020-06-30 14:27:31,784 : INFO : collected 18000 word types from a corpus of 253559 raw words and 19127 sentences
+2020-06-30 14:27:31,784 : INFO : Loading a fresh vocabulary
+2020-06-30 14:27:31,797 : INFO : effective_min_count=5 retains 4690 unique words (26% of original 18000, drops 13310)
+2020-06-30 14:27:31,797 : INFO : effective_min_count=5 leaves 233206 word corpus (91% of original 253559, drops 20353)
+2020-06-30 14:27:31,810 : INFO : deleting the raw counts dictionary of 18000 items
+2020-06-30 14:27:31,811 : INFO : sample=0.001 downsamples 45 most-common words
+2020-06-30 14:27:31,811 : INFO : downsampling leaves estimated 168502 word corpus (72.3% of prior 233206)
+2020-06-30 14:27:31,819 : INFO : estimated required memory for 4690 words and 200 dimensions: 9849000 bytes
+2020-06-30 14:27:31,819 : INFO : resetting layer weights
+2020-06-30 14:27:32,705 : INFO : training model with 1 workers on 4690 vocabulary and 200 features, using sg=0 hs=0 sample=0.001 negative=5 window=5
+2020-06-30 14:27:33,365 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 14:27:33,365 : INFO : EPOCH - 1 : training on 253559 raw words (168372 effective words) took 0.7s, 257663 effective words/s
+2020-06-30 14:27:34,006 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 14:27:34,006 : INFO : EPOCH - 2 : training on 253559 raw words (168464 effective words) took 0.6s, 265369 effective words/s
+2020-06-30 14:27:34,644 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 14:27:34,644 : INFO : EPOCH - 3 : training on 253559 raw words (168295 effective words) took 0.6s, 264528 effective words/s
+2020-06-30 14:27:35,288 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 14:27:35,289 : INFO : EPOCH - 4 : training on 253559 raw words (168487 effective words) took 0.6s, 263700 effective words/s
+2020-06-30 14:27:35,943 : INFO : worker thread finished; awaiting finish of 0 more threads
+2020-06-30 14:27:35,943 : INFO : EPOCH - 5 : training on 253559 raw words (168529 effective words) took 0.6s, 259375 effective words/s
+2020-06-30 14:27:35,943 : INFO : training on a 1267795 raw words (842147 effective words) took 3.2s, 260120 effective words/s
+2020-06-30 14:27:35,943 : INFO : Training finished. Took 4.349926233291626 s
+2020-06-30 14:27:35,943 : INFO : Vocab size: 4690
+2020-06-30 14:27:35,944 : INFO : saving Word2VecKeyedVectors object under models/models/ns, separately ['vectors']
+2020-06-30 14:27:35,944 : INFO : storing np array 'vectors' to models/models/ns.vectors.npy
