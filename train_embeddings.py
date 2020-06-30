@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
+from pathlib import Path
 import multiprocessing as mp
 from gensim.models.word2vec import Word2Vec, LineSentence
 from gensim.models.fasttext import FastText as FT_gensim
-from representations.utils import CreateCorpus, save_vocab
+from utils import CreateCorpus, save_vocab
 import argparse
 import time
+
+MODELS_FOLDER = Path('./models')
 
 parser = argparse.ArgumentParser(description='Train word embedding models for parliamentary proceedings')
 parser.add_argument('--format', type=str, default='gensim', help='Save word2vec model in original word2vec or gensim format')
@@ -32,7 +35,8 @@ logging.info(f'Training started at: {start}')
 if args.proceedings.endswith('.txt'):
     sentences = LineSentence(args.proceedings)
 else:
-    sentences = CreateCorpus(args.proceedings)
+    sentences = list(CreateCorpus(args.proceedings))
+    print(len(sentences))
 
 if args.model_type == 'word2vec':
     
@@ -53,9 +57,9 @@ logging.info(f'Training finished. Took {elapsed-start} s')
 logging.info(f'Vocab size: {len(model.wv.vocab)}')
 # Save model to disk
 if args.format == 'w2v':
-	model.wv.save_word2vec_format(args.model_path + '.txt', binary=True)
+	model.wv.save_word2vec_format(f'{MODELS_FOLDER / args.model_path}.txt', binary=True)
 else:
-	model.wv.save(args.model_path,separately= ['vectors'])
+	model.wv.save(f'{MODELS_FOLDER /args.model_path}',separately= ['vectors'])
 
 # Save vocab to disk 
 save_vocab(model, args.vocab_path)
