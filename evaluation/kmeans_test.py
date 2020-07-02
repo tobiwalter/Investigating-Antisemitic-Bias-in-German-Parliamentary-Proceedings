@@ -15,7 +15,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
 models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
-weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, XWEAT().weat_6]
+weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4]
 
 def main():
   parser = argparse.ArgumentParser(description="Running K-means test")
@@ -27,8 +27,6 @@ def main():
 
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
-  print(vocab_files)
-  print(vector_files)
   for t in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0]
       vocab = load_vocab(t[0])
