@@ -14,12 +14,13 @@ from pathlib import Path
 from eval import embedding_coherence_test, bias_analogy_test
 from weat import XWEAT
 
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
 models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, 
-XWEAT().weat_6]
+XWEAT().weat_5, XWEAT().weat_6, XWEAT().weat_7]
 
 EMB_DIM = 200
 def run_bat(vectors, vocab, weat_terms):
@@ -45,13 +46,17 @@ def run_ect(vectors, vocab, weat_terms, attributes):
 
 def main():
   parser = argparse.ArgumentParser(description="Running BAT or ECT")
-  parser.add_argument("--test_type", type=str, help="Whether to run BAT or ECT test", required=True)
+  parser.add_argument("--test_type", type=str, help="Specify BAT or ECT depending on which test shall be run", required=True)
   parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=True)
   parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file or file pattern in case of multiple files", required=True)
   parser.add_argument("--vector_file_pattern", type=str, default=None, help="vector path file or file pattern in case of multiple files", required=True)
  
   args = parser.parse_args()
+	
+  if not args.test_type in ['ECT', 'BAT']:
+    parser.print_help()
+    sys.exit(2)
 
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
