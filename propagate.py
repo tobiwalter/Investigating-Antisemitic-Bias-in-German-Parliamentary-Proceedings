@@ -76,7 +76,7 @@ def main():
   parser = argparse.ArgumentParser(description="Propagate labels based on PPMI matrix")
   parser.add_argument("--ppmi", type=str, help="Path to PPMI matrix to be used for label propagation", required=True)
   parser.add_argument("--index", type=str, help="Path to token-2-index dictionary to be used for label propagation", required=True)
-  parser.add_argument("--protocol_type", type=str, help="Run tests for Reichstagsprotokolle or Bundestagsprotokolle?", required=True)
+  parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   parser.add_argument("--attribute_specifications", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
