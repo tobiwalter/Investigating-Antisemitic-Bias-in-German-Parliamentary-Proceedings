@@ -46,8 +46,9 @@ def run_ect(vectors, vocab, weat_terms, attributes):
 
 def main():
   parser = argparse.ArgumentParser(description="Running BAT or ECT")
-  parser.add_argument("--test_type", type=str, help="Specify BAT or ECT depending on which test shall be run", required=True)
-  parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
+  parser.add_argument("--test_type", nargs='?', choices = ['ECT', 'BAT'], help="Specify BAT or ECT depending on which test shall be run", required=True)
+  parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",
+ required=True)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=True)
   parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file or file pattern in case of multiple files", required=True)
   parser.add_argument("--vector_file_pattern", type=str, default=None, help="vector path file or file pattern in case of multiple files", required=True)
@@ -57,7 +58,7 @@ def main():
   if not args.test_type in ['ECT', 'BAT']:
     parser.print_help()
     sys.exit(2)
-
+	
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
 
