@@ -19,6 +19,7 @@ class LabelPropagation:
   @classmethod
   def load(cls, matrix_path, indx_path):
     ppmi_mat = sparse.load_npz(matrix_path)
+    logging.info(f'Shape of PPMI matrix:{ppmi_mat.shape}')
     indx2tok = json.load(open(indx_path, 'r', encoding='utf-8'))
     return cls(ppmi_mat, indx2tok)
 
@@ -95,7 +96,6 @@ def main():
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
   targets = create_target_sets(lp.index, kind=args.protocol_type)
-  print(targets)
   bias_term_indices = lp.get_bias_term_indices(targets)
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
