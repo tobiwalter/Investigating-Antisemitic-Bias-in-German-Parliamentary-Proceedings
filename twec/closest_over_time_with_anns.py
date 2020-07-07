@@ -8,13 +8,11 @@ import os
 import helpers
 from gensim.models import KeyedVectors
 import argparse
+import glob
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-print(ROOT_DIR)
-tpath = os.path.abspath(os.path.join(ROOT_DIR, "../"))
-sys.path.append(tpath)
-print(os.getcwd())
-print(tpath)
+# tpath = os.path.abspath(os.path.join(ROOT_DIR, "../"))
+# sys.path.append(tpath)
 # os.chdir(tpath)
 from SequentialEmbeddings import SequentialEmbedding
 
@@ -24,9 +22,9 @@ def main():
     parser.add_argument("-n", "--neighbors", type=int, default=15, help="Number of neighbors to plot", required=True)
     parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
     parser.add_argument("--model_folder", type=str, help="Folder where word2vec models are located")
-    
+
     args = parser.parse_args()
-    words = args.words
+    words_to_plot = args.words
     n = args.neighbors
 
     if args.protocol_type == 'RT':
@@ -36,18 +34,18 @@ def main():
       #           }
 
       # embeddings = SequentialEmbeddings(embeds)
-      embeddings = SequentialEmbedding.load(os.path.join(args.model_folder, 'rt_slice'),5)
+      embeddings = SequentialEmbedding.load(args.model_folder)
 
 
     if args.protocol_type == 'BRD':
-      embeddings = SequentialEmbedding.load(os.path.join(args.model_folder, 'slice'),4)
+      embeddings = SequentialEmbedding.load(args.model_folder,4)
 
-    for word1 in words:
+    for word1 in words_to_plot:
         helpers.clear_figure()
-        try:
+        try: 
           time_sims, lookups, nearests, sims = helpers.get_time_sims(embeddings, word1, topn=n)
        
-          words = list(lookups.keys())
+          words = list(lookups.keys())  
           values = [ lookups[word] for word in words]
           fitted = helpers.fit_tsne(values)
           if not len(fitted):
@@ -57,6 +55,7 @@ def main():
           # draw the words onto the graph
           cmap = helpers.get_cmap(len(time_sims))
           annotations = helpers.plot_words(word1, words, fitted, cmap, sims,len(embeddings.embeds)+1)
+          print(f'Annotations:{annotations}')
 
           if annotations:
               helpers.plot_annotations(annotations)
