@@ -6,6 +6,7 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import collections
+import heapq
 from sklearn.manifold import TSNE
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -19,6 +20,19 @@ CMAP_MIN=0
 def get_cmap(n, name='Set1'):
     return plt.cm.get_cmap(name, n+CMAP_MIN)
 
+def get_index(model):
+    words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
+    index = {w: i for i, w in enumerate(words)}
+    return index
+
+def closest(model, w, topn=10):
+    """
+    Assumes the vectors have been normalized.
+    """
+    scores = model.wv.vectors.dot(model[w])
+    index = get_index(model)
+    return heapq.nlargest(topn, zip(scores, index))
+
 def get_time_sims(seq_embedding, word1, topn=15):
     start = time.time()
     time_sims = collections.OrderedDict()
@@ -30,7 +44,15 @@ def get_time_sims(seq_embedding, word1, topn=15):
         nearests[f"{word1}|{period}"]= nearest
         time_sims[period] = []
 
-        for word, sim in embed.wv.most_similar(word1, topn=topn):
+        # ww = f"{word1}|{period}"
+        # sim = 1.00
+        # nearest.append((sim, ww))
+        # time_sims[period].append((sim, ww))
+        # lookups[ww] = embed[word1]
+        # sims[ww] = sim
+
+        # for word, sim in embed.wv.most_similar(word1, topn=topn):
+        for sim, word in closest(embed, word1, topn=topn):
           ww = f"{word}|{period}"
           nearest.append((sim, ww))
           if sim > 0.3:
@@ -72,8 +94,6 @@ def plot_words(word1, words, fitted, cmap, sims, n):
     # TODO: remove this and just set the plot axes directly
     label = [assing_period(word) for word in words]
     colors = [cmap(i - 1 + CMAP_MIN) for i in range(1,n)]
-    print(label)
-    print(colors)
     sns.scatterplot(fitted[:,0], fitted[:,1], alpha=0, hue=label, palette= colors)
     # plt.scatter(fitted[:,0], fitted[:,1], alpha=0, hue=label)
     plt.suptitle(f"{word1}", fontsize=30, y=0.1)
@@ -89,7 +109,6 @@ def plot_words(word1, words, fitted, cmap, sims, n):
         color = cmap((int(period)) - 1 + CMAP_MIN)
         word = ww
         sizing = sims[words[i]] * 30
-
         # word1 is the word we are plotting against
         if ww == word1 or (isArray and ww in word1):
             annotations.append((ww, period, pt))

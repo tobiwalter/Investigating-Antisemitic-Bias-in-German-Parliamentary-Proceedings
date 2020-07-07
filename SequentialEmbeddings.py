@@ -3,6 +3,10 @@ import numpy as np
 import itertools
 import collections
 from gensim.models import KeyedVectors
+import glob
+import os
+import heapq
+from ReichstagEmbeddings import Embeddings
 
 # Define class for sequential embedding
 class SequentialEmbedding:
@@ -10,10 +14,14 @@ class SequentialEmbedding:
         self.embeds = embedding_spaces
  
     @classmethod
-    def load(cls, path, num_slices, **kwargs):
+    def load(cls, path, **kwargs):
+        i = 1
         embeds = collections.OrderedDict()
-        for i in range(1,num_slices+1): 
-            embeds[i] = KeyedVectors.load(f'{path}_{i}.model')
+        for fn in glob.glob(f'{path}/*.model'):
+            if os.path.splitext(os.path.basename(fn))[0] != 'compass':
+                embeds[i] = KeyedVectors.load(fn)
+                # embeds[i] = Embeddings.load(fn)
+                i += 1
         return SequentialEmbedding(embeds)
 
     def get_embed(self, slice):
