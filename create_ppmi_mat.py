@@ -6,17 +6,48 @@ from scipy import sparse
 import argparse
 import logging
 import json
-from utils import CreateCorpus, create_attribute_sets, convert_attribute_set
+from nltk.corpus import stopwords
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
-def get_unigrams(corpus, min_count=5):
+def umlauts(text):
+    """
+    Replace umlauts for a given text
+    
+    :param word: text as string
+    :return: manipulated text as str
+    """
+    
+    tempVar = word # local variable
+    
+    # Using str.replace() 
+    
+    tempVar = tempVar.replace('ä', 'ae')
+    tempVar = tempVar.replace('ö', 'oe')
+    tempVar = tempVar.replace('ü', 'ue')
+    tempVar = tempVar.replace('Ä', 'Ae')
+    tempVar = tempVar.replace('Ö', 'Oe')
+    tempVar = tempVar.replace('Ü', 'Ue')
+    tempVar = tempVar.replace('ß', 'ss')
+    
+    return tempVar
+
+def get_unigrams(corpus, min_count=10, filter_stopwords=True):
+    if filter_stopwords:
+      german_stop_words = stopwords.words('german')
+      german_stop_words_to_use = [umlauts(word) for word in german_stop_words]   # List to hold words after conversion
+
+      german_stop_words.append('0')
+
     unigram_counts = Counter()
     logging.info(f'Get unigrams')
     for ii, sent in enumerate(corpus):
         if ii % 200000 == 0:
             logging.info(f'finished {ii/len(corpus):.2%} of corpus')
         for token in sent:
-            unigram_counts[token] += 1
+          if filter_stopwords and token not in german_stop_words:
+              unigram_counts[token] += 1
+          else:
+              unigram_counts[token] += 1
     unigram_counts = {k:v for k,v in unigram_counts.items() if v >= min_count}                
     return unigram_counts
 
@@ -134,6 +165,7 @@ def main():
   tok2indx, indx2tok = get_indices(unigrams, attributes[att_1], attributes[att_2])
   skipgrams = get_skipgram_counts(sentences, tok2indx, indx2tok)
   coo_mat = create_coo_mat(skipgrams)
+
   ppmi_mat, sppmi_mat = create_ppmi_mat(coo_mat, skipgrams)
 
   # Save matrices
