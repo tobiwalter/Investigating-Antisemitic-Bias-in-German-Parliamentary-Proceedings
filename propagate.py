@@ -25,7 +25,12 @@ class LabelPropagation:
     assert len(tok2indx) == ppmi_mat.shape[0]
     return cls(ppmi_mat, tok2indx, **kwargs)
 
-  def reindex(self, pos_att, neg_att):
+  def reindex(self, pos_att, neg_att, random=False):
+
+    if random:
+      pos_indices_to_swap = np.random.randint(0,len(self.index),len(self.attributes[pos_att]))
+      neg_indices_to_swap = np.random.randint(0,len(self.index),len(self.attributes[neg_att]))
+
     pos_indices_to_swap = [self.index[word] for word in self.attributes[pos_att]]
     neg_indices_to_swap = [self.index[word] for word in self.attributes[neg_att]]
 
@@ -102,6 +107,7 @@ def main():
   parser.add_argument("--index", type=str, help="Path to token-2-index dictionary to be used for label propagation", required=True)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   parser.add_argument("--attribute_specifications", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--random", action='store_true')
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
@@ -109,13 +115,17 @@ def main():
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
   lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
   print(lp.labels)
-  if args.attribute_specifications != 'sentiment':
+
+  if args.attribute_specifications != 'sentiment' or args.random:
     logging.info('Reindex matrix')
-    lp.reindex(att_1, att_2)
+    lp.reindex(att_1, att_2, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)
   bias_term_indices = lp.get_bias_term_indices(targets)
   start = time.time()
-  logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
+  if args.random:
+    logging.info(f'Start label propagation for random attribute sets')
+  else:
+    logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
   lp.propagate()
   #lp.load_scores('fu_scores/kaiserreich_1.npy')
   lp.save_scores(args.output_file, args.attribute_specifications)
