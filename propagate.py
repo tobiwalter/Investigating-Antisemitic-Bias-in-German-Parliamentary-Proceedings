@@ -18,18 +18,19 @@ class LabelPropagation:
     self.labels = None
     self.scores = None
   @classmethod
-  def load(cls, matrix_path, indx_path):
+  def load(cls, matrix_path, indx_path, **kwargs):
     ppmi_mat = sparse.load_npz(matrix_path)
     logging.info(f'Shape of PPMI matrix:{ppmi_mat.shape}')
-    indx2tok = json.load(open(indx_path, 'r', encoding='utf-8'))
-    return cls(ppmi_mat, indx2tok)
+    tok2indx = json.load(open(indx_path, 'r', encoding='utf-8'))
+    assert len(tok2indx) == ppmi_mat.shape[0]
+    return cls(ppmi_mat, tok2indx, **kwargs)
 
   def reindex(self, pos_att, neg_att):
-    pos_indices_to_swap = [self.index[word] for word in attributes[pos_att]]
-    neg_indices_to_swap = [self.index[word] for word in attributes[neg_att]]
+    pos_indices_to_swap = [self.index[word] for word in self.attributes[pos_att]]
+    neg_indices_to_swap = [self.index[word] for word in self.attributes[neg_att]]
 
     matrix = self.ppmi.toarray()
-    i2t = {v:k for k,v in self.index}
+    i2t = {v:k for k,v in self.index.items()}
     for indx_old, indx_new in enumerate(pos_indices_to_swap):
         matrix[[indx_old, indx_new]] = matrix[[indx_new, indx_old]]
         matrix[:,[indx_old, indx_new]] = matrix[:,[indx_new, indx_old]]
@@ -41,6 +42,8 @@ class LabelPropagation:
         i2t[indx_old+len(pos_indices_to_swap)], i2t[indx_new] = i2t[indx_new], i2t[indx_old+len(pos_indices_to_swap)]
         
     self.index = {v:k for k,v in i2t.items()}
+    print([(f'{word}:{self.index[word]}') for word in self.attributes[pos_att]])
+    print([(f'{word}:{self.index[word]}') for word in self.attributes[neg_att]])
     self.ppmi = sparse.csr_matrix(matrix)
 
   def create_labels(self, targets_1, targets_2):
@@ -102,15 +105,15 @@ def main():
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
-  
-  lp = LabelPropagation.load(args.ppmi, args.index, kind=args.protocol_type)
-  # attributes = create_attribute_sets(lp.index, kind=args.protocol_type)
+  lp = LabelPropagation.load(args.ppmi, args.index, protocol_type=args.protocol_type)
   att_1, att_2 = convert_attribute_set(args.attribute_specifications)
-  lp.create_labels(attributes[att_1], attributes[att_2])
+  lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
   print(lp.labels)
-  if attribute_specifications != 'sentiment':
+  if args.attribute_specifications != 'sentiment':
     logging.info('Reindex matrix')
     lp.reindex(att_1, att_2)
+  targets = create_target_sets(lp.index, kind=args.protocol_type)
+  bias_term_indices = lp.get_bias_term_indices(targets)
   start = time.time()
   logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
   lp.propagate()
@@ -118,11 +121,9 @@ def main():
   lp.save_scores(args.output_file, args.attribute_specifications)
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
-  targets = create_target_sets(lp.index, kind=args.protocol_type)
-  bias_term_indices = lp.get_bias_term_indices(targets)
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
-  with codecs.open(f'fu_scores/{args.output_file}.txt', "w", "utf8") as f:
+  with codecs.open(f'fu_scores/{args.output_file}_{args.attribute_specifications}.txt', "w", "utf8") as f:
     for k,v in bias_term_scores.items():
       f.write(f'Mean score {k}: {v.mean()}\n')
       f.write(f'Median score {k}: {np.percentile(v, 50)}\n')
@@ -136,7 +137,7 @@ def main():
       f.write(f't-test for {t1} and {t2}:\n')
       f.write(f'test statistic: {t}, ')
       f.write(f'p-value: {p}\n')
-
+    f.close()
 
 if __name__ == "__main__":
   main()
