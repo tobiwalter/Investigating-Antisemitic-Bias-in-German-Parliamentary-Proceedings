@@ -51,6 +51,14 @@ CONSPIRATORIAL_PRO = 'treu, moralisch, ehrlich, loyal, aufrichtig, ehrenwert, zu
 
 CONSPIRATORIAL_CON = 'untreu, unmoralisch, unehrlich, verraeterisch, hinterlistig, betruegerisch, geheim, einflussreich, macht'.split(', ')
 
+RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
+
+RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, schaendlich, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
+
+RACIST_RPO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
+
+RACIST_CON = 'seltsam, unterlegenheit, ungleichheit, unangenehm, boshaft, schaendlich, hass, abgelehnt, schlechter, fremdlaendisch, unrein, unterlegen, schmutzig, verseucht, schaedlich, niedertraechtig'
+
 OUTSIDER_WORDS = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beaengstigend, hinterlistig, energisch, truegerisch, \
 neidisch, gierig, abscheulich, verachtenswert, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'\
 .lower().split(', ') 
@@ -145,6 +153,10 @@ def create_attribute_sets(word_vectors, kind):
 	'economic_con' : filter_target_set(ECONOMIC_CON, word_vectors),
 	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, word_vectors),
 	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, word_vectors),
+    'religious_pro' : filter_target_set(RELIGIOUS_PRO),
+    'religious_con' : filter_target_set(RELIGIOUS_CON),
+    'racist_pro' : filter_target_set(RACIST_RPO),
+    'racist_con' : filter_target_set(RACIST_CON),
         'outsider_words' : filter_target_set(OUTSIDER_WORDS, word_vectors), 
         'jewish_occupations' : filter_target_set(JEWISH_OCCUPATIONS, word_vectors),
         'jewish_nouns' : filter_target_set(JEWISH_STEREOTYPES_NOUNS, word_vectors),
