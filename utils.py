@@ -43,9 +43,9 @@ VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, 
 
 VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos'.split(', ')   
 
-ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos,  genuegsam, großmut, uneigennuetzig, sparsam, bourgeoisie, großmut, bescheiden'.split(', ')
+ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos,  genuegsam, großmut, uneigennuetzig, sparsam, proletariat, bescheiden'.split(', ')
 
-ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, eigennuetzig, verschwenderisch, proletariat, habsucht, wucher'.split(', ')
+ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, eigennuetzig, verschwenderisch, bourgeoisie, habsucht, wucher'.split(', ')
 
 CONSPIRATORIAL_PRO = 'treu, moralisch, ehrlich, loyal, aufrichtig, ehrenwert, zugaenglich, machtlos, ohnmacht'.split(', ')
 
@@ -159,7 +159,7 @@ def create_attribute_sets(word_vectors, kind):
     return attribute_sets
 
 def convert_attribute_set(label):
-    if label == 'sentiment':
+    if label in ('sentiment', 'random'):
       return ('pleasant', 'unpleasant')
     elif label == 'patriotism':
       return ('volkstreu', 'volksuntreu')
