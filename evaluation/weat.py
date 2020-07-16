@@ -96,7 +96,7 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
       # attributes_1 = PLEASANT 
       # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
@@ -114,7 +114,7 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
 
-      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
       # attributes_1 = PLEASANT 
       # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
@@ -132,7 +132,7 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
 
       # attributes_1 = PLEASANT 
       # attributes_2 = UNPLEASANT
@@ -151,7 +151,7 @@ class XWEAT(object):
         targets_1 = CATHOLIC_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
 
       # attributes_1 = PLEASANT 
       # attributes_2 = UNPLEASANT
@@ -387,6 +387,7 @@ def main():
   with codecs.open(args.output_file, "w", "utf8") as f:
     f.write("Config: ")
     f.write(str(args.test_number) + " and ")
+    f.write(str(args.att_dim) + " and ")
     f.write(str(args.lower) + " and ")
     f.write(str(args.permutation_number) + "\n")
     f.write("Result: ")
