@@ -141,6 +141,10 @@ def create_attribute_sets(word_vectors, kind):
     attribute_sets = {
         'pleasant' : filter_target_set(PLEASANT, word_vectors),
         'unpleasant' : filter_target_set(UNPLEASANT, word_vectors),
+	'economic_pro' : filter_target_set(ECONOMIC_PRO, word_vectors),
+	'economic_con' : filter_target_set(ECONOMIC_CON, word_vectors),
+	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, word_vectors),
+	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, word_vectors),
         'outsider_words' : filter_target_set(OUTSIDER_WORDS, word_vectors), 
         'jewish_occupations' : filter_target_set(JEWISH_OCCUPATIONS, word_vectors),
         'jewish_nouns' : filter_target_set(JEWISH_STEREOTYPES_NOUNS, word_vectors),
@@ -161,6 +165,8 @@ def create_attribute_sets(word_vectors, kind):
 def convert_attribute_set(label):
     if label in ('sentiment', 'random'):
       return ('pleasant', 'unpleasant')
+    elif label == 'sentiment_flipped':
+      return ('unpleasant', 'pleasant')
     elif label == 'patriotism':
       return ('volkstreu', 'volksuntreu')
     elif label == 'economic':
