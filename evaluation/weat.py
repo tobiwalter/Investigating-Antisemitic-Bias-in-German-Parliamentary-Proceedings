@@ -70,7 +70,21 @@ class XWEAT(object):
      else:
       raise NotImplementedError()
 
-  def weat_1(self, protocol_type):
+  @staticmethod
+  def convert_attribute_dimension(attribute_dimension, protocol_type):
+    if attribute_dimension == 'sentiment':
+      return PLEASANT, UNPLEASANT
+    elif attribute_dimension == 'patriotism':
+      if protocol_type == 'RT':
+        return VOLKSTREU_RT, VOLKSUNTREU_RT
+      elif protocol_type == 'BRD':
+        return VOLKSTREU_BRD, VOLKSUNTREU_BRD
+    elif attribute_dimension == 'economic':
+      return ECONOMIC_PRO, ECONOMIC_CON
+    elif attribute_dimension == 'conspiratorial':
+      return CONSPIRATORIAL_PRO, CONSPIRATORIAL_CON
+
+  def weat_1(self, attribute_dimension, protocol_type):
       """
       WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant wordargs.protocol_typeselfs
       """
@@ -82,12 +96,13 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = PLEASANT 
-      attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      # attributes_1 = PLEASANT 
+      # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_2(self, protocol_type):
+  def weat_2(self, attribute_dimension, protocol_type):
       """
       WEAT 2 - terms representing catholicism and protestantism + sets of pleasant/unplesant words
       """
@@ -99,12 +114,13 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
 
-      attributes_1 = PLEASANT 
-      attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+      # attributes_1 = PLEASANT 
+      # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_3(self, protocol_type):
+  def weat_3(self, attribute_dimension, protocol_type):
       """
       WEAT 3 - terms representing protestantism and judaism + sets of pleasant/unplesant words
       """
@@ -116,12 +132,14 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = PLEASANT 
-      attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+
+      # attributes_1 = PLEASANT 
+      # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_4(self, protocol_type):
+  def weat_4(self, attribute_dimension, protocol_type):
       """
       WEAT 4 - terms representing catholicism and judaism + sets of pleasant/unplesant words
       """
@@ -133,12 +151,14 @@ class XWEAT(object):
         targets_1 = CATHOLIC_RT
         targets_2 = JEWISH_RT
 
-      attributes_1 = PLEASANT 
-      attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = convert_attribute_dimension(attribute_dimension, protocol_type)
+
+      # attributes_1 = PLEASANT 
+      # attributes_2 = UNPLEASANT
       return targets_1, targets_2, attributes_1, attributes_2
 
     # again african american vs european american names, but with different attributes
-  def weat_5(self, protocol_type):
+  def weat_5(self,  protocol_type):
       # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
 
       if protocol_type == 'BRD':
@@ -314,6 +334,7 @@ def main():
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",required=True)
+  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
@@ -330,13 +351,13 @@ def main():
   weat = XWEAT()
 
   if args.test_number == 1:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.att_dim, args.protocol_type)
   elif args.test_number == 2:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.att_dim, args.protocol_type)
   elif args.test_number == 3:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.att_dim, args.protocol_type)
   elif args.test_number == 4:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.att_dim, args.protocol_type)
   elif args.test_number == 5:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5(args.protocol_type)
   elif args.test_number == 6:
