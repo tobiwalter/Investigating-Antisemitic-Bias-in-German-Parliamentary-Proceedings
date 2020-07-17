@@ -83,6 +83,10 @@ class XWEAT(object):
       return ECONOMIC_PRO, ECONOMIC_CON
     elif attribute_dimension == 'conspiratorial':
       return CONSPIRATORIAL_PRO, CONSPIRATORIAL_CON
+    elif attribute_dimension == 'racist':
+      return RACIST_PRO, RACIST_CON
+    elif attribute_dimension == 'religious':
+      return RELIGIOUS_PRO, RELIGIOUS_CON
 
   def weat_1(self, attribute_dimension, protocol_type):
       """
@@ -334,7 +338,7 @@ def main():
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",required=True)
-  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
