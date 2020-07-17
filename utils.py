@@ -13,6 +13,8 @@ VOCAB_FOLDER = DATA_FOLDER / 'vocab'
 
 # term sets
 
+## target terms 
+
 JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelit", "rothschild", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
 JEWISH_BRD = 'judentum, jude, juedisch, israel, israels, israeli, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
@@ -29,11 +31,14 @@ CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, pae
 
 CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "roemisch-katholisch", "zentrumspartei"]
 
+## attribute terms defining different attribute dimensions
+
+# sentiment
 PLEASANT = 'streicheln, Freiheit, Gesundheit, Liebe, Frieden, Freude, Freund, Himmel, loyal, Vergnuegen, Diamant, sanft, ehrlich, gluecklich, Regenbogen, Diplom, Geschenk, Ehre, Wunder, Sonnenaufgang, Familie, Lachen, Paradies, Ferien'.lower().split(', ') 
 
 UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergiften, stinken, Angriff, Katastrophe, Hass, verschmutzen, Tragoedie, Scheidung, Gefaengnis, Armut, haesslich, Krebs, toeten, faul, erbrechen, Qual'.lower().split(', ') 
 
-# sets patriotic/non-patriotic words 
+# nationalism/patriotism
 
 VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanisch, deutschnational, nationalbewusstsein, vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
 
@@ -43,21 +48,37 @@ VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, 
 
 VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos'.split(', ')   
 
-ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos,  genuegsam, großmut, uneigennuetzig, sparsam, proletariat, bescheiden'.split(', ')
+# economy
 
-ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, eigennuetzig, verschwenderisch, bourgeoisie, habsucht, wucher'.split(', ')
+ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos, genuegsam, großmut, uneigennuetzig, sparsam, proletariat, armut, industriearbeiter'.split(', ')
 
-CONSPIRATORIAL_PRO = 'treu, moralisch, ehrlich, loyal, aufrichtig, ehrenwert, zugaenglich, machtlos, ohnmacht'.split(', ')
+ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, boerse, wucher'.split(', ')
 
-CONSPIRATORIAL_CON = 'untreu, unmoralisch, unehrlich, verraeterisch, hinterlistig, betruegerisch, geheim, einflussreich, macht'.split(', ')
+# conspiracy
+
+CONSPIRATORIAL_PRO = 'loyal, kamerad, ehrlichkeit, ersichtlich, aufrichtig, vertrauenswuerdig, wahr, ehrlich, unschuldig, freundschaftlich, hell, zugaenglich, machtlos, ohnmacht, untertan'.split(', ')
+
+CONSPIRATORIAL_CON = 'illoyal, spitzel, verrat, geheim, betruegerisch, hinterlistig, unwahr, zweifelhaft, verbrecher, bedrohlich, dunkel, geheimnis, einflussreich, weltmacht, herrschaft, verschwoerung'.split(', ')
+
+# ethics
+
+ETHIC_PRO = 'bescheiden, sittlich, anstaendig, tugendhaft, charakterfest, wuerdig, treu, moralisch, ehrlich, gesittet, gewissenhaft, vorbildlich'.split(', ')
+
+ETHIC_CON = 'unbescheiden, unsittlich, unanstaendig, luestern, korrupt, unwuerdig, untreu, unmoralisch, unehrlich, verdorben, gewissenlos, barbarisch'.split(', ')
+
+# religion
 
 RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
 
 RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, schaendlich, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
 
+# racism
+
 RACIST_RPO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
 
 RACIST_CON = 'seltsam, unterlegenheit, ungleichheit, unangenehm, boshaft, schaendlich, hass, abgelehnt, schlechter, fremdlaendisch, unrein, unterlegen, schmutzig, verseucht, schaedlich, niedertraechtig'
+
+# unipolar attribute sets - can only be used for ECT 
 
 OUTSIDER_WORDS = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beaengstigend, hinterlistig, energisch, truegerisch, \
 neidisch, gierig, abscheulich, verachtenswert, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'\
@@ -185,6 +206,7 @@ def convert_attribute_set(label):
       return ('economic_pro', 'economic_con')
     elif label == 'conspiratorial':
       return ('conspiratorial_pro', 'conspiratorial_con')
+  
       
 def create_target_sets(word_vectors, kind): 
     """
