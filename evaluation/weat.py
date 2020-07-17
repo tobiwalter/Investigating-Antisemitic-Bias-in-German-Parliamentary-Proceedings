@@ -87,6 +87,8 @@ class XWEAT(object):
       return RACIST_PRO, RACIST_CON
     elif attribute_dimension == 'religious':
       return RELIGIOUS_PRO, RELIGIOUS_CON
+    elif attribute_dimension == 'ethic':
+      return ETHIC_PRO, ETHIC_CON
 
   def weat_1(self, attribute_dimension, protocol_type):
       """
@@ -310,16 +312,16 @@ class XWEAT(object):
       A1 = self.convert_by_vocab(attributes_1)
       A2 = self.convert_by_vocab(attributes_2)
       while len(T1) < len(T2):
-        logging.info("Popped T2 %d", T2[-1])
+        logging.info("Popped T2 %d", self.vocab[T2[-1]])
         T2.pop(-1)
       while len(T2) < len(T1):
-        logging.info("Popped T1 %d", T1[-1])
+        logging.info("Popped T1 %d", self.vocab[T1[-1]])
         T1.pop(-1)
       while len(A1) < len(A2):
-        logging.info("Popped A2 %d", A2[-1])
+        logging.info("Popped A2 %d", self.vocab[A2[-1]])
         A2.pop(-1)
       while len(A2) < len(A1):
-        logging.info("Popped A1 %d", A1[-1])
+        logging.info("Popped A1 %d", self.vocab[A1[-1]])
         A1.pop(-1)
       assert len(T1)==len(T2)
       assert len(A1) == len(A2)
@@ -338,7 +340,7 @@ def main():
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",required=True)
-  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious', 'ethic'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
