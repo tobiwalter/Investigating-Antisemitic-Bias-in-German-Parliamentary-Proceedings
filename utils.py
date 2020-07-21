@@ -73,7 +73,7 @@ RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlic
 RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
 
 # racism
-RACIST_PRO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', '
+RACIST_PRO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
 
 RACIST_CON = 'seltsam, unterlegenheit, ungleichheit, unangenehm, boshaft, schaendlich, hass, abgelehnt, schlechter, fremdlaendisch, unrein, unterlegen, schmutzig, verseucht, schaedlich, niedertraechtig'.split(', ')
 
@@ -173,10 +173,12 @@ def create_attribute_sets(word_vectors, kind):
 	'economic_con' : filter_target_set(ECONOMIC_CON, word_vectors),
 	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, word_vectors),
 	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, word_vectors),
-    'religious_pro' : filter_target_set(RELIGIOUS_PRO),
-    'religious_con' : filter_target_set(RELIGIOUS_CON),
-    'racist_pro' : filter_target_set(RACIST_RPO),
-    'racist_con' : filter_target_set(RACIST_CON),
+    'religious_pro' : filter_target_set(RELIGIOUS_PRO, word_vectors),
+    'religious_con' : filter_target_set(RELIGIOUS_CON, word_vectors),
+    'racist_pro' : filter_target_set(RACIST_PRO, word_vectors),
+    'racist_con' : filter_target_set(RACIST_CON, word_vectors),
+    'ethic_pro' : filter_target_set(ETHIC_PRO, word_vectors),
+    'ethic_con' : filter_target_set(ETHIC_CON, word_vectors),
         'outsider_words' : filter_target_set(OUTSIDER_WORDS, word_vectors), 
         'jewish_occupations' : filter_target_set(JEWISH_OCCUPATIONS, word_vectors),
         'jewish_nouns' : filter_target_set(JEWISH_STEREOTYPES_NOUNS, word_vectors),
@@ -205,15 +207,14 @@ def convert_attribute_set(label):
       return ('economic_pro', 'economic_con')
     elif label == 'conspiratorial':
       return ('conspiratorial_pro', 'conspiratorial_con')
-<<<<<<< HEAD
     elif label == 'racist':
       return ('racist_pro', 'racist_con')
     elif label == 'religious':
       return ('religious_pro', 'religious_con')
-=======
-  
->>>>>>> 0e9e5c6cdefc8b5688524df068bdeac4b79673fa
-      
+    elif label == 'ethic':
+      return ('ethic_pro', 'ethic_con')
+    
+    
 def create_target_sets(word_vectors, kind): 
     """
     Create all target sets for this study

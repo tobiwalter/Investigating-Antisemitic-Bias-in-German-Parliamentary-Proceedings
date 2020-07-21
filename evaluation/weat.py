@@ -312,16 +312,16 @@ class XWEAT(object):
       A1 = self.convert_by_vocab(attributes_1)
       A2 = self.convert_by_vocab(attributes_2)
       while len(T1) < len(T2):
-        logging.info("Popped T2 %d", self.vocab[T2[-1]])
+        logging.info("Popped T2 %d", T2[-1])
         T2.pop(-1)
       while len(T2) < len(T1):
-        logging.info("Popped T1 %d", self.vocab[T1[-1]])
+        logging.info("Popped T1 %d", T1[-1])
         T1.pop(-1)
       while len(A1) < len(A2):
-        logging.info("Popped A2 %d", self.vocab[A2[-1]])
+        logging.info("Popped A2 %d", A2[-1])
         A2.pop(-1)
       while len(A2) < len(A1):
-        logging.info("Popped A1 %d", self.vocab[A1[-1]])
+        logging.info("Popped A1 %d", A1[-1])
         A1.pop(-1)
       assert len(T1)==len(T2)
       assert len(A1) == len(A2)
