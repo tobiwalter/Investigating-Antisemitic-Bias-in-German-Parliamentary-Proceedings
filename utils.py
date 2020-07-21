@@ -5,6 +5,7 @@ import numpy as np
 from pathlib import Path
 import os
 import codecs
+from scipy import sparse
 # import numba
 
 DATA_FOLDER = Path('./data')
@@ -297,7 +298,10 @@ def load_vocab(path, inverse = False):
     return vocab
 
 def load_vectors(path, normalize = False):
-  vecs = np.load(path)
+  if path.endswith('npz'):
+    vecs = sparse.load_npz(path)
+  else:
+    vecs = np.load(path)
   if normalize:
     vecs_norm = vecs / np.transpose([np.linalg.norm(vecs, 2, 1)])
     return vecs, vecs_norm

@@ -67,6 +67,9 @@ class XWEAT(object):
   def _init_similarities(self, similarity_type):
      if similarity_type == "cosine":
       self.similarities = self.cosine(self.embedding_matrix, self.embedding_matrix)
+     elif similarity_type == "ppmi":
+      self.similarities = mat_normalize(self.embedding_matrix)
+
      else:
       raise NotImplementedError()
 
