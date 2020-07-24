@@ -51,6 +51,7 @@ class XWEAT(object):
       for term, index in self.vocab.items():
         if term in self.embd_dict:
           self.embedding_matrix.append(self.embd_dict[term])
+	
         else:
           raise AssertionError("This should not happen.")
       self.embd_dict = None
@@ -68,8 +69,7 @@ class XWEAT(object):
      if similarity_type == "cosine":
       self.similarities = self.cosine(self.embedding_matrix, self.embedding_matrix)
      elif similarity_type == "ppmi":
-      self.similarities = mat_normalize(self.embedding_matrix)
-
+      self.similarities = np.array(self.embedding_matrix)
      else:
       raise NotImplementedError()
 
@@ -343,10 +343,11 @@ def main():
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",required=True)
-  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious', 'ethic'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious', 'ethic'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial', required=True)
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
+  parser.add_argument("--similarity_type", type=str, default='cosine', help='Similarity function to use')
   parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab", required=True)
   parser.add_argument("--embedding_vocab", type=str, help="Vocab of the embeddings")
   parser.add_argument("--embedding_vectors", type=str, help="Vectors of the embeddings")
@@ -391,7 +392,7 @@ def main():
   weat.set_embd_dict(embd_dict)
 
   logging.info("Running test")
-  result = weat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.permutation_number)
+  result = weat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.permutation_number, args.similarity_type)
   logging.info(result)
   with codecs.open(args.output_file, "w", "utf8") as f:
     f.write("Config: ")

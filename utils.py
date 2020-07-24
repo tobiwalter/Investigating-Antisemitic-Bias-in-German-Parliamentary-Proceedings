@@ -299,7 +299,7 @@ def load_vocab(path, inverse = False):
 
 def load_vectors(path, normalize = False):
   if path.endswith('npz'):
-    vecs = sparse.load_npz(path)
+    vecs = sparse.load_npz(path).toarray()
   else:
     vecs = np.load(path)
   if normalize:
