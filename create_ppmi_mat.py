@@ -31,7 +31,7 @@ def umlauts(text):
     
     return tempVar
 
-def get_unigrams(corpus, min_count=10, filter_stopwords=True):
+def get_unigrams(corpus, min_count=10, filter_stopwords=False):
     if filter_stopwords:
       german_stop_words = stopwords.words('german')
       german_stop_words_to_use = [umlauts(word) for word in german_stop_words]   # List to hold words after conversion
@@ -63,14 +63,18 @@ def get_indices(unigram_counts, targets_1, targets_2):
     logging.info(f'vocabulary size: {len(tok2indx)}')
     return tok2indx, indx2tok
 
-def get_skipgram_counts(corpus, tok2indx, indx2tok):
+def get_skipgram_counts(corpus, tok2indx, window_size=2):
+    back_window = 2
+    front_window = 2
     skipgram_counts = Counter()
     logging.info(f'Get skipgram counts')
     for ix, sent in enumerate(corpus):
         tokens = [tok2indx[tok] for tok in sent if tok in tok2indx]
         for ii_word, word in enumerate(tokens):
+            ii_context_min = max(0, ii_word - back_window)
+            ii_context_max = min(len(tokens) - 1, ii_word + front_window)
             ii_contexts = [
-                ii for ii in range(len(tokens)) 
+                ii for ii in range(ii_context_min, ii_context_max + 1) 
                 if ii != ii_word]
             for ii_context in ii_contexts:
                 skipgram = (tokens[ii_word], tokens[ii_context])
@@ -151,6 +155,7 @@ def main():
   parser = argparse.ArgumentParser(description="Compute PPMI matrix")
   parser.add_argument("--corpus", type=str, help="Corpus path", required=True)
   parser.add_argument("--min_count", type=int, help="Minimum number of occurences of a word to be included in PPMI matrix", required=True)
+  parser.add_argument("--window_size", type=int, help="Window size to use for creating CO and PPMI matrices", required=True)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",
  required=True)
   parser.add_argument("--attribute_specifications", type=str, help='Which attribute set to be used for subsequent label propagation - either sentiment, patriotism, economic or conspiratorial')
