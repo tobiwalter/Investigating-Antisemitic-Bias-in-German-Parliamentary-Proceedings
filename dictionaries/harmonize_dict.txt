@@ -6,7 +6,18 @@ judenthums judentum
 judentums judentum
 großmuth großmut
 armuth armut
+israels israel
+juedischen juedisch
+christlichen christlich
+evangelische evangelisch
+evangelischen evangelisch
+evangeliums evangelium
+katholische katholisch
+katholischen katholisch
 ehrenwerth ehrenwert
+evangelischlutherisch evangelisch-lutherisch
+roemischkatholisch roemisch-katholisch
+katholicismus katholizismus
 einflußreich einflussreich
 geheimnißvoll geheinisvoll
 ossensichtlich offensichtlich
@@ -340,6 +351,7 @@ genuß genuss
 daß dass
 bundeskanzler-amt bundeskanzleramt
 volksthum volkstum
+volkstums volkstum
 erlaffen erlassen
 fluß fluss
 neichsregierung reichsregierung
