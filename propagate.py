@@ -25,14 +25,16 @@ class LabelPropagation:
     assert len(tok2indx) == ppmi_mat.shape[0]
     return cls(ppmi_mat, tok2indx, **kwargs)
 
-  def reindex(self, pos_att, neg_att, random=False):
+  def reindex(self, dim, random=False):
+
+    att1, att2 = convert_attribute_set(dim)
 
     if random:
       pos_indices_to_swap = np.random.randint(0,len(self.index),len(self.attributes[pos_att]))
       neg_indices_to_swap = np.random.randint(0,len(self.index),len(self.attributes[neg_att]))
-
-    pos_indices_to_swap = [self.index[word] for word in self.attributes[pos_att]]
-    neg_indices_to_swap = [self.index[word] for word in self.attributes[neg_att]]
+    else:
+      pos_indices_to_swap = [self.index[word] for word in self.attributes[pos_att]]
+      neg_indices_to_swap = [self.index[word] for word in self.attributes[neg_att]]
 
     matrix = self.ppmi.toarray()
     i2t = {v:k for k,v in self.index.items()}
@@ -57,11 +59,13 @@ class LabelPropagation:
         labels.append(1)
     for word in targets_2:
         labels.append(0)
-    labels = np.array(labels)
+#     labels = np.array(labels)
+    labels = np.array([labels, list(reversed(labels))]).T
     self.labels = labels
 
   def propagate(self):
     # Compute normalized laplacian 
+
     L = sparse.csgraph.laplacian(self.ppmi, normed=True).toarray()
     
     # Sub-matrices L_ul and L_uu
@@ -69,8 +73,11 @@ class LabelPropagation:
     L_uu = L[len(self.labels):, len(self.labels):]
     
     # Compute scores f_u (add a little bit if noise to L_uu to avoid LinAlgError when computing inverse)
-    self.scores = (-1* inverse(L_uu + np.eye(L_uu.shape[0])*M)).dot(L_ul).dot(self.labels)
-    # np.save(f'f_u_scores/{label}', f_u)
+    try:
+      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu)).dot(L_ul).dot(labels)
+    except:
+      logging.info(f'Add little amount of noise ({M}) to enable computation of inverse')
+      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu + np.eye(L_uu.shape[0])*M)).dot(L_ul).dot(labels)
 
   def save_scores(self, path, attribute_specification):
     if not os.path.exists('fu_scores'):
@@ -81,6 +88,7 @@ class LabelPropagation:
      return {k: [self.index[word] - len(self.labels) for word in v] for k,v in targets.items()}
 
   def get_bias_term_scores(self, bias_term_indices):
+    self.scores = self.scores.T[0]
     return {k: self.scores[v] for k,v in bias_term_indices.items()}
 
   # def output_stats(self):
@@ -106,17 +114,17 @@ def main():
   parser.add_argument("--ppmi", type=str, help="Path to PPMI matrix to be used for label propagation", required=True)
   parser.add_argument("--index", type=str, help="Path to token-2-index dictionary to be used for label propagation", required=True)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
-  parser.add_argument("--attribute_specifications", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--attribute_dimension", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--random", action='store_true')
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
   lp = LabelPropagation.load(args.ppmi, args.index, protocol_type=args.protocol_type)
-  att_1, att_2 = convert_attribute_set(args.attribute_specifications)
+  att_1, att_2 = convert_attribute_set(args.attribute_dimension)
   lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
   print(lp.labels)
 
-  if args.attribute_specifications != 'sentiment' or args.random:
+  if args.attribute_dimension != 'sentiment' or args.random:
     logging.info('Reindex matrix')
     lp.reindex(att_1, att_2, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)

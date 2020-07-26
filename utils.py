@@ -41,19 +41,19 @@ UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergif
 
 # nationalism/patriotism
 
-VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanisch, deutschnational, nationalbewusstsein, vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu, staatstreu, nationalgefuehl'.split(', ')
+VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanisch, deutschnational, nationalbewusstsein, vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
 
-VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, staatsfeindlichh, dissident, heimatlos'.split(', ')   
+VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, umstuerzler'.split(', ')   
 
-VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot, staatstreu'.split(', ')
+VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot'.split(', ')
 
-VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos, dissident'.split(', ')   
+VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos'.split(', ')   
 
 # economy
 
 ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos, genuegsam, großmut, uneigennuetzig, sparsam, proletariat, armut, industriearbeiter'.split(', ')
 
-ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, bankier, wucher'.split(', ')
+ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, boerse, wucher'.split(', ')
 
 # conspiracy
 
@@ -71,7 +71,7 @@ ETHIC_CON = 'unbescheiden, unsittlich, unanstaendig, luestern, korrupt, unwuerdi
 
 RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
 
-RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
+RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, schaendlich, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
 
 # racism
 RACIST_PRO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
@@ -154,93 +154,97 @@ def write_lines(path, list):
         f.write(str(l) + "\n")
     f.close()
 
-def filter_target_set(target_set, word_vectors):
+def filter_target_set(target_set, dict):
     """
-    Filter out all target terms that did not reach the minimum count and are thus not included in the embeddings space
+    Filter out target terms that did not reach the minimum count 
     """
-    return [word for word in target_set if word in word_vectors]
+    return [word for word in target_set if word in dict]
 
-def create_attribute_sets(word_vectors, kind):
+def create_attribute_sets(dict, kind, incl_unipolar=False):
     """
     Create all attribute sets for this study
 
-    :param word_vectors: trained word vectors 
+    :param dict: trained word vectors 
     :param kind: kind of attributes to create - either RT or BRD 
+    :param incl_unipolar: whether to include unipolar attribute sets 
     """
     attribute_sets = {
-        'pleasant' : filter_target_set(PLEASANT, word_vectors),
-        'unpleasant' : filter_target_set(UNPLEASANT, word_vectors),
-	'economic_pro' : filter_target_set(ECONOMIC_PRO, word_vectors),
-	'economic_con' : filter_target_set(ECONOMIC_CON, word_vectors),
-	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, word_vectors),
-	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, word_vectors),
-    'religious_pro' : filter_target_set(RELIGIOUS_PRO, word_vectors),
-    'religious_con' : filter_target_set(RELIGIOUS_CON, word_vectors),
-    'racist_pro' : filter_target_set(RACIST_PRO, word_vectors),
-    'racist_con' : filter_target_set(RACIST_CON, word_vectors),
-    'ethic_pro' : filter_target_set(ETHIC_PRO, word_vectors),
-    'ethic_con' : filter_target_set(ETHIC_CON, word_vectors),
-        'outsider_words' : filter_target_set(OUTSIDER_WORDS, word_vectors), 
-        'jewish_occupations' : filter_target_set(JEWISH_OCCUPATIONS, word_vectors),
-        'jewish_nouns' : filter_target_set(JEWISH_STEREOTYPES_NOUNS, word_vectors),
-        'jewish_character' : filter_target_set(JEWISH_STEREOTYPES_CHARACTER, word_vectors),
-        'jewish_political' : filter_target_set(JEWISH_STEREOTYPES_POLITICAL, word_vectors)
-                    }
+        'pleasant' : filter_target_set(PLEASANT, dict),
+        'unpleasant' : filter_target_set(UNPLEASANT, dict),
+	'economic_pro' : filter_target_set(ECONOMIC_PRO, dict),
+	'economic_con' : filter_target_set(ECONOMIC_CON, dict),
+	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, dict),
+	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, dict),
+    'religious_pro' : filter_target_set(RELIGIOUS_PRO),
+    'religious_con' : filter_target_set(RELIGIOUS_CON),
+    'racist_pro' : filter_target_set(RACIST_RPO),
+    'racist_con' : filter_target_set(RACIST_CON),
+    'ethic_pro' : filter_target_set(ETHIC_PRO, dict),
+    'ethic_con' : filter_target_set(ETHIC_CON, dict)}
+
+    if incl_unipolar:
+
+        attribute_sets['outsider_words'] = filter_target_set(OUTSIDER_WORDS, dict)
+        attribute_sets['jewish_occupations'] = filter_target_set(JEWISH_OCCUPATIONS, dict),
+        attribute_sets['jewish_nouns'] = filter_target_set(JEWISH_STEREOTYPES_NOUNS, dict),
+        attribute_sets['jewish_character'] = filter_target_set(JEWISH_STEREOTYPES_CHARACTER, dict),
+        attribute_sets['jewish_political'] = filter_target_set(JEWISH_STEREOTYPES_POLITICAL, dict)
+
     if kind == 'BRD':
-        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_BRD, word_vectors)
-        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_BRD, word_vectors)
+        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_BRD, dict)
+        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_BRD, dict)
     elif kind == 'RT':            
-        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_RT, word_vectors)
-        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_RT, word_vectors)
-    else:
-        print('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
+        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_RT, dict)
+        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_RT, dict)
+    else: 
+        raise ValueError('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
 
     return attribute_sets
 
-def convert_attribute_set(label):
-    if label in ('sentiment', 'random'):
+def convert_attribute_set(dimension):
+    if dimension in ('sentiment', 'random'):
       return ('pleasant', 'unpleasant')
-    elif label == 'sentiment_flipped':
+    elif dimension == 'sentiment_flipped':
       return ('unpleasant', 'pleasant')
-    elif label == 'patriotism':
+    elif dimension == 'patriotism':
       return ('volkstreu', 'volksuntreu')
-    elif label == 'economic':
+    elif dimension == 'economic':
       return ('economic_pro', 'economic_con')
-    elif label == 'conspiratorial':
+    elif dimension == 'conspiratorial':
       return ('conspiratorial_pro', 'conspiratorial_con')
-    elif label == 'racist':
+    elif dimension == 'racist':
       return ('racist_pro', 'racist_con')
-    elif label == 'religious':
+    elif dimension == 'religious':
       return ('religious_pro', 'religious_con')
-    elif label == 'ethic':
+    elif dimension == 'ethic':
       return ('ethic_pro', 'ethic_con')
-    
-    
-def create_target_sets(word_vectors, kind): 
+
+      
+def create_target_sets(dict, kind): 
     """
     Create all target sets for this study
-    :param word_vectors: trained word vectors 
+    :param dict: trained word vectors 
     :param kind: kind of attributes to create - either RT or BRD 
     """
     if kind == 'RT':
         target_sets = {
-        'jewish' : filter_target_set(JEWISH_RT, word_vectors),
+        'jewish' : filter_target_set(JEWISH_RT, dict),
         
-        'christian' : filter_target_set(CHRISTIAN_RT, word_vectors),
+        'christian' : filter_target_set(CHRISTIAN_RT, dict),
         
-        'catholic' : filter_target_set(CATHOLIC_RT, word_vectors),
+        'catholic' : filter_target_set(CATHOLIC_RT, dict),
         
-        'protestant' : filter_target_set(PROTESTANT_RT, word_vectors)
+        'protestant' : filter_target_set(PROTESTANT_RT, dict)
                     }
     elif kind == 'BRD':
         target_sets = {
-        'jewish' : filter_target_set(JEWISH_BRD, word_vectors),
+        'jewish' : filter_target_set(JEWISH_BRD, dict),
         
-        'christian' : filter_target_set(CHRISTIAN_BRD, word_vectors),
+        'christian' : filter_target_set(CHRISTIAN_BRD, dict),
         
-        'catholic' : filter_target_set(CATHOLIC_BRD, word_vectors),
+        'catholic' : filter_target_set(CATHOLIC_BRD, dict),
         
-        'protestant' : filter_target_set(PROTESTANT_BRD, word_vectors)
+        'protestant' : filter_target_set(PROTESTANT_BRD, dict)
                     }
     else:
         print('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
@@ -251,25 +255,15 @@ def create_target_sets(word_vectors, kind):
 def inverse(matrix):
   return np.linalg.inv(matrix)
 
-def create_labels(targets_1, targets_2):
-    labels = []
-    for word in targets_1:
-        labels.append(1)
-    for word in targets_2:
-        labels.append(0)
-    labels = np.array(labels)
-    return labels
-
-
-def load_embedding_dict(vocab_path="", vector_path="", word_vectors_path="", glove=False, postspec=False):
+def load_embedding_dict(vocab_path="", vector_path="", dict_path="", glove=False, postspec=False):
   """
   >>> _load_embedding_dict()
   :param vocab_path:
   :param vector_path:
   :return: embd_dict
   """
-  if word_vectors_path != "":
-    embd_dict = utils.load_word_vectors(word_vectors_path)
+  if dict_path != "":
+    embd_dict = utils.load_dict(dict_path)
     return embd_dict
   else:
     embd_dict = {}
