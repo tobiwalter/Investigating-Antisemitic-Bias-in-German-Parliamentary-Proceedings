@@ -41,19 +41,19 @@ UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergif
 
 # nationalism/patriotism
 
-VOLKSTREU_RT = 'patriotisch, vaterlandsliebe, volksbewusstsein, volksgeist, germanisch, deutschnational, nationalbewusstsein, vaterlaendisch, reichstreu, nationalgesinnt, nationalstolz, koenigstreu'.split(', ')
+VOLKSTREU_RT = 'patriotisch, germanisch, vaterlaendisch, deutschnational, reichstreu, vaterlandsliebe, nationalgesinnt, nationalstolz, koenigstreu, volksgeist, nationalbewusstsein, volksbewusstsein, staatstreu, nationalgefuehl'.split(', ')
 
-VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, umstuerzler'.split(', ')   
+VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, dissident, staatsfeindlich, heimatlos'.split(', ')
 
-VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot'.split(', ')
+VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot, staatstreu'.split(', ')
 
-VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos'.split(', ')   
+VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos, dissident'.split(', ')   
 
 # economy
 
 ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos, genuegsam, großmut, uneigennuetzig, sparsam, proletariat, armut, industriearbeiter'.split(', ')
 
-ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, boerse, wucher'.split(', ')
+ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, bankier, wucher'.split(', ')
 
 # conspiracy
 
@@ -71,7 +71,7 @@ ETHIC_CON = 'unbescheiden, unsittlich, unanstaendig, luestern, korrupt, unwuerdi
 
 RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
 
-RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, schaendlich, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
+RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
 
 # racism
 RACIST_PRO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
@@ -175,10 +175,10 @@ def create_attribute_sets(dict, kind, incl_unipolar=False):
 	'economic_con' : filter_target_set(ECONOMIC_CON, dict),
 	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, dict),
 	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, dict),
-    'religious_pro' : filter_target_set(RELIGIOUS_PRO),
-    'religious_con' : filter_target_set(RELIGIOUS_CON),
-    'racist_pro' : filter_target_set(RACIST_RPO),
-    'racist_con' : filter_target_set(RACIST_CON),
+    'religious_pro' : filter_target_set(RELIGIOUS_PRO, dict),
+    'religious_con' : filter_target_set(RELIGIOUS_CON, dict),
+    'racist_pro' : filter_target_set(RACIST_PRO, dict),
+    'racist_con' : filter_target_set(RACIST_CON, dict),
     'ethic_pro' : filter_target_set(ETHIC_PRO, dict),
     'ethic_con' : filter_target_set(ETHIC_CON, dict)}
 
