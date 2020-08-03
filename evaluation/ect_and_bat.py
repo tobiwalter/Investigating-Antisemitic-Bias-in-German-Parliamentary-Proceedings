@@ -19,8 +19,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
 models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
-weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4, 
-XWEAT().weat_5, XWEAT().weat_6, XWEAT().weat_7]
+weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4]
 
 EMB_DIM = 200
 def run_bat(vectors, vocab, weat_terms):
@@ -50,8 +49,8 @@ def main():
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",
  required=True)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=True)
-  parser.add_argument("--vocab_file_pattern", type=str, default=None, help="vocab path file or file pattern in case of multiple files", required=True)
-  parser.add_argument("--vector_file_pattern", type=str, default=None, help="vector path file or file pattern in case of multiple files", required=True)
+  parser.add_argument("--vocab_file", type=str, default=None, help="path to vocab file", required=True)
+  parser.add_argument("--vector_file", type=str, default=None, help="path to vector file", required=True)
  
   args = parser.parse_args()
 	
@@ -59,53 +58,41 @@ def main():
     parser.print_help()
     sys.exit(2)
 	
-  vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
-  vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
+  vocab = load_vocab(str(vocab_path / args.vocab_file_pattern))
+  vectors = load_vectors(str(models_path/ args.vector_file_pattern))
+  attribute_sets = create_attribute_sets(vocab, args.protocol_type)
+  for test in weat_tests:
+    logging.info('{} {}: '.format(args.test_type, test.__name__ ))
+    weat_terms = test(args.protocol_type)
 
-  attribute_sets = {
-          'pleasant_unplesant' : PLEASANT + UNPLEASANT,
-	  'conspiratorial' : CONSPIRATORIAL_PRO + CONSPIRATORIAL_CON,
-	  'economic' : ECONOMIC_PRO + ECONOMIC_CON,
-          'outsider_words' : OUTSIDER_WORDS,
-          'jewish_nouns' : JEWISH_STEREOTYPES_NOUNS,
-          'jewish_character' : JEWISH_STEREOTYPES_CHARACTER,
-          'jewish_political' : JEWISH_STEREOTYPES_POLITICAL ,
-          'jewish_occupations' : JEWISH_OCCUPATIONS
-          }
-  if args.protocol_type == 'RT':
-    attribute_sets['volkstreu_volksuntreu'] = VOLKSTREU_RT + VOLKSUNTREU_RT
-  elif args.protocol_type == 'BRD':
-    attribute_sets['volkstreu_volksuntreu'] = VOLKSTREU_BRD + VOLKSUNTREU_BRD
-  
-  if args.output_file:
-    with codecs.open(str(ROOT_DIR) + args.output_file, "w", "utf8") as f:
-      for t in zip(vocab_files, vector_files):
-        file_name = os.path.splitext(os.path.basename(t[0]))[0]
-        f.write(file_name + ':')
-        f.write("\n")
-        vocab = load_vocab(t[0])
-        vectors = load_vectors(t[1])
-        for test in weat_tests:
-          f.write('{} {}: '.format(args.test_type, test.__name__ ))
-          weat_terms = test(args.protocol_type)
+    results = {}
+    for test in weat_tests:
+        results[test.__name__] = {}
+        dims = ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'religious', 'racist', 'ethic']
+        for dim in dims:
+            weat_terms = test(dim, args.protocol_type) 
+            if test_type == 'BAT':
+                result = run_bat(model, vocab, weat_terms) 
+                logging.info(f'{test.__name__} - {dim}: {result}')
+                results[test.__name__][dim] = result 
+            elif test_type == 'ECT':
+                result = run_ect(model, vocab, weat_terms, attribute_sets[f'{dim}_pro'] + attribute_sets[f'{dim}_con'])
+                logging.info(f'{test.__name__} - {dim}: {result}')
+                results[test.__name__][dim] = result 
 
-          if args.test_type == 'BAT':
-            result = run_bat(vectors, vocab, weat_terms) 
-            f.write(str(result))
-            f.write("\n")
-          elif args.test_type == 'ECT':
-            emb_size = EMB_DIM
-            for att in attribute_sets:
-          # if args.attributes:
-              atts_to_test = attribute_sets[att]
-              result = run_ect(vectors, vocab, weat_terms, atts_to_test)
-              f.write("Config: ")
-              f.write(str(att) + " and ")
-              f.write(str(emb_size) + "\n")
-              f.write("Result: ")
-              f.write(str(result))
-              f.write("\n")
-      f.close()
+    if test_type == 'BAT':
+      res_df = pd.DataFrame(results).T.round(3)
+
+    elif test_type == 'ECT':
+      res_df = pd.DataFrame(index=pd.MultiIndex.from_product([dims, ['corr', 'p']]),
+                         columns=results.keys()).T
+      for k1,v1 in results.items():
+          for k2, v2 in v1.items():
+              res_df.loc[k1, (k2, 'corr')] = results[k1][k2].correlation
+              res_df.loc[k1, (k2, 'p')] = results[k1][k2].pvalue
+
+    res_df.to_csv(f'{args.output_file}.csv', index=True, header=True)
+
 
 if __name__ == "__main__":
   main()
