@@ -43,7 +43,7 @@ UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergif
 
 VOLKSTREU_RT = 'patriotisch, germanisch, vaterlaendisch, deutschnational, reichstreu, vaterlandsliebe, nationalgesinnt, nationalstolz, koenigstreu, volksgeist, nationalbewusstsein, volksbewusstsein, staatstreu, nationalgefuehl'.split(', ')
 
-VOLKSUNTREU_RT = 'nichtdeutsch, fremdlaendisch, fremd, undeutsch, vaterlandslos, reichsfeind, landesverraeter, reichsfeindlich, unpatriotisch, antideutsch, deutschfeindlich, dissident, staatsfeindlich, heimatlos'.split(', ')
+VOLKSUNTREU_RT = 'unpatriotisch, undeutsch, vaterlandslos, antideutsch, dissident, landesverraeter, reichsfeindlich, reichsfeind, deutschfeindlich, fremd, fremdlaendisch, nichtdeutsch, staatsfeindlich, heimatlos'.split(', ')
 
 VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot, staatstreu'.split(', ')
 
@@ -169,8 +169,8 @@ def create_attribute_sets(dict, kind, incl_unipolar=False):
     :param incl_unipolar: whether to include unipolar attribute sets 
     """
     attribute_sets = {
-        'pleasant' : filter_target_set(PLEASANT, dict),
-        'unpleasant' : filter_target_set(UNPLEASANT, dict),
+        'sentiment_pro' : filter_target_set(PLEASANT, dict),
+        'sentiment_con' : filter_target_set(UNPLEASANT, dict),
 	'economic_pro' : filter_target_set(ECONOMIC_PRO, dict),
 	'economic_con' : filter_target_set(ECONOMIC_CON, dict),
 	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, dict),
@@ -191,11 +191,11 @@ def create_attribute_sets(dict, kind, incl_unipolar=False):
         attribute_sets['jewish_political'] = filter_target_set(JEWISH_STEREOTYPES_POLITICAL, dict)
 
     if kind == 'BRD':
-        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_BRD, dict)
-        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_BRD, dict)
+        attribute_sets['patriotism_pro'] = filter_target_set(VOLKSTREU_BRD, dict)
+        attribute_sets['patriotism_con'] = filter_target_set(VOLKSUNTREU_BRD, dict)
     elif kind == 'RT':            
-        attribute_sets['volkstreu'] = filter_target_set(VOLKSTREU_RT, dict)
-        attribute_sets['volksuntreu'] = filter_target_set(VOLKSUNTREU_RT, dict)
+        attribute_sets['patriotism_pro'] = filter_target_set(VOLKSTREU_RT, dict)
+        attribute_sets['patriotism_con'] = filter_target_set(VOLKSUNTREU_RT, dict)
     else: 
         raise ValueError('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
 
