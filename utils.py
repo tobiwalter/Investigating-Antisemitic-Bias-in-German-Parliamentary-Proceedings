@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import json
 import pickle
@@ -203,11 +204,11 @@ def create_attribute_sets(dict, kind, incl_unipolar=False):
 
 def convert_attribute_set(dimension):
     if dimension in ('sentiment', 'random'):
-      return ('pleasant', 'unpleasant')
+      return ('sentiment_pro', 'sentiment_con')
     elif dimension == 'sentiment_flipped':
-      return ('unpleasant', 'pleasant')
+      return ('sentiment_con', 'sentiment_pro')
     elif dimension == 'patriotism':
-      return ('volkstreu', 'volksuntreu')
+      return ('patriotism_pro', 'patriotism_con')
     elif dimension == 'economic':
       return ('economic_pro', 'economic_con')
     elif dimension == 'conspiratorial':
