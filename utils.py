@@ -19,7 +19,7 @@ VOCAB_FOLDER = DATA_FOLDER / 'vocab'
 
 JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelit", "rothschild", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
 
-JEWISH_BRD = 'judentum, jude, juedisch, israel, israels, israeli, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
+JEWISH_BRD = 'judentum, jude, juedisch, israel, israelisch, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
 
 CHRISTIAN_RT = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
 
@@ -139,7 +139,7 @@ def save_corpus(corpus, corpus_path):
     if not (DATA_FOLDER / corpus_path).exists():
         os.makedirs(DATA_FOLDER / corpus_path)
     for num,doc in enumerate(corpus):
-        write_lines((DATA_FOLDER / corpus_path / f'{num+1}_sents.txt'), doc)
+        write_lines((DATA_FOLDER / f'{corpus_path}_{num+1}_sents.txt'), doc)
 
 def save_vocab(model, filepath):
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
