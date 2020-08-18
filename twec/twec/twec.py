@@ -117,7 +117,7 @@ class TWEC:
                 print("Compass will be overwritten after training")
             self.compass = self.train_model(sentences)
             self.compass.save(os.path.join(self.opath, "compass.model"))
-            save_vocab(compass, "compass_twec")
+            save_vocab(self.compass, "compass_twec")
 
 
         self.gvocab = self.compass.wv.vocab
@@ -139,7 +139,7 @@ class TWEC:
         if save:
             # model.wv.save_word2vec_format(os.path.join(self.opath, model_name + ".txt"), binary=True)
             model.save(os.path.join(self.opath, model_name + ".model"))
-            save_vocab(model, model_name)
+            save_vocab(model, f'{model_name}_twec')
 
         return self.trained_slices[model_name]
 
