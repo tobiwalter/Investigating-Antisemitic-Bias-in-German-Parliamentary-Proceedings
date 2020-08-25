@@ -6,7 +6,8 @@ from scipy import sparse
 import argparse
 import logging
 import json
-from utils import create_attribute_sets, create_target_sets
+import itertools
+from utils import create_attribute_sets, create_target_sets, convert_attribute_set, CreateCorpus
 from nltk.corpus import stopwords
 logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
@@ -70,7 +71,7 @@ def create_index(unigram_counts, kind, full=False, top_dimension='sentiment'):
     top_1, top_2 = convert_attribute_set(top_dimension)
     top_words = attributes[top_1] + attributes[top_2]
     tok2indx = {tok: indx for indx, tok in enumerate(top_words)}
-    j = len(all_words)
+    j = len(top_words)
 
     if full:
       for tok in unigram_counts.keys():
