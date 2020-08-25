@@ -7,7 +7,8 @@ from pathlib import Path
 import os
 import codecs
 from scipy import sparse
-# import numba
+from typing import List, Dict, Tuple
+from gensim.models import Word2Vec
 
 DATA_FOLDER = Path('./data')
 MODELS_FOLDER = Path('./models')
@@ -100,8 +101,16 @@ Troedelhaendler'.lower().split(', ')
 
 
 class CreateSlice:
+    """
+    Read in pre-processed files before feeding them to word2vec model
+
+    Attributes
+    ----------
+    dirname (str): The name of the directory storing the protocols
+    protocol_type (str): whether to process a collection of Reichstag or BRD protocols
+    """
     
-    def __init__(self, dirname, profiling=False):
+    def __init__(self, dirname: str, profiling=False):
         self.dirname = str(DATA_FOLDER / dirname)
         self.profiling = profiling
 
@@ -117,86 +126,90 @@ class CreateSlice:
 
 class CreateCorpus:
     """
-    Read in pre-processed files before feeding them to word2vec model 
+    Read in pre-processed files before feeding them to word2vec model
+
+    Attributes
+    ----------
+    top_dir (str): The name of the top directory storing the protocols
+    protocol_type (str): whether to process a collection of Reichstag or BRD protocols
     """
+
     def __init__(self,top_dir, profiling=False):
         self.top_dir = str(DATA_FOLDER / top_dir)
         self.profiling = profiling
-    """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
     def __iter__(self):
+        """Iterate over all documents, yielding a document (=list of utf-8 tokens) at a time."""
         for root, dirs, files in os.walk(self.top_dir):
             for file in filter(lambda file: file.endswith('.txt'), files):
                 text = open(os.path.join(root, file), encoding='utf-8').readlines()
-                # for corpus profiling
+                # for the purpose of corpus profiling
                 if self.profiling:
                     yield text
                 else:
                     for line in text:
                         yield line.split()
 
-
-def save_corpus(corpus, corpus_path):
+def save_corpus(corpus: List , corpus_path: str):
+    """Save each protocol from a corpus to disk."""
     if not (DATA_FOLDER / corpus_path).exists():
         os.makedirs(DATA_FOLDER / corpus_path)
     for num,doc in enumerate(corpus):
-        write_lines((DATA_FOLDER / f'{corpus_path}_{num+1}_sents.txt'), doc)
+        write_lines((DATA_FOLDER / corpus_path / f'{num+1}_sents.txt'), doc)
 
-def save_vocab(model, filepath):
+def save_vocab(model: Word2Vec, filepath: str):
+    """Save the word:index mappings from word2vec to disk."""
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
-    json_repr = json.dumps(index)
     with codecs.open(str(VOCAB_FOLDER / filepath) + '.json',"w", encoding='utf-8') as f:
-        f.write(json_repr)
+        f.write(json.dumps(index))
 
-
-def write_lines(path, list):
+def write_lines(path: str, lines: List):
+    """Write document lines stored as a list to disk"""
     f = codecs.open(path, "w", encoding='utf8')
-    for l in list:
+    for l in lines:
         f.write(str(l) + "\n")
     f.close()
 
-def filter_target_set(target_set, dict):
-    """
-    Filter out target terms that did not reach the minimum count 
-    """
-    return [word for word in target_set if word in dict]
+def filter_terms(target_set: List, input_repr):
+    """Filter out target terms that do not reach the minimum count. """
+    return [word for word in target_set if word in input_repr]
 
 def create_attribute_sets(dict, kind, incl_unipolar=False):
     """
-    Create all attribute sets for this study
+    Create all attribute sets for a specific time period
 
-    :param dict: trained word vectors 
-    :param kind: kind of attributes to create - either RT or BRD 
+    :param input_repr: input representation of the text 
+    :param kind: version of attributes to create - either for RT or BRD 
     :param incl_unipolar: whether to include unipolar attribute sets 
     """
     attribute_sets = {
-        'sentiment_pro' : filter_target_set(PLEASANT, dict),
-        'sentiment_con' : filter_target_set(UNPLEASANT, dict),
-	'economic_pro' : filter_target_set(ECONOMIC_PRO, dict),
-	'economic_con' : filter_target_set(ECONOMIC_CON, dict),
-	'conspiratorial_pro' : filter_target_set(CONSPIRATORIAL_PRO, dict),
-	'conspiratorial_con' : filter_target_set(CONSPIRATORIAL_CON, dict),
-    'religious_pro' : filter_target_set(RELIGIOUS_PRO, dict),
-    'religious_con' : filter_target_set(RELIGIOUS_CON, dict),
-    'racist_pro' : filter_target_set(RACIST_PRO, dict),
-    'racist_con' : filter_target_set(RACIST_CON, dict),
-    'ethic_pro' : filter_target_set(ETHIC_PRO, dict),
-    'ethic_con' : filter_target_set(ETHIC_CON, dict)}
+    'sentiment_pro' : filter_terms(PLEASANT, dict),
+    'sentiment_con' : filter_terms(UNPLEASANT, dict),
+	'economic_pro' : filter_terms(ECONOMIC_PRO, dict),
+	'economic_con' : filter_terms(ECONOMIC_CON, dict),
+	'conspiratorial_pro' : filter_terms(CONSPIRATORIAL_PRO, dict),
+	'conspiratorial_con' : filter_terms(CONSPIRATORIAL_CON, dict),
+    'religious_pro' : filter_terms(RELIGIOUS_PRO, dict),
+    'religious_con' : filter_terms(RELIGIOUS_CON, dict),
+    'racist_pro' : filter_terms(RACIST_PRO, dict),
+    'racist_con' : filter_terms(RACIST_CON, dict),
+    'ethic_pro' : filter_terms(ETHIC_PRO, dict),
+    'ethic_con' : filter_terms(ETHIC_CON, dict)}
 
     if incl_unipolar:
 
-        attribute_sets['outsider_words'] = filter_target_set(OUTSIDER_WORDS, dict)
-        attribute_sets['jewish_occupations'] = filter_target_set(JEWISH_OCCUPATIONS, dict),
-        attribute_sets['jewish_nouns'] = filter_target_set(JEWISH_STEREOTYPES_NOUNS, dict),
-        attribute_sets['jewish_character'] = filter_target_set(JEWISH_STEREOTYPES_CHARACTER, dict),
-        attribute_sets['jewish_political'] = filter_target_set(JEWISH_STEREOTYPES_POLITICAL, dict)
+        attribute_sets['outsider_words'] = filter_terms(OUTSIDER_WORDS, dict)
+        attribute_sets['jewish_occupations'] = filter_terms(JEWISH_OCCUPATIONS, dict),
+        attribute_sets['jewish_nouns'] = filter_terms(JEWISH_STEREOTYPES_NOUNS, dict),
+        attribute_sets['jewish_character'] = filter_terms(JEWISH_STEREOTYPES_CHARACTER, dict),
+        attribute_sets['jewish_political'] = filter_terms(JEWISH_STEREOTYPES_POLITICAL, dict)
 
     if kind == 'BRD':
-        attribute_sets['patriotism_pro'] = filter_target_set(VOLKSTREU_BRD, dict)
-        attribute_sets['patriotism_con'] = filter_target_set(VOLKSUNTREU_BRD, dict)
+        attribute_sets['patriotism_pro'] = filter_terms(VOLKSTREU_BRD, dict)
+        attribute_sets['patriotism_con'] = filter_terms(VOLKSUNTREU_BRD, dict)
     elif kind == 'RT':            
-        attribute_sets['patriotism_pro'] = filter_target_set(VOLKSTREU_RT, dict)
-        attribute_sets['patriotism_con'] = filter_target_set(VOLKSUNTREU_RT, dict)
+        attribute_sets['patriotism_pro'] = filter_terms(VOLKSTREU_RT, dict)
+        attribute_sets['patriotism_con'] = filter_terms(VOLKSUNTREU_RT, dict)
     else: 
         raise ValueError('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
 
@@ -229,40 +242,40 @@ def create_target_sets(dict, kind):
     """
     if kind == 'RT':
         target_sets = {
-        'jewish' : filter_target_set(JEWISH_RT, dict),
+        'jewish' : filter_terms(JEWISH_RT, dict),
         
-        'christian' : filter_target_set(CHRISTIAN_RT, dict),
+        'christian' : filter_terms(CHRISTIAN_RT, dict),
         
-        'catholic' : filter_target_set(CATHOLIC_RT, dict),
+        'catholic' : filter_terms(CATHOLIC_RT, dict),
         
-        'protestant' : filter_target_set(PROTESTANT_RT, dict)
+        'protestant' : filter_terms(PROTESTANT_RT, dict)
                     }
     elif kind == 'BRD':
         target_sets = {
-        'jewish' : filter_target_set(JEWISH_BRD, dict),
+        'jewish' : filter_terms(JEWISH_BRD, dict),
         
-        'christian' : filter_target_set(CHRISTIAN_BRD, dict),
+        'christian' : filter_terms(CHRISTIAN_BRD, dict),
         
-        'catholic' : filter_target_set(CATHOLIC_BRD, dict),
+        'catholic' : filter_terms(CATHOLIC_BRD, dict),
         
-        'protestant' : filter_target_set(PROTESTANT_BRD, dict)
+        'protestant' : filter_terms(PROTESTANT_BRD, dict)
                     }
     else:
         print('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
     # Join them together to form bias words
     return target_sets
 
-# @numba.jit
 def inverse(matrix):
   return np.linalg.inv(matrix)
 
 def load_embedding_dict(vocab_path="", vector_path="", dict_path="", glove=False, postspec=False):
-  """
-  >>> _load_embedding_dict()
+  """Load embedding dict for WEAT test
+
   :param vocab_path:
   :param vector_path:
   :return: embd_dict
   """
+
   if dict_path != "":
     embd_dict = utils.load_dict(dict_path)
     return embd_dict
@@ -277,12 +290,6 @@ def load_embedding_dict(vocab_path="", vector_path="", dict_path="", glove=False
 
 def load_lines(filepath):
   return [l.strip() for l in list(codecs.open(filepath, "r", encoding = 'utf8', errors = 'replace').readlines(sizehint=None))]
-
-def write_list(path, list):
-    f = codecs.open(path,'w',encoding='utf8')
-    for l in list:
-        f.write(l + "\n")
-    f.close()
 
 def load_vocab(path, inverse = False):
   vocab = json.load(open(path,"r"))
