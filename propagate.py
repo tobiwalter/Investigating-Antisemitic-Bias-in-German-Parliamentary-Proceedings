@@ -11,12 +11,23 @@ logging.basicConfig(level=logging.INFO)
 
 M = 1e-06
 class LabelPropagation:
+  """
+  Performs harmonic function label propagation on a graph
+
+  Attributes
+  ----------
+  ppmi (scipy.sparse.csr.csr_matrix): PPMI matrix/graph
+  index (dict): word2tok index for graph
+  attributes (dict): attribute sets of the graph 
+  """
+
   def __init__(self, ppmi_mat, tok2indx, protocol_type):
     self.ppmi = ppmi_mat
     self.index = tok2indx
     self.attributes = create_attribute_sets(self.index, kind=protocol_type)
     self.labels = None
     self.scores = None
+
   @classmethod
   def load(cls, matrix_path, indx_path, **kwargs):
     ppmi_mat = sparse.load_npz(matrix_path)
@@ -25,9 +36,15 @@ class LabelPropagation:
     assert len(tok2indx) == ppmi_mat.shape[0]
     return cls(ppmi_mat, tok2indx, **kwargs)
 
-  def reindex(self, dim, random=False):
+  def reindex(self, semantic_domain, random=False):
+    """
+    Reindex the PPMI matrix to put the attributes on top that shall be used as labelled nodes to propagate from
 
-    att1, att2 = convert_attribute_set(dim)
+    param semantic_domain: Which semantic domain to propagate from
+    random: Whether to use random indices for reindexing (for testing purposes)
+    """
+
+    pos_att, neg_att = f'{semantic_domain}_pro', f'{semantic_domain}_con'
 
     if random:
       pos_indices_to_swap = np.random.randint(0,len(self.index),len(self.attributes[pos_att]))
@@ -38,36 +55,38 @@ class LabelPropagation:
 
     matrix = self.ppmi.toarray()
     i2t = {v:k for k,v in self.index.items()}
+    # Switch matrix rows
     for indx_old, indx_new in enumerate(pos_indices_to_swap):
         matrix[[indx_old, indx_new]] = matrix[[indx_new, indx_old]]
         matrix[:,[indx_old, indx_new]] = matrix[:,[indx_new, indx_old]]
         i2t[indx_old], i2t[indx_new] = i2t[indx_new], i2t[indx_old]
-
+    # Switch matrix columns
     for indx_old, indx_new in enumerate(neg_indices_to_swap):
         matrix[[indx_old+len(pos_indices_to_swap), indx_new]] = matrix[[indx_new, indx_old+len(pos_indices_to_swap)]]
         matrix[:,[indx_old+len(pos_indices_to_swap), indx_new]] = matrix[:,[indx_new, indx_old+len(pos_indices_to_swap)]]
+        # Switch index
         i2t[indx_old+len(pos_indices_to_swap)], i2t[indx_new] = i2t[indx_new], i2t[indx_old+len(pos_indices_to_swap)]
-        
+    
+    # Adapt index
     self.index = {v:k for k,v in i2t.items()}
     print([(f'{word}:{self.index[word]}') for word in self.attributes[pos_att]])
     print([(f'{word}:{self.index[word]}') for word in self.attributes[neg_att]])
     self.ppmi = sparse.csr_matrix(matrix)
 
   def create_labels(self, targets_1, targets_2):
+    """Create pre-assigned y-labels for labelled nodes"""
     labels = []
     for word in targets_1:
         labels.append(1)
     for word in targets_2:
         labels.append(0)
-#     labels = np.array(labels)
     labels = np.array([labels, list(reversed(labels))]).T
     self.labels = labels
 
   def propagate(self):
-    # Compute normalized laplacian 
+    """Compute harmonic function scores based on Laplacian matrix operations"""
 
     L = sparse.csgraph.laplacian(self.ppmi, normed=True).toarray()
-    
     # Sub-matrices L_ul and L_uu
     L_ul = L[len(self.labels):, :len(self.labels)]
     L_uu = L[len(self.labels):, len(self.labels):]
@@ -75,19 +94,23 @@ class LabelPropagation:
     # Compute scores f_u (add a little bit if noise to L_uu to avoid LinAlgError when computing inverse)
     try:
       self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu)).dot(L_ul).dot(labels)
-    except:
+    except LinAlgError:
       logging.info(f'Add little amount of noise ({M}) to enable computation of inverse')
       self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu + np.eye(L_uu.shape[0])*M)).dot(L_ul).dot(labels)
 
-  def save_scores(self, path, attribute_specification):
+  def save_scores(self, path, semantic_domain):
+    """Save harmonic function scores"""
+
     if not os.path.exists('fu_scores'):
       os.makedirs('fu_scores')
-    np.save(f'fu_scores/{path}_{attribute_specification}.npy', self.scores)
+    np.save(f'fu_scores/{path}_{semantic_domain}.npy', self.scores)
 
   def get_bias_term_indices(self, targets):
      return {k: [self.index[word] - len(self.labels) for word in v] for k,v in targets.items()}
 
   def get_bias_term_scores(self, bias_term_indices):
+    """Retrieve the scores belonging to target terms"""
+
     self.scores = self.scores.T[0]
     return {k: self.scores[v] for k,v in bias_term_indices.items()}
 
@@ -100,6 +123,8 @@ class LabelPropagation:
   #                       columns = ['position_score'])
 
   def t_test(self, targets_1, targets_2):
+    """Compute t-test between the harmonic function scores of two target sets"""
+
     t2, p2 = stats.ttest_ind(self.scores[targets_1], self.scores[targets_2], equal_var=True)
     logging.info("t = " + str(t2))
     logging.info("p = " + str(p2))
@@ -113,18 +138,18 @@ def main():
   parser = argparse.ArgumentParser(description="Propagate labels based on PPMI matrix")
   parser.add_argument("--ppmi", type=str, help="Path to PPMI matrix to be used for label propagation", required=True)
   parser.add_argument("--index", type=str, help="Path to token-2-index dictionary to be used for label propagation", required=True)
-  parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
-  parser.add_argument("--attribute_dimension", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
+  parser.add_argument("--protocol_type", "-pt", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
+  parser.add_argument("--semantic_domain", "-sem", type=str, help='Which attribute set to be used for label propagation - either sentiment, patriotism, economic or conspiratorial')
   parser.add_argument("--random", action='store_true')
   parser.add_argument("--output_file", type=str, help='Path to output file for label propagation scores of bias term indices')
 
   args = parser.parse_args()
   lp = LabelPropagation.load(args.ppmi, args.index, protocol_type=args.protocol_type)
-  att_1, att_2 = convert_attribute_set(args.attribute_dimension)
+  att_1, att_2 = f'{semantic_domain}_pro', f'{semantic_domain}_con'
   lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
   print(lp.labels)
 
-  if args.attribute_dimension != 'sentiment' or args.random:
+  if args.semantic_domain != 'sentiment' or args.random:
     logging.info('Reindex matrix')
     lp.reindex(att_1, att_2, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)
@@ -136,12 +161,12 @@ def main():
     logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
   lp.propagate()
   #lp.load_scores('fu_scores/kaiserreich_1.npy')
-  lp.save_scores(args.output_file, args.attribute_specifications)
+  lp.save_scores(args.output_file, args.semantic_domains)
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
-  with codecs.open(f'fu_scores/{args.output_file}_{args.attribute_specifications}.txt', "w", "utf8") as f:
+  with codecs.open(f'fu_scores/{args.output_file}_{args.semantic_domains}.txt', "w", "utf8") as f:
     for k,v in bias_term_scores.items():
       f.write(f'Mean score {k}: {v.mean()}\n')
       f.write(f'Median score {k}: {np.percentile(v, 50)}\n')

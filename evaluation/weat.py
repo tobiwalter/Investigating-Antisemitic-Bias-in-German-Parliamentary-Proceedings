@@ -1,6 +1,7 @@
 import sys
 sys.path.append('./..')
 from utils import *
+from bias_specifications import *
 import numpy as np
 import random
 from itertools import filterfalse
@@ -51,7 +52,6 @@ class XWEAT(object):
       for term, index in self.vocab.items():
         if term in self.embd_dict:
           self.embedding_matrix.append(self.embd_dict[term])
-	
         else:
           raise AssertionError("This should not happen.")
       self.embd_dict = None
@@ -69,34 +69,15 @@ class XWEAT(object):
      if similarity_type == "cosine":
       self.similarities = self.cosine(self.embedding_matrix, self.embedding_matrix)
      elif similarity_type == "ppmi":
-      self.similarities = np.array(self.embedding_matrix)
+      self.similarities = mat_normalize(self.embedding_matrix)
      else:
       raise NotImplementedError()
 
-  @staticmethod
-  def convert_attribute_dimension(attribute_dimension, protocol_type):
-    if attribute_dimension == 'sentiment':
-      return PLEASANT, UNPLEASANT
-    elif attribute_dimension == 'patriotism':
-      if protocol_type == 'RT':
-        return VOLKSTREU_RT, VOLKSUNTREU_RT
-      elif protocol_type == 'BRD':
-        return VOLKSTREU_BRD, VOLKSUNTREU_BRD
-    elif attribute_dimension == 'economic':
-      return ECONOMIC_PRO, ECONOMIC_CON
-    elif attribute_dimension == 'conspiratorial':
-      return CONSPIRATORIAL_PRO, CONSPIRATORIAL_CON
-    elif attribute_dimension == 'racist':
-      return RACIST_PRO, RACIST_CON
-    elif attribute_dimension == 'religious':
-      return RELIGIOUS_PRO, RELIGIOUS_CON
-    elif attribute_dimension == 'ethic':
-      return ETHIC_PRO, ETHIC_CON
+  def weat_1(self, semantic_domain, protocol_type):
+      """
+      WEAT 1 - target terms representing Judaism and Christianity
+      """
 
-  def weat_1(self, attribute_dimension, protocol_type):
-      """
-      WEAT 1 - terms representing judaism and christianism + sets of pleasant/unplesant wordargs.protocol_typeselfs
-      """
       if protocol_type == 'BRD':
         targets_1 = CHRISTIAN_BRD
         targets_2 = JEWISH_BRD
@@ -105,15 +86,13 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
-      # attributes_1 = PLEASANT 
-      # attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_2(self, attribute_dimension, protocol_type):
+  def weat_2(self, semantic_domain, protocol_type):
       """
-      WEAT 2 - terms representing catholicism and protestantism + sets of pleasant/unplesant words
+      WEAT 2 - target terms representing Protestantism and Catholicism
       """
       if protocol_type == 'BRD':
         targets_1 = PROTESTANT_BRD
@@ -123,15 +102,13 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
 
-      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
-      # attributes_1 = PLEASANT 
-      # attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_3(self, attribute_dimension, protocol_type):
+  def weat_3(self, semantic_domain, protocol_type):
       """
-      WEAT 3 - terms representing protestantism and judaism + sets of pleasant/unplesant words
+      WEAT 3 - target terms representing Protestantism and Judaism
       """
       if protocol_type == 'BRD':
         targets_1 = PROTESTANT_BRD
@@ -141,16 +118,13 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
-
-      # attributes_1 = PLEASANT 
-      # attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
-  def weat_4(self, attribute_dimension, protocol_type):
+  def weat_4(self, semantic_domain, protocol_type):
       """
-      WEAT 4 - terms representing catholicism and judaism + sets of pleasant/unplesant words
+      WEAT 4 - target terms representing Crotestantism and Judaism
       """
       if protocol_type == 'BRD':
         targets_1 = CATHOLIC_BRD
@@ -160,61 +134,9 @@ class XWEAT(object):
         targets_1 = CATHOLIC_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = self.convert_attribute_dimension(attribute_dimension, protocol_type)
-
-      # attributes_1 = PLEASANT 
-      # attributes_2 = UNPLEASANT
+      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
-    # again african american vs european american names, but with different attributes
-  def weat_5(self,  protocol_type):
-      # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
-
-      if protocol_type == 'BRD':
-        targets_1 = CHRISTIAN_BRD
-        targets_2 = JEWISH_BRD
-
-      elif protocol_type == 'RT':
-        targets_1 = CHRISTIAN_RT
-        targets_2 = JEWISH_RT
-
-      attributes_1 = ECONOMIC_PRO
-      attributes_2 = ECONOMIC_CON
-      return targets_1, targets_2, attributes_1, attributes_2
-
-
-  def weat_6(self, protocol_type):
-      """
-      WEAT 6- terms representing patriotism and non-patriotism+ sets of pleasant/unplesant words
-      """
-      if protocol_type == 'BRD':
-        targets_1 = CHRISTIAN_BRD
-        targets_2 = JEWISH_BRD
-        attributes_1 = VOLKSTREU_BRD
-        attributes_2 = VOLKSUNTREU_BRD
-
-      elif protocol_type == 'RT':
-        targets_1 = CHRISTIAN_RT
-        targets_2 = JEWISH_RT
-        attributes_1 = VOLKSTREU_RT
-        attributes_2 = VOLKSUNTREU_RT
-      return targets_1, targets_2, attributes_1, attributes_2
-
-
-  def weat_7(self, protocol_type):
-      # excluded as in the original paper: Jay, Kristen, (here only excluded in the glove experiments)
-
-      if protocol_type == 'BRD':
-        targets_1 = CHRISTIAN_BRD
-        targets_2 = JEWISH_BRD
-
-      elif protocol_type == 'RT':
-        targets_1 = CHRISTIAN_RT
-        targets_2 = JEWISH_RT
-
-      attributes_1 = CONSPIRATORIAL_PRO
-      attributes_2 = CONSPIRATORIAL_CON
-      return targets_1, targets_2, attributes_1, attributes_2
 
   def similarity_precomputed_sims(self, w1, w2, type="cosine"):
       return self.similarities[w1, w2]
@@ -248,6 +170,7 @@ class XWEAT(object):
     observed_test_stats_over_permutations = []
     total_possible_permutations = math.factorial(len(T1_T2)) / math.factorial(size_of_permutation) / math.factorial((len(T1_T2)-size_of_permutation))
     logging.info("Number of possible permutations: %d", total_possible_permutations)
+    
     if not sample or sample >= total_possible_permutations:
       permutations = combinations(T1_T2, size_of_permutation)
     else:
@@ -272,33 +195,10 @@ class XWEAT(object):
     p = self.weat_p_value_precomputed_sims(T1, T2, A1, A2, sample=sample_p)
     return test_statistic, effect_size, p
 
-
-  def _create_vocab(self):
-      """
-      >>> weat = XWEAT(None); weat._create_vocab()
-      :return: all
-      """
-      all = []
-      for i in range(1, 8):
-        t1, t2, a1, a2 = getattr(self, "weat_" + str(i))()
-        all = all + t1 + t2 + a1 + a2
-      all = set(all)
-      return all
-
-  def _output_vocab(self, path="./data/vocab_en.txt"):
-      """
-      >>> weat = XWEAT(None); weat._output_vocab()
-      """
-      vocab = self._create_vocab()
-      with codecs.open(path, "w", "utf8") as f:
-        for w in vocab:
-              f.write(w)
-              f.write("\n")
-        f.close()
-
   def run_test_precomputed_sims(self, target_1, target_2, attributes_1, attributes_2, sample_p=None, similarity_type="cosine"):
-      """Run the WEAT test for differential association between two
-      sets of target words and two sets of attributes.
+      """
+      Run the WEAT test for differential association between two sets of target words and two sets of attributes.
+
       RETURNS:
           (d, e, p). A tuple of floats, where d is the WEAT Test statistic,
           e is the effect size, and p is the one-sided p-value measuring the
@@ -315,16 +215,16 @@ class XWEAT(object):
       A1 = self.convert_by_vocab(attributes_1)
       A2 = self.convert_by_vocab(attributes_2)
       while len(T1) < len(T2):
-        logging.info("Popped T2 %d", T2[-1])
+        logging.info("Popped T2 %d", self.vocab[T2[-1]])
         T2.pop(-1)
       while len(T2) < len(T1):
-        logging.info("Popped T1 %d", T1[-1])
+        logging.info("Popped T1 %d", self.vocab[T1[-1]])
         T1.pop(-1)
       while len(A1) < len(A2):
-        logging.info("Popped A2 %d", A2[-1])
+        logging.info("Popped A2 %d", self.vocab[A2[-1]])
         A2.pop(-1)
       while len(A2) < len(A1):
-        logging.info("Popped A1 %d", A1[-1])
+        logging.info("Popped A1 %d", self.vocab[A1[-1]])
         A1.pop(-1)
       assert len(T1)==len(T2)
       assert len(A1) == len(A2)
@@ -343,15 +243,15 @@ def main():
   parser = argparse.ArgumentParser(description="Running XWEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)",required=True)
-  parser.add_argument("--att_dim", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious', 'ethic'], help='Which attribute set to be used for WEAT - either sentiment, patriotism, economic or conspiratorial', required=True)
+  parser.add_argument("--sem_domain", nargs='?', choices= ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'racist', 'religious', 'ethic'], help='Which semantic domain to test in WEAT', required=True)
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
-  parser.add_argument("--similarity_type", type=str, default='cosine', help='Similarity function to use')
   parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab", required=True)
   parser.add_argument("--embedding_vocab", type=str, help="Vocab of the embeddings")
   parser.add_argument("--embedding_vectors", type=str, help="Vectors of the embeddings")
   parser.add_argument("--is_vec_format", type=boolean_string, default=False, help="Whether embeddings are in vec format")
+  parser.add_argument("--similarity_type", type=str, default='cosine', help="Similarity type to use")
   parser.add_argument("--embeddings", type=str, help="Vectors and vocab of the embeddings")
   args = parser.parse_args()
 
@@ -367,16 +267,9 @@ def main():
   elif args.test_number == 3:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.att_dim, args.protocol_type)
   elif args.test_number == 4:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.att_dim, args.protocol_type)
-  elif args.test_number == 5:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_5(args.protocol_type)
-  elif args.test_number == 6:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_6(args.protocol_type)
-  elif args.test_number == 7:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_7(args.protocol_type)
-   
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.att_dim, args.protocol_type) 
   else:
-    raise ValueError("Only WEAT 1 to 7 are supported")
+    raise ValueError("Only WEAT 1 to 4 are supported")
 
   if args.lower:
     targets_1 = [t.lower() for t in targets_1]
@@ -392,7 +285,7 @@ def main():
   weat.set_embd_dict(embd_dict)
 
   logging.info("Running test")
-  result = weat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.permutation_number, args.similarity_type)
+  result = weat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.permutation_number)
   logging.info(result)
   with codecs.open(args.output_file, "w", "utf8") as f:
     f.write("Config: ")
