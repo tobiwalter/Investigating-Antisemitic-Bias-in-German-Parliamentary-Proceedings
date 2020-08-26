@@ -8,7 +8,6 @@ import os
 import codecs
 from scipy import sparse
 from typing import List, Dict, Tuple
-from gensim.models import Word2Vec
 
 DATA_FOLDER = Path('./data')
 MODELS_FOLDER = Path('./models')
@@ -156,7 +155,7 @@ def save_corpus(corpus: List , corpus_path: str):
     for num,doc in enumerate(corpus):
         write_lines((DATA_FOLDER / corpus_path / f'{num+1}_sents.txt'), doc)
 
-def save_vocab(model: Word2Vec, filepath: str):
+def save_vocab(model, filepath: str):
     """Save the word:index mappings from word2vec to disk."""
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
