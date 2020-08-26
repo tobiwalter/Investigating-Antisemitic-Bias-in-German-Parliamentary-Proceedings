@@ -9,6 +9,7 @@ from utils import CreateCorpus, save_vocab
 import argparse
 import time
 
+PYTHONHASHSEED = 0
 MODELS_FOLDER = Path('./models')
 
 parser = argparse.ArgumentParser(description='Train word embedding models from parliamentary protocols')

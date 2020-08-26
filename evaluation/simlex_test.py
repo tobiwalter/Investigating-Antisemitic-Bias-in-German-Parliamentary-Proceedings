@@ -38,7 +38,7 @@ def main():
 
   with open(os.path.join(ROOT_DIR, f'simlex/{args.output_file}'), 'w') as f:
     for voc,vec in zip(vocab_files, vector_files):
-      file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
+      file_name = os.path.splitext(os.path.basename(voc))[0][4:]
       vocab = load_vocab(voc)
       vectors = load_vectors(vec)
       simlex_score = eval_simlex(simlex_pairs, vocab, vectors)

@@ -25,14 +25,14 @@ def main():
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
   for voc,vec in zip(vocab_files, vector_files):
-      file_name = os.path.splitext(os.path.basename(t[0]))[0]
+      file_name = os.path.splitext(os.path.basename(voc))[0]
       vocab = load_vocab(voc)
       vectors = load_vectors(vec)
       with open(os.path.join(ROOT_DIR, f'kmeans/{file_name}.txt'), 'w') as f:
         for test in weat_tests:
           f.write(f'K-means score {test.__name__ }: ')
-          targets_1 = test(args.protocol_type)[0]
-          targets_2 = test(args.protocol_type)[1]
+          targets_1 = test('sentiment',args.protocol_type,)[0]
+          targets_2 = test('sentiment',args.protocol_type)[1]
           k_means_score = eval_k_means(targets_1, targets_2, vectors, vocab)
           f.write(str(k_means_score))
           f.write('\n')

@@ -1,7 +1,6 @@
 import sys
 sys.path.append('./..')
-from utils import *
-
+from utils import load_specifications, load_vectors, load_vocab
 import os
 import codecs
 import numpy as np
@@ -41,7 +40,7 @@ def run_ect(vectors, vocab, weat_terms):
   logging.basicConfig(level=logging.INFO)
   logging.info(f'ECT test started')
   start_time = time.time()
-  result = embedding_coherence_test(EMB_DIM,vectors, vocab, weat_terms[0], weat_terms[1], weat_terms[3] + weat_terms[4])
+  result = embedding_coherence_test(EMB_DIM,vectors, vocab, weat_terms[0], weat_terms[1], weat_terms[2] + weat_terms[3])
   elapsed = time.time()
   logging.info('Time for ECT: {}'.format(elapsed-start_time))
   logging.info(result)
@@ -64,7 +63,6 @@ def main():
 	
   vocab = load_vocab(str(vocab_path / args.vocab_file))
   vectors = load_vectors(str(models_path/ args.vector_file))
-  attribute_sets = create_attribute_sets(vocab, args.protocol_type)
   results = {}
   for test in weat_tests:
         results[test.__name__] = {}

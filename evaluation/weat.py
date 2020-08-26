@@ -86,7 +86,7 @@ class XWEAT(object):
         targets_1 = CHRISTIAN_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
+      attributes_1, attributes_2 = antisemitic_streams(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -102,7 +102,7 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2  = CATHOLIC_RT
 
-      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
+      attributes_1, attributes_2 = antisemitic_streams(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -118,7 +118,7 @@ class XWEAT(object):
         targets_1 = PROTESTANT_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
+      attributes_1, attributes_2 = antisemitic_streams(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -134,7 +134,7 @@ class XWEAT(object):
         targets_1 = CATHOLIC_RT
         targets_2 = JEWISH_RT
 
-      attributes_1, attributes_2 = bias_specifications(semantic_domain, protocol_type)
+      attributes_1, attributes_2 = antisemitic_streams(semantic_domain, protocol_type)
       return targets_1, targets_2, attributes_1, attributes_2
 
 
@@ -215,16 +215,16 @@ class XWEAT(object):
       A1 = self.convert_by_vocab(attributes_1)
       A2 = self.convert_by_vocab(attributes_2)
       while len(T1) < len(T2):
-        logging.info("Popped T2 %d", self.vocab[T2[-1]])
+        logging.info("Popped T2 %d", T2[-1])
         T2.pop(-1)
       while len(T2) < len(T1):
-        logging.info("Popped T1 %d", self.vocab[T1[-1]])
+        logging.info("Popped T1 %d", T1[-1])
         T1.pop(-1)
       while len(A1) < len(A2):
-        logging.info("Popped A2 %d", self.vocab[A2[-1]])
+        logging.info("Popped A2 %d", A2[-1])
         A2.pop(-1)
       while len(A2) < len(A1):
-        logging.info("Popped A1 %d", self.vocab[A1[-1]])
+        logging.info("Popped A1 %d", A1[-1])
         A1.pop(-1)
       assert len(T1)==len(T2)
       assert len(A1) == len(A2)
@@ -261,13 +261,13 @@ def main():
   weat = XWEAT()
 
   if args.test_number == 1:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.att_dim, args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.sem_domain, args.protocol_type)
   elif args.test_number == 2:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.att_dim, args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.sem_domain, args.protocol_type)
   elif args.test_number == 3:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.att_dim, args.protocol_type)
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_3(args.sem_domain, args.protocol_type)
   elif args.test_number == 4:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.att_dim, args.protocol_type) 
+    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_4(args.sem_domain, args.protocol_type) 
   else:
     raise ValueError("Only WEAT 1 to 4 are supported")
 
@@ -290,7 +290,7 @@ def main():
   with codecs.open(args.output_file, "w", "utf8") as f:
     f.write("Config: ")
     f.write(str(args.test_number) + " and ")
-    f.write(str(args.att_dim) + " and ")
+    f.write(str(args.sem_domain) + " and ")
     f.write(str(args.lower) + " and ")
     f.write(str(args.permutation_number) + "\n")
     f.write("Result: ")
