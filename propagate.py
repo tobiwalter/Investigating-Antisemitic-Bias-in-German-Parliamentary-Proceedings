@@ -147,14 +147,12 @@ def main():
   lp = LabelPropagation.load(args.ppmi, args.index, protocol_type=args.protocol_type)
   att_1, att_2 = f'{args.semantic_domain}_pro', f'{args.semantic_domain}_con'
   lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
-  print(lp.labels)
 
   if args.semantic_domain != 'sentiment' or args.random:
     logging.info('Reindex matrix')
     lp.reindex(args.semantic_domain, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)
   bias_term_indices = lp.get_bias_term_indices(targets)
-  print(bias_term_indices)
   
   start = time.time()
   if args.random:
