@@ -111,15 +111,16 @@ def create_coo_mat(coo_counts: dict):
     logging.info(f'Create co-occurence matrix')
     for (tok1, tok2), sg_count in coo_counts.items():
         ii += 1
-        if ii % 1000000 == 0:
+        if ii % 200000 == 0:
             logging.info(f'finished {ii/len(coo_counts):.2%} of skipgrams')    
         row_indxs.append(tok1)
         col_indxs.append(tok2)
         values.append(sg_count)
+    logging.info('done')
     wwcnt_mat = sparse.csr_matrix((values, (row_indxs, col_indxs)))
     return wwcnt_mat
 
-def create_ppmi_mat(coo_ma, coo_counts, smooth=0, neg=1, normalize=False):
+def create_ppmi_mat(coo_mat, coo_counts, smooth=0, neg=1, normalize=False):
     """Create PMMI matrix
     
     :param coo_mat: co-occurrence matrix of the corpus
@@ -157,7 +158,7 @@ def create_ppmi_mat(coo_ma, coo_counts, smooth=0, neg=1, normalize=False):
     logging.info(f'Create PPMI matrix')
     for (tok_word, tok_context), sg_count in coo_counts.items():
         ii += 1
-        if ii % 1000000 == 0:
+        if ii % 200000 == 0:
             logging.info(f'finished {ii/len(coo_counts):.2%} of skipgrams')
 
         nwc = sg_count + smooth
@@ -180,6 +181,7 @@ def create_ppmi_mat(coo_ma, coo_counts, smooth=0, neg=1, normalize=False):
         ppmi_values.append(ppmi)
         sppmi_values.append(sppmi)
 
+    logging.info('done')	
     ppmi_mat = sparse.csr_matrix((ppmi_values, (row_indxs, col_indxs)))
     sppmi_mat = sparse.csr_matrix((sppmi_values, (row_indxs, col_indxs)))    
     return ppmi_mat, sppmi_mat

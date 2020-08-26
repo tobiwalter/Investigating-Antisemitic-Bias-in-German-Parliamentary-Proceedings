@@ -93,10 +93,10 @@ class LabelPropagation:
     
     # Compute scores f_u (add a little bit if noise to L_uu to avoid LinAlgError when computing inverse)
     try:
-      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu)).dot(L_ul).dot(labels)
-    except LinAlgError:
+      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu)).dot(L_ul).dot(self.labels)
+    except:
       logging.info(f'Add little amount of noise ({M}) to enable computation of inverse')
-      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu + np.eye(L_uu.shape[0])*M)).dot(L_ul).dot(labels)
+      self.scores = fu = np.multiply(-1.0, np.linalg.inv(L_uu + np.eye(L_uu.shape[0])*M)).dot(L_ul).dot(self.labels)
 
   def save_scores(self, path, semantic_domain):
     """Save harmonic function scores"""
@@ -145,15 +145,17 @@ def main():
 
   args = parser.parse_args()
   lp = LabelPropagation.load(args.ppmi, args.index, protocol_type=args.protocol_type)
-  att_1, att_2 = f'{semantic_domain}_pro', f'{semantic_domain}_con'
+  att_1, att_2 = f'{args.semantic_domain}_pro', f'{args.semantic_domain}_con'
   lp.create_labels(lp.attributes[att_1], lp.attributes[att_2])
   print(lp.labels)
 
   if args.semantic_domain != 'sentiment' or args.random:
     logging.info('Reindex matrix')
-    lp.reindex(att_1, att_2, random=args.random)
+    lp.reindex(args.semantic_domain, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)
   bias_term_indices = lp.get_bias_term_indices(targets)
+  print(bias_term_indices)
+  
   start = time.time()
   if args.random:
     logging.info(f'Start label propagation for random attribute sets')
@@ -161,12 +163,12 @@ def main():
     logging.info(f'Start label propagation for attributes {att_1} and {att_2}')
   lp.propagate()
   #lp.load_scores('fu_scores/kaiserreich_1.npy')
-  lp.save_scores(args.output_file, args.semantic_domains)
+  lp.save_scores(args.output_file, args.semantic_domain)
   elapsed = time.time()
   logging.info(f'Label propagation finished. Took {(elapsed - start) / 60} min.')
   bias_term_scores = lp.get_bias_term_scores(bias_term_indices)
 
-  with codecs.open(f'fu_scores/{args.output_file}_{args.semantic_domains}.txt', "w", "utf8") as f:
+  with codecs.open(f'fu_scores/{args.output_file}_{args.semantic_domain}.txt', "w", "utf8") as f:
     for k,v in bias_term_scores.items():
       f.write(f'Mean score {k}: {v.mean()}\n')
       f.write(f'Median score {k}: {np.percentile(v, 50)}\n')
