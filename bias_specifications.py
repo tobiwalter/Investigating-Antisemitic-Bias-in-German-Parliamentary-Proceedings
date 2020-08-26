@@ -46,30 +46,30 @@ def antisemitic_streams(domain: str, kind: str):
 			con = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos, dissident'.split(', ')   
 
 	# economic
-	elif attribute_dimension == 'economic':
+	elif domain == 'economic':
 		pro = 'geben, großzuegigkeit, großzuegig, selbstlos, genuegsam, großmut, uneigennuetzig, sparsam, proletariat, armut, industriearbeiter'.split(', ')
 
 		con = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, bankier, wucher'.split(', ')
 
 	# conspiracy
-	elif attribute_dimension == 'conspiratorial':
+	elif domain == 'conspiratorial':
 		pro = 'loyal, kamerad, ehrlichkeit, ersichtlich, aufrichtig, vertrauenswuerdig, wahr, ehrlich, unschuldig, freundschaftlich, hell, zugaenglich, machtlos, ohnmacht, untertan'.split(', ')
 
 		con = 'illoyal, spitzel, verrat, geheim, betruegerisch, hinterlistig, unwahr, zweifelhaft, verbrecher, bedrohlich, dunkel, geheimnis, einflussreich, weltmacht, herrschaft, verschwoerung'.split(', ')
 
 	# ethics
-	elif attribute_dimension == 'ethic':
+	elif domain == 'ethic':
 		pro = 'bescheiden, sittlich, anstaendig, tugendhaft, charakterfest, wuerdig, treu, moralisch, ehrlich, gesittet, gewissenhaft, vorbildlich'.split(', ')
 		con = 'unbescheiden, unsittlich, unanstaendig, luestern, korrupt, unwuerdig, untreu, unmoralisch, unehrlich, verdorben, gewissenlos, barbarisch'.split(', ')
 
 	# religion
-	elif attribute_dimension == 'religious':
+	elif domain == 'religious':
 		pro = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
 
 		con = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
 
 	# racism
-	elif attribute_dimension == 'racist':
+	elif domain == 'racist':
 		pro = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
 		con = 'seltsam, unterlegenheit, ungleichheit, unangenehm, boshaft, schaendlich, hass, abgelehnt, schlechter, fremdlaendisch, unrein, unterlegen, schmutzig, verseucht, schaedlich, niedertraechtig'.split(', ')
 
