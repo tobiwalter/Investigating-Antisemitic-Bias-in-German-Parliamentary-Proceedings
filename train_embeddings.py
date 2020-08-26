@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
 from pathlib import Path
 import multiprocessing as mp
 from gensim.models.word2vec import Word2Vec, LineSentence
@@ -31,15 +32,15 @@ logging.basicConfig(
 start = time.time()
 logging.info(f'Training started at: {start}')
 
-if args.proceedings.endswith('.txt'):
-    sentences = LineSentence(args.proceedings)
+if args.protocols.endswith('.txt'):
+    sentences = LineSentence(args.protocols)
 else:
-		# Read in each document to be processed by word2vec
-    sentences = list(CreateCorpus(args.proceedings))
+    # Read in each document to be processed by word2vec
+    sentences = list(CreateCorpus(args.protocols))
 
 if args.model_architecture == 'word2vec':
 	model = Word2Vec(sentences=sentences, size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs, negative=args.ns)
-elif args.model_type == 'fasttext':
+elif args.model_architecture == 'fasttext':
 	model = FT_gensim(size=args.size, window=args.window, min_count=args.min_count, workers=args.threads, sg=args.sg, hs=args.hs,negative=args.ns)
 
 	# build the vocabulary
