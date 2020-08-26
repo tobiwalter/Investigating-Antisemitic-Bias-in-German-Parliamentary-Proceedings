@@ -56,11 +56,11 @@ class ProcessProtocols(object):
                     text = remove_double_spaces(text)
                     text = reduce_numerical_sequences(text)
                     text = filter_doc(text)
-                    text = [removeGermanChainWords(line) for line in text]
+                    text = [remove_german_chainwords(line) for line in text]
                     text = [remove_hyphens(line) for line in text]
                     text = [lemmatizer.lemmatize(line) for line in text]
                     text = [lowercase(line) for line in text]
-                    text = [removeUmlauts(line) for line in text]
+                    text = [remove_umlauts(line) for line in text]
                     text = [harmonizeSpelling(line, spelling_dict) for line in text]
                     save_as_line_sentence(text, f'{self.dirname}_processed/{num}_sents.txt')
                     i += 1
