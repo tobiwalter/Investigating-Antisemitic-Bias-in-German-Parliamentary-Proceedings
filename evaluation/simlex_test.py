@@ -18,7 +18,6 @@ models_path = Path((os.path.join(ROOT_DIR, "../models")))
 with open(os.path.join(ROOT_DIR, 'MSimLex999_German.csv'), encoding = 'utf-8') as f:
 
     text = f.readlines()
-
     simlex_pairs = []
     for line in text:
       elements = line.split(',')
@@ -38,10 +37,10 @@ def main():
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
 
   with open(os.path.join(ROOT_DIR, f'simlex/{args.output_file}'), 'w') as f:
-    for t in zip(vocab_files, vector_files):
+    for voc,vec in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0][4:]
-      vocab = load_vocab(t[0])
-      vectors = load_vectors(t[1])
+      vocab = load_vocab(voc)
+      vectors = load_vectors(vec)
       simlex_score = eval_simlex(simlex_pairs, vocab, vectors)
       f.write('{}: {}'.format(file_name,simlex_score))
       f.write('\n')

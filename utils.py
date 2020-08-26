@@ -8,97 +8,11 @@ import os
 import codecs
 from scipy import sparse
 from typing import List, Dict, Tuple
-from gensim.models import Word2Vec
 
 DATA_FOLDER = Path('./data')
 MODELS_FOLDER = Path('./models')
 VOCAB_FOLDER = DATA_FOLDER / 'vocab'
-
-# term sets
-
-## target terms 
-
-JEWISH_RT = ["jude", "juedisch", "judentum", "orthodox", "israel", "mosaisch","israelitisch","israelit", "rothschild", "talmud", "synagoge", "abraham", "rabbiner", "zionistisch"]
-
-JEWISH_BRD = 'judentum, jude, juedisch, israel, israelisch, synagoge, koscher, orthodox, rabbiner, zentralrat'.split(', ')
-
-CHRISTIAN_RT = ["christ", "christlich", "christentum", "katholizismus", "katholisch", "evangelisch", "evangelium", "auferstehung", "kirche" , "jesus", "taufe", "pfarrer", "bibel", "ostern"]
-
-CHRISTIAN_BRD = 'christ, christlich, christentum, evangelisch, evangelium, jesus, katholisch, kirche, pfarrer, taufe, abendland'.split(', ')
-
-PROTESTANT_BRD = "protestant, protestantisch, evangelisch, evangelium, landeskirche, kirchentag, ekd, landesbischof, lutherisch, diakonie".split(', ')
-
-PROTESTANT_RT = ["protestant", "protestantisch", "protestantismus", "evangelisch", "evangelium", "landeskirche", "lutherisch", "evangelisch-lutherisch", "oberkirchenrat", "reformiert"]
-
-CATHOLIC_BRD = "katholisch, katholik, papst, roemisch-katholisch, enzyklika, paepstlich, bischofskonferenz, dioezese, franziskus, kurie".split(', ')
-
-CATHOLIC_RT = ["katholizismus", "katholisch", "katholik", "papst", "jesuiten", "ultramontanismus", "ultramontanen", "jesuitenorden", "roemisch-katholisch", "zentrumspartei"]
-
-## attribute terms defining different attribute dimensions
-
-# sentiment
-PLEASANT = 'streicheln, Freiheit, Gesundheit, Liebe, Frieden, Freude, Freund, Himmel, loyal, Vergnuegen, Diamant, sanft, ehrlich, gluecklich, Regenbogen, Diplom, Geschenk, Ehre, Wunder, Sonnenaufgang, Familie, Lachen, Paradies, Ferien'.lower().split(', ') 
-
-UNPLEASANT = 'Missbrauch, Absturz, Schmutz, Mord, Krankheit, Tod, Trauer, vergiften, stinken, Angriff, Katastrophe, Hass, verschmutzen, Tragoedie, Scheidung, Gefaengnis, Armut, haesslich, Krebs, toeten, faul, erbrechen, Qual'.lower().split(', ') 
-
-# nationalism/patriotism
-
-VOLKSTREU_RT = 'patriotisch, germanisch, vaterlaendisch, deutschnational, reichstreu, vaterlandsliebe, nationalgesinnt, nationalstolz, koenigstreu, volksgeist, nationalbewusstsein, volksbewusstsein, staatstreu, nationalgefuehl'.split(', ')
-
-VOLKSUNTREU_RT = 'unpatriotisch, undeutsch, vaterlandslos, antideutsch, dissident, landesverraeter, reichsfeindlich, reichsfeind, deutschfeindlich, fremd, fremdlaendisch, nichtdeutsch, staatsfeindlich, heimatlos'.split(', ')
-
-VOLKSTREU_BRD = 'patriotisch, vaterlandsliebe, germanisch, nationalbewusstsein, vaterlaendisch, nationalgefuehl, volkstum, patriotismus, patriot, staatstreu'.split(', ')
-
-VOLKSUNTREU_BRD = 'nichtdeutsch, vaterlandslos, landesverraeter, antideutsch, heimatlos, separatistisch, staatsfeindlich, fremd, staatenlos, dissident'.split(', ')   
-
-# economy
-
-ECONOMIC_PRO = 'geben, großzuegigkeit, großzuegig, selbstlos, genuegsam, großmut, uneigennuetzig, sparsam, proletariat, armut, industriearbeiter'.split(', ')
-
-ECONOMIC_CON = 'nehmen, gier, gierig, egoistisch, habgierig, habsucht, eigennuetzig, verschwenderisch, bourgeoisie, wohlstand, bankier, wucher'.split(', ')
-
-# conspiracy
-
-CONSPIRATORIAL_PRO = 'loyal, kamerad, ehrlichkeit, ersichtlich, aufrichtig, vertrauenswuerdig, wahr, ehrlich, unschuldig, freundschaftlich, hell, zugaenglich, machtlos, ohnmacht, untertan'.split(', ')
-
-CONSPIRATORIAL_CON = 'illoyal, spitzel, verrat, geheim, betruegerisch, hinterlistig, unwahr, zweifelhaft, verbrecher, bedrohlich, dunkel, geheimnis, einflussreich, weltmacht, herrschaft, verschwoerung'.split(', ')
-
-# ethics
-
-ETHIC_PRO = 'bescheiden, sittlich, anstaendig, tugendhaft, charakterfest, wuerdig, treu, moralisch, ehrlich, gesittet, gewissenhaft, vorbildlich'.split(', ')
-
-ETHIC_CON = 'unbescheiden, unsittlich, unanstaendig, luestern, korrupt, unwuerdig, untreu, unmoralisch, unehrlich, verdorben, gewissenlos, barbarisch'.split(', ')
-
-# religion
-
-RELIGIOUS_PRO = 'glaeubige, geistlich, engel, heilig, fromm, geheiligt, goettlich, ehrwuerdig, treu, glaeubig, religioes'.split(', ')
-
-RELIGIOUS_CON = 'atheist, weltlich, teufel, irdisch, atheistisch, heidnisch, gottlos, verflucht, untreu, unglaeubig, irreligioes, gotteslaesterung'.split(', ')
-
-# racism
-RACIST_PRO = 'normal, ueberlegenheit, gleichheit, angenehm, freundlich, ehrenwert, sympathie, akzeptiert, besser, national, rein, ueberlegen, sauber, ehrenhaft'.split(', ')
-
-RACIST_CON = 'seltsam, unterlegenheit, ungleichheit, unangenehm, boshaft, schaendlich, hass, abgelehnt, schlechter, fremdlaendisch, unrein, unterlegen, schmutzig, verseucht, schaedlich, niedertraechtig'.split(', ')
-
-# unipolar attribute sets - can only be used for ECT 
-
-OUTSIDER_WORDS = 'unaufrichtig, komisch, boshaft, unberechenbar, primitiv, beaengstigend, hinterlistig, energisch, truegerisch, \
-neidisch, gierig, abscheulich, verachtenswert, brutal, ungeheuer, berechnend, grausam, gemein, intolerant, aggressiv'\
-.lower().split(', ') 
-
-JEWISH_STEREOTYPES_NOUNS = 'Gier, Wucherer, Drueckeberger, Kriegsgewinnler, Macht, Einfluss, Kriegstreiber, Luegner, \
-Weltherrschaft, Kommunismus, Kapitalismus, Liberalismus, Aussenseiter'.lower().split(', ')
-
-JEWISH_STEREOTYPES_CHARACTER = 'egoistisch, fremd, dekadent, hasserfuellt, habgierig, geldgierig, penetrant, hinterlistig, \
-intellektuell, pervers, hinterhaeltig, betruegerisch, gebeugt, bucklig'.split(', ')
-
-JEWISH_STEREOTYPES_POLITICAL = 'liberalistisch, modern, materialistisch, liberal, undeutsch, unpatriotisch, saekular, \
-sozialistisch, links, bolschewistisch'.split(', ')
-
-JEWISH_OCCUPATIONS = 'Pfandleiher, Geldleiher, Kaufmann, Haendler, Bankier, Finanzier, Steuereintreiber, Zoellner, \
-Troedelhaendler'.lower().split(', ') 
-
-
+SPECIFICATIONS_FOLDER = DATA_FOLDER / 'specifications'
 
 class CreateSlice:
     """
@@ -156,7 +70,7 @@ def save_corpus(corpus: List , corpus_path: str):
     for num,doc in enumerate(corpus):
         write_lines((DATA_FOLDER / corpus_path / f'{num+1}_sents.txt'), doc)
 
-def save_vocab(model: Word2Vec, filepath: str):
+def save_vocab(model, filepath: str):
     """Save the word:index mappings from word2vec to disk."""
     words = sorted([w for w in model.wv.vocab], key=lambda w: model.wv.vocab.get(w).index)
     index = {w: i for i, w in enumerate(words)}
@@ -174,42 +88,29 @@ def filter_terms(target_set: List, input_repr):
     """Filter out target terms that do not reach the minimum count. """
     return [word for word in target_set if word in input_repr]
 
-def create_attribute_sets(dict, kind, incl_unipolar=False):
+def load_specifications(attribute_set):
+    with open(SPECIFICATIONS_FOLDER / f'{attribute_set}.txt', 'r') as f:
+        specifications = f.read().lower().split('\n')
+    return specifications
+
+def create_attribute_sets(input_repr, kind):
     """
     Create all attribute sets for a specific time period
 
     :param input_repr: input representation of the text 
     :param kind: version of attributes to create - either for RT or BRD 
-    :param incl_unipolar: whether to include unipolar attribute sets 
     """
-    attribute_sets = {
-    'sentiment_pro' : filter_terms(PLEASANT, dict),
-    'sentiment_con' : filter_terms(UNPLEASANT, dict),
-	'economic_pro' : filter_terms(ECONOMIC_PRO, dict),
-	'economic_con' : filter_terms(ECONOMIC_CON, dict),
-	'conspiratorial_pro' : filter_terms(CONSPIRATORIAL_PRO, dict),
-	'conspiratorial_con' : filter_terms(CONSPIRATORIAL_CON, dict),
-    'religious_pro' : filter_terms(RELIGIOUS_PRO, dict),
-    'religious_con' : filter_terms(RELIGIOUS_CON, dict),
-    'racist_pro' : filter_terms(RACIST_PRO, dict),
-    'racist_con' : filter_terms(RACIST_CON, dict),
-    'ethic_pro' : filter_terms(ETHIC_PRO, dict),
-    'ethic_con' : filter_terms(ETHIC_CON, dict)}
 
-    if incl_unipolar:
-
-        attribute_sets['outsider_words'] = filter_terms(OUTSIDER_WORDS, dict)
-        attribute_sets['jewish_occupations'] = filter_terms(JEWISH_OCCUPATIONS, dict),
-        attribute_sets['jewish_nouns'] = filter_terms(JEWISH_STEREOTYPES_NOUNS, dict),
-        attribute_sets['jewish_character'] = filter_terms(JEWISH_STEREOTYPES_CHARACTER, dict),
-        attribute_sets['jewish_political'] = filter_terms(JEWISH_STEREOTYPES_POLITICAL, dict)
+    domains = ['sentiment_pro', 'sentiment_con', 'economic_pro', 'economic_con', 'conspiratorial_pro', 'conspiratorial_con', 'religious_pro','religious_con',
+     'racist_pro', 'racist_con', 'ethic_pro', 'ethic_con']
+    attribute_sets = {d: filter_terms(load_specifications(d), input_repr) for d in domains}
 
     if kind == 'BRD':
-        attribute_sets['patriotism_pro'] = filter_terms(VOLKSTREU_BRD, dict)
-        attribute_sets['patriotism_con'] = filter_terms(VOLKSUNTREU_BRD, dict)
+        attribute_sets['patriotic_pro'] = filter_terms(load_specifications('patriotic_pro_brd'), input_repr)
+        attribute_sets['patriotic_con'] = filter_terms(load_specifications('patriotic_con_brd'), input_repr)
     elif kind == 'RT':            
-        attribute_sets['patriotism_pro'] = filter_terms(VOLKSTREU_RT, dict)
-        attribute_sets['patriotism_con'] = filter_terms(VOLKSUNTREU_RT, dict)
+        attribute_sets['patriotic_pro'] = filter_terms(load_specifications('patriotic_pro_rt'), input_repr)
+        attribute_sets['patriotic_con'] = filter_terms(load_specifications('patriotic_con_rt'), input_repr)
     else: 
         raise ValueError('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
 
@@ -234,32 +135,19 @@ def convert_attribute_set(dimension):
       return ('ethic_pro', 'ethic_con')
 
       
-def create_target_sets(dict, kind): 
+def create_target_sets(input_repr, kind): 
     """
     Create all target sets for this study
-    :param dict: trained word vectors 
+
+    :param input_repr: trained word vectors 
     :param kind: kind of attributes to create - either RT or BRD 
     """
+
+    targets = ['jewish', 'christian', 'protestant', 'catholic']
     if kind == 'RT':
-        target_sets = {
-        'jewish' : filter_terms(JEWISH_RT, dict),
-        
-        'christian' : filter_terms(CHRISTIAN_RT, dict),
-        
-        'catholic' : filter_terms(CATHOLIC_RT, dict),
-        
-        'protestant' : filter_terms(PROTESTANT_RT, dict)
-                    }
+        target_sets =  {t: filter_terms(load_specifications(f'{t}_rt'), input_repr) for t in targets}
     elif kind == 'BRD':
-        target_sets = {
-        'jewish' : filter_terms(JEWISH_BRD, dict),
-        
-        'christian' : filter_terms(CHRISTIAN_BRD, dict),
-        
-        'catholic' : filter_terms(CATHOLIC_BRD, dict),
-        
-        'protestant' : filter_terms(PROTESTANT_BRD, dict)
-                    }
+        target_sets =  {t: filter_terms(load_specifications(f'{t}_brd'), input_repr) for t in targets}
     else:
         print('parameter ''kind'' must be specified to either RT for Reichstag proceedings or BRD for Bundestag proceedings.')
     # Join them together to form bias words

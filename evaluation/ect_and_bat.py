@@ -14,17 +14,20 @@ import argparse
 from pathlib import Path
 from eval import embedding_coherence_test, bias_analogy_test
 from weat import XWEAT
+from bias_specifications import antisemitic_streams
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
 models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4]
+DIMENSIONS = ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'religious', 'racist', 'ethic']
 
 EMB_DIM = 200
 def run_bat(vectors, vocab, weat_terms):
+  """ Performs bias analogy test with WEAT terms on embedding vectors"""
   logging.basicConfig(level=logging.INFO)
-  logging.info('BAT test started:')
+  logging.info('BAT test started')
   start_time = time.time()
   result = bias_analogy_test(vectors, vocab, weat_terms[0], weat_terms[1], 
     weat_terms[2], weat_terms[3])
@@ -33,11 +36,12 @@ def run_bat(vectors, vocab, weat_terms):
   logging.info(f'Result : {result}')
   return result
 
-def run_ect(vectors, vocab, weat_terms, attributes):
+def run_ect(vectors, vocab, weat_terms):
+  """ Performs embedding coherence test with provided target terms and attribute terms on embedding vectors"""
   logging.basicConfig(level=logging.INFO)
-  logging.info(f'ECT test started with {attributes}')
+  logging.info(f'ECT test started')
   start_time = time.time()
-  result = embedding_coherence_test(EMB_DIM,vectors, vocab, weat_terms[0], weat_terms[1], attributes)
+  result = embedding_coherence_test(EMB_DIM,vectors, vocab, weat_terms[0], weat_terms[1], weat_terms[3] + weat_terms[4])
   elapsed = time.time()
   logging.info('Time for ECT: {}'.format(elapsed-start_time))
   logging.info(result)
@@ -64,15 +68,14 @@ def main():
   results = {}
   for test in weat_tests:
         results[test.__name__] = {}
-        dims = ['sentiment', 'patriotism', 'economic', 'conspiratorial', 'religious', 'racist', 'ethic']
-        for dim in dims:
+        for dim in DIMENSIONS:
             weat_terms = test(dim, args.protocol_type) 
             if args.test_type == 'BAT':
                 result = run_bat(vectors, vocab, weat_terms) 
                 logging.info(f'{test.__name__} - {dim}: {result}')
                 results[test.__name__][dim] = result 
             elif args.test_type == 'ECT':
-                result = run_ect(vectors, vocab, weat_terms, attribute_sets[f'{dim}_pro'] + attribute_sets[f'{dim}_con'])
+                result = run_ect(vectors, vocab, weat_terms)
                 logging.info(f'{test.__name__} - {dim}: {result}')
                 results[test.__name__][dim] = result 
 
@@ -80,7 +83,7 @@ def main():
       res_df = pd.DataFrame(results).T.round(3)
 
   elif args.test_type == 'ECT':
-      res_df = pd.DataFrame(index=pd.MultiIndex.from_product([dims, ['corr', 'p']]),
+      res_df = pd.DataFrame(index=pd.MultiIndex.from_product([DIMENSIONS, ['corr', 'p']]),
                          columns=results.keys()).T
       for k1,v1 in results.items():
           for k2, v2 in v1.items():

@@ -2,14 +2,12 @@
 import sys
 sys.path.append('./..')
 from utils import load_vocab, load_vectors
-import os 
+import os
 import glob
 from eval import eval_k_means
 from weat import XWEAT
 from pathlib import Path
-import json
 import argparse
-import numpy as np
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
@@ -26,10 +24,10 @@ def main():
 
   vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
   vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
-  for t in zip(vocab_files, vector_files):
+  for voc,vec in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(t[0]))[0]
-      vocab = load_vocab(t[0])
-      vectors = load_vectors(t[1])
+      vocab = load_vocab(voc)
+      vectors = load_vectors(vec)
       with open(os.path.join(ROOT_DIR, f'kmeans/{file_name}.txt'), 'w') as f:
         for test in weat_tests:
           f.write(f'K-means score {test.__name__ }: ')
