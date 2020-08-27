@@ -111,13 +111,16 @@ class SubspaceProjections:
       race_direction_pca = pca.components_[0]
       return race_direction_pca
 
-  def get_projections(self, attribute, race_direction):
+  def get_projections(self, attribute, race_direction, slice):
       """Compute subspace projections of attribute terms onto the bias direction"""
       A1 = self.convert_by_vocab(attribute, numbers=False)
       projections = {}
       for word in A1:
           projection = self.cosine(self.embedding_matrix[self.vocab[word]], race_direction) 
-          projections[word] = projection 
+	  if slice in ('kaiserreich_1', 'weimar'):
+                  projections[word] = projection * (-1)
+	  else:
+	          projections[word] = projection
           logging.info(f'Projection for {word}: {projection}.')
       return projections
 
@@ -173,6 +176,7 @@ def main():
     parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
     parser.add_argument("--embedding_vocab", type=str, help="Vocab of the self.embedding_matrix")
     parser.add_argument("--embedding_vectors", type=str, help="Vectors of the self.embedding_matrix")
+    parser.add_argument("--slice", type=str, help="The slice to plot")
     parser.add_argument("--plot_projections", type=boolean_string, default=True, help="Whether to plot subspace projections", required=True)
     parser.add_argument("--plot_pca", type=boolean_string, default=False, help="Whether to plot subspace projections", required=True)
     parser.add_argument("--t_test", type=boolean_string, default=True, help="Whether to compute t-test for a semantic domain ", required=True)
@@ -193,8 +197,8 @@ def main():
 
     race_direction_pca = ripa.doPCA(targets_1,targets_2, plot=args.plot_pca)
     
-    projections_pro= ripa.get_projections(attributes_1, race_direction_pca)
-    projections_con= ripa.get_projections(attributes_2, race_direction_pca)
+    projections_pro= ripa.get_projections(attributes_1, race_direction_pca, args.slice)
+    projections_con= ripa.get_projections(attributes_2, race_direction_pca, args.slice)
 
     if args.plot_projections:
       logging.info(f'Plot projections for semantic sphere {args.sem_domain}')
