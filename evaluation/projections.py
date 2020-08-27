@@ -119,7 +119,7 @@ class SubspaceProjections:
           projection = self.cosine(self.embedding_matrix[self.vocab[word]], race_direction) 
           if slice in ('kaiserreich_1', 'weimar'):
               projections[word] = projection * (-1)
-
+              logging.info(f'Projection for {word}: {projection}.')
           else:
               projections[word] = projection
               logging.info(f'Projection for {word}: {projection}.')
@@ -202,8 +202,9 @@ def main():
     projections_con= ripa.get_projections(attributes_2, race_direction_pca, args.slice)
 
     if args.plot_projections:
-      logging.info(f'Plot projections for semantic sphere {args.sem_domain}')
-      ripa.plot_onto_bias_direction(projections_pro, projections_con, output_file=args.output_file)
+      with plt.style.context('ggplot'):
+        logging.info(f'Plot projections for semantic sphere {args.sem_domain}')
+        ripa.plot_onto_bias_direction(projections_pro, projections_con, output_file=args.output_file)
     if args.t_test:
       logging.info(f'Conduct t-test for semantic sphere {args.sem_domain}')
       t,p = ripa.t_test(list(projections_pro.values()), list(projections_con.values()))
