@@ -117,11 +117,12 @@ class SubspaceProjections:
       projections = {}
       for word in A1:
           projection = self.cosine(self.embedding_matrix[self.vocab[word]], race_direction) 
-	  if slice in ('kaiserreich_1', 'weimar'):
-                  projections[word] = projection * (-1)
-	  else:
-	          projections[word] = projection
-          logging.info(f'Projection for {word}: {projection}.')
+          if slice in ('kaiserreich_1', 'weimar'):
+              projections[word] = projection * (-1)
+
+          else:
+              projections[word] = projection
+              logging.info(f'Projection for {word}: {projection}.')
       return projections
 
 
