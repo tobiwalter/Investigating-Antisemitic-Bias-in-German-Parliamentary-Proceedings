@@ -10,8 +10,8 @@ from pathlib import Path
 import argparse
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
-models_path = Path((os.path.join(ROOT_DIR, "../models")))
+#vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
+#models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
 weat_tests = [XWEAT().weat_1, XWEAT().weat_2, XWEAT().weat_3, XWEAT().weat_4]
 
@@ -22,8 +22,8 @@ def main():
   parser.add_argument("--protocol_type", nargs='?', choices = ['RT', 'BRD'], help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
   args = parser.parse_args()
 
-  vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
-  vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
+  vocab_files = glob.glob(str(args.vocab_file_pattern))
+  vector_files = glob.glob(str(args.vector_file_pattern))
   for voc,vec in zip(vocab_files, vector_files):
       file_name = os.path.splitext(os.path.basename(voc))[0]
       vocab = load_vocab(voc)

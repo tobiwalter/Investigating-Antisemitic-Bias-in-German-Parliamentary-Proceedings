@@ -11,8 +11,8 @@ import numpy as np
 import argparse
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
-models_path = Path((os.path.join(ROOT_DIR, "../models")))
+#vocab_path = Path((os.path.join(ROOT_DIR, "../data/vocab")))
+#models_path = Path((os.path.join(ROOT_DIR, "../models")))
 
 # Get simlex pairs
 with open(os.path.join(ROOT_DIR, 'MSimLex999_German.csv'), encoding = 'utf-8') as f:
@@ -33,8 +33,8 @@ def main():
   parser.add_argument("--output_file", type=str, default=None, help="file to write output to", required=True)
 
   args = parser.parse_args()
-  vocab_files = glob.glob(str(vocab_path / args.vocab_file_pattern))
-  vector_files = glob.glob(str(models_path/ args.vector_file_pattern))
+  vocab_files = glob.glob(str(args.vocab_file_pattern))
+  vector_files = glob.glob(str(args.vector_file_pattern))
 
   with open(os.path.join(ROOT_DIR, f'simlex/{args.output_file}'), 'w') as f:
     for voc,vec in zip(vocab_files, vector_files):
