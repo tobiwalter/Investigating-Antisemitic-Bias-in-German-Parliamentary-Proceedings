@@ -10,6 +10,7 @@ import glob
 import logging
 import copy
 
+PYTHONHASHSEED=0
 class TWEC: 
     """
     Handles alignment between multiple slices of temporal text
