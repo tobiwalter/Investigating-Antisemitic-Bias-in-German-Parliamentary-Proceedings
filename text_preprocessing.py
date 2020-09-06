@@ -139,7 +139,7 @@ def remove_hyphens(sentence: str, split_chars="-|—|–") -> str:
             new_text = new_text.replace(t, "-".join(parts))
     return new_text
 
-def remove_umlauts(sentence: str) -> str:
+def remove_umlauts(sentence: List) -> str:
     text_out = []
     for tok in sentence:
         res = tok.replace('ä', 'ae')
