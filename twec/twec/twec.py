@@ -111,7 +111,6 @@ class TWEC:
             print("Compass loaded from file.")
         else:
             sentences = CreateCorpus(compass_text)
-            # sentences.input_files = [s for s in sentences.input_files if not os.path.basename(s).startswith('.')]
             print("Training the compass.")
             if compass_exists:
                 print("Compass will be overwritten after training")
@@ -128,17 +127,15 @@ class TWEC:
         print("Training temporal embeddings: slice {}.".format(slice_text))
 
         sentences = CreateCorpus(slice_text)
-        #print(len(sentences.input_files))
+
         model = self.train_model(sentences)
-
         model_name = os.path.splitext(os.path.basename(slice_text))[0]
-
         self.trained_slices[model_name] = model
 
         # modified saving function to save in w2v format 
         if save:
-            # model.wv.save_word2vec_format(os.path.join(self.opath, model_name + ".txt"), binary=True)
             model.save(os.path.join(self.opath, model_name + ".model"))
+            # Save vocab 
             save_vocab(model, f'{model_name}_twec')
 
         return self.trained_slices[model_name]
@@ -155,10 +152,6 @@ class TWEC:
             m.negative = self.negative
             m.window = self.window
             m.vector_size = self.size
-            # if vocab_len > 0 and vocab_len != len(m.wv.vocab):
-            #     print(
-            #         "ERROR in evaluation: models with different vocab size {} != {}".format(vocab_len, len(m.wv.vocab)))
-            #     return
             vocab_len = len(m.wv.vocab)
             mods.append(m)
         tfiles = glob.glob(self.test + '/*.txt')

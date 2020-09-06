@@ -14,9 +14,14 @@ ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 tpath = os.path.abspath(os.path.join(ROOT_DIR, "../"))
 sys.path.append(tpath)
 os.chdir(tpath)
+
+from plot_utils import set_size
 from SequentialEmbeddings import SequentialEmbedding
 
 CMAP_MIN=0
+WIDTH = 360
+FIG_DIM = set_size(WIDTH)
+
 def get_cmap(n, name='Set1'):
     return plt.cm.get_cmap(name, n+CMAP_MIN)
 
@@ -52,7 +57,7 @@ def get_time_sims(seq_embedding, word1, topn=15):
         # sims[ww] = sim
 
         # for word, sim in embed.wv.most_similar(word1, topn=topn):
-        for sim, word in closest(embed, word1, topn=topn):
+        for sim, word in embed.closest(word1, topn=topn):
           ww = f"{word}|{period}"
           nearest.append((sim, ww))
           if sim > 0.3:
@@ -65,7 +70,6 @@ def get_time_sims(seq_embedding, word1, topn=15):
 
 
 def clear_figure():
-    plt.figure(figsize=(20,20))
     plt.clf()
 
 def fit_tsne(values):
@@ -79,25 +83,35 @@ def fit_tsne(values):
 
     return fitted
 
-numbers = {'1': 'one',
-           '2': 'two',
-           '3': 'three',
-           '4': 'four',
-           '5': 'five'
+def assing_period(word, protocol_type):
+    if protocol_type == 'BRD':
+        numbers = {'1': 'CDU I',
+           '2': 'SPD I',
+           '3': 'CDU II',
+           '4': 'SPD II',
+           '5': 'CDU III'
            }
 
-def assing_period(word):
+    elif protocol_type == 'RT':
+            numbers = {'1': 'KS I',
+           '2': 'KS II',
+           '3': 'Weimar'
+           }
     number = word.split("|")[1].strip() 
     return numbers.get(number)
 
-def plot_words(word1, words, fitted, cmap, sims, n):
+def plot_words(word1, words, fitted, cmap, sims, n, protocol_type):
     # TODO: remove this and just set the plot axes directly
-    label = [assing_period(word) for word in words]
+    label = [assing_period(word, protocol_type) for word in words]
     colors = [cmap(i - 1 + CMAP_MIN) for i in range(1,n)]
-    sns.scatterplot(fitted[:,0], fitted[:,1], alpha=0, hue=label, palette= colors)
-    # plt.scatter(fitted[:,0], fitted[:,1], alpha=0, hue=label)
-    plt.suptitle(f"{word1}", fontsize=30, y=0.1)
+    fig, ax = plt.subplots(figsize=FIG_DIM)
+    sns.scatterplot(fitted[:,0], fitted[:,1], alpha=0, hue=label, palette=colors, legend='brief')
+
+    plt.suptitle(f"{word1}", fontsize=8, y=0.05)
+    fig.set_size_inches(FIG_DIM[0], (FIG_DIM[0]/1.6))
     plt.axis('off')
+    plt.tight_layout()
+    ax.legend(loc='best', fontsize=3,framealpha=0.75, frameon=True, markerscale=0.2)
 
 
     annotations = []
@@ -108,13 +122,13 @@ def plot_words(word1, words, fitted, cmap, sims, n):
         ww,period = [w.strip() for w in words[i].split("|")]
         color = cmap((int(period)) - 1 + CMAP_MIN)
         word = ww
-        sizing = sims[words[i]] * 30
+        sizing = sims[words[i]] * 10
         # word1 is the word we are plotting against
         if ww == word1 or (isArray and ww in word1):
             annotations.append((ww, period, pt))
             word = period
             color = 'black'
-            sizing = 15
+            sizing = 4
 
         plt.text(pt[0], pt[1], word, color=color, size=int(sizing))
 
@@ -128,16 +142,16 @@ def plot_annotations(annotations):
     prev = annotations[0][-1]
     for ww, period, ann in annotations[1:]:
         plt.annotate('', xy=prev, xytext=ann,
-            arrowprops=dict(facecolor='blue', shrink=0.1, alpha=0.3,width=2, headwidth=15))
+            arrowprops=dict(facecolor='blue', shrink=0.1, alpha=0.15,width=1, headwidth=10))
         print(prev, ann)
         prev = ann
 
-def savefig(name):
+def savefig(name, protocol_type, n):
 
-    directory = os.path.join(ROOT_DIR, "output")
+    directory = os.path.join(ROOT_DIR, f"output/{protocol_type}_historic")
     if not os.path.exists(directory):
         os.makedirs(directory)
 
     fname = os.path.join(directory, name)
 
-    plt.savefig(fname, bbox_inches=0)
+    plt.savefig(f'{fname}_{n}_control.pdf', format='pdf', bbox_inches='tight')

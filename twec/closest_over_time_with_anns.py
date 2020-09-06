@@ -21,24 +21,18 @@ def main():
     parser.add_argument('-w','--words', nargs='+', help='List of words to plot', required=True)
     parser.add_argument("-n", "--neighbors", type=int, default=15, help="Number of neighbors to plot", required=True)
     parser.add_argument("--protocol_type", type=str, help="Whether to run test for Reichstagsprotokolle (RT) or Bundestagsprotokolle (BRD)", required=True)
-    parser.add_argument("--model_folder", type=str, help="Folder where word2vec models are located")
+    parser.add_argument("--model_folder", type=str, help="Folder where word2vec models are located", required=False)
 
     args = parser.parse_args()
     words_to_plot = args.words
     n = args.neighbors
 
     if args.protocol_type == 'RT':
-      # embeds = {1 : KeyedVectors.load('model/kaiserreich_1'),
-      #           2 : KeyedVectors.load('model/kaiserreich_2'),
-      #           3 : KeyedVectors.load('model/weimar')
-      #           }
-
-      # embeddings = SequentialEmbeddings(embeds)
       embeddings = SequentialEmbedding.load(args.model_folder)
 
 
     if args.protocol_type == 'BRD':
-      embeddings = SequentialEmbedding.load(args.model_folder,4)
+      embeddings = SequentialEmbedding.load(args.model_folder)
 
     for word1 in words_to_plot:
         helpers.clear_figure()
@@ -54,13 +48,13 @@ def main():
 
           # draw the words onto the graph
           cmap = helpers.get_cmap(len(time_sims))
-          annotations = helpers.plot_words(word1, words, fitted, cmap, sims,len(embeddings.embeds)+1)
+          annotations = helpers.plot_words(word1, words, fitted, cmap, sims,len(embeddings.embeds)+1, args.protocol_type)
           print(f'Annotations:{annotations}')
 
           if annotations:
               helpers.plot_annotations(annotations)
 
-          helpers.savefig(f"{args.protocol_type}/{word1}_annotated_{n}")
+          helpers.savefig(word1, args.protocol_type, n)
           for year, sim in time_sims.items():
               print(year, sim)
         except KeyError:
