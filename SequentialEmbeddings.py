@@ -9,18 +9,21 @@ import heapq
 from ReichstagEmbeddings import Embeddings
 
 # Define class for sequential embedding
-class SequentialEmbedding:
+class SequentialEmbedding(Embeddings):
+    """
+    Credits: This implementation is based on https://github.com/williamleif/histwords/blob/master/representations/embedding_matrixedding.py
+    """
     def __init__(self, embedding_spaces, **kwargs):
         self.embeds = embedding_spaces
  
     @classmethod
-    def load(cls, path, **kwargs):
+    def load(cls, model_folder, **kwargs):
         i = 1
         embeds = collections.OrderedDict()
-        for fn in glob.glob(f'{path}/*.model'):
+        model_names = glob.glob(f'{model_folder}/*.model')
+        for fn in model_names:
             if os.path.splitext(os.path.basename(fn))[0] != 'compass':
-                embeds[i] = KeyedVectors.load(fn)
-                # embeds[i] = Embeddings.load(fn)
+                embeds[i] = Embeddings.load(fn)
                 i += 1
         return SequentialEmbedding(embeds)
 
