@@ -1,7 +1,10 @@
-python train_embeddings.py --proceedings reichstag/kaiserreich_1_processed \
+for slice in kaiserreich_1 kaiserreich_2 weimar; do \
+python train_embeddings.py --protocols reichstag/${slice}_processed \
 						--format gensim \
-						--model_path kaiserreich_1 \
+						--model_path ${slice} \
 						--threads 1 \
-						--vocab_path kaiserreich_1 \
-						--model_type word2vec
+						--model_architecture word2vec \
+						--sg 0 \
+						--vocab_path ${slice}
+done
 
