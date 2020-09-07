@@ -6,12 +6,16 @@ Detect ethno-religious biases within German parliamentary proceedings reaching f
 * catholicism
 * protestantism
 -----------
-On the provided USB stick, four original collections of unprocessed protocols (1895.corr.seg, 1918.corr.seg, 1933.corr.seg, 1942.corr.seg) are provided. The following steps need to be taken to vectorize the data, and then evaluate the sub-corpora with regard to ethno-religious bias:
+On the provided USB stick, four original collections of unprocessed protocols (1895.corr.seg, 1918.corr.seg, 1933.corr.seg, 1942.corr.seg) are provided. The following steps need to be taken to vectorize the data, and then evaluate the sub-corpora with regard to ethno-religious bias.
+
+All word2vec models used for the bias experiments of the thesis are provided in the ```./models folder```, with the vocab in the ```./vocab``` folder, and should be reproducible. TWEC models are provided under ```./models/rt_twec``` and ```./models/bundestag_twec``` respectively. PPMI matrices can be produced with the pre-set parameters, the subsequent propagation results should be reproducible, since harmonic function label propagation is deterministic.
+
+The folders ```./data/reichstag``` and ```./data/bundestag``` contain the preprocessed slices.
 
 ## Extract parliamentary protocols and pre-process them
 
 ### Reichstag
-1) Extract Reichstag proceedings from each of the original files (e.g. '1942.corr.seg'):
+1) Extract Reichstag proceedings from each of the original files (e.g. '1895.corr.seg'):
 ```
 python extract_proceedings.py [file] (output will be saved in ./data/protocols_1895)
 ```
@@ -48,7 +52,7 @@ Semantic evaluation:
 * To run the Simlex test, run the script ```run_simlex.sh```.
 
 Subspace Projections:
-* To compute subspace projections, run the sript ```ripa.sh```. Provide a semantic domain to plot with the --sem_domain argument and set plot_projections to true.
+* To compute subspace projections, run the sript ```ripa.sh```. Provide a semantic domain to plot with the ```--sem_domain``` argument and set ```plot_projections``` to True.
 
 The scripts on the provided USB stick should work with the pre-set arguments, to run each bias test.
 
@@ -59,7 +63,7 @@ The scripts on the provided USB stick should work with the pre-set arguments, to
 bash ppmi.sh (--protocols  [the processed slice, e.g. ./data/reichstag/kaiserreich_1_processed] -> matrix is stored in ./matrices/ppmi_kaiserreich_1.npz, index in ./ppmi_vocab/kaiserreich_1.json))
 ```
 
-2) After, the label propagation can be executed by running the script ```propagate.sh```. Provide a semantic domain to propagate from (--semantic_domain [dom])
+2) After, the label propagation can be executed by running the script ```propagate.sh```. Provide a semantic domain to propagate from (```--semantic_domain``` [dom])
 
 # Visualize Semantic Shift
 
