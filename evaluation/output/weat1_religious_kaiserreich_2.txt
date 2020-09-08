@@ -1,0 +1,3 @@
+Config: 1 and religious and False and 1000000
+Result: (0.54759693, 0.6082763, 0.05762)
+0.23163138422701093

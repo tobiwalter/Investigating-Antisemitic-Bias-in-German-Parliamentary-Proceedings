@@ -1,0 +1,3 @@
+Config: 3 and conspiratorial and False and 1000000
+Result: (-0.15323311, -0.5034075, 0.8440148087206911)
+0.010378440618515014

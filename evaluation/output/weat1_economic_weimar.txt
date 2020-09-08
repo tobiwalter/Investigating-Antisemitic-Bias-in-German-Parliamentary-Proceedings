@@ -1,0 +1,3 @@
+Config: 1 and economic and False and 1000000
+Result: (0.49059814, 0.8233374, 0.015221)
+0.22942814429601033
