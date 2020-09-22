@@ -209,8 +209,14 @@ def main():
         logging.info(f'Plot projections for semantic sphere {args.sem_domain}')
         ripa.plot_onto_bias_direction(projections_pro, projections_con, output_file=args.output_file)
     if args.t_test:
+      if not os.path.exists('t_test'):
+        os.makedirs('t_test')
       logging.info(f'Conduct t-test for semantic sphere {args.sem_domain}')
       t,p = ripa.t_test(list(projections_pro.values()), list(projections_con.values()))
+      with codecs.open(f't_test/{args.slice}_{args.semantic_domain}.txt', "w", "utf8") as f:
+        f.write(f'test statistic: {t}, ')
+        f.write(f'p-value: {p}\n')
+        f.close()
 
 if __name__ == "__main__":
   main()
