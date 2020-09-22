@@ -153,7 +153,8 @@ def main():
     lp.reindex(args.semantic_domain, random=args.random)
   targets = create_target_sets(lp.index, kind=args.protocol_type)
   bias_term_indices = lp.get_bias_term_indices(targets)
-  
+  print(f"len Jewish: {len(bias_term_indices['jewish'])}")
+  print(f"len Christian: {len(bias_term_indices['christian'])}")
   start = time.time()
   if args.random:
     logging.info(f'Start label propagation for random attribute sets')

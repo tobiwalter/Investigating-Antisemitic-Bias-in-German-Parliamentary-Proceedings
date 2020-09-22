@@ -14,8 +14,6 @@ import logging
 
 # Plotting parameters
 TEX_FONTS = {
-    # Use LaTeX to write all text
-    "text.usetex": False,
     "font.family": "serif",
     # Use 10pt font in plots, to match 10pt font in document
     "axes.labelsize": 10,
@@ -79,7 +77,7 @@ class SubspaceProjections:
 
   def bias_axes(self, semantic_domain, protocol_type):
       """
-      WEAT 1 - target terms representing Judaism and Christianity
+      Establish bias axes
       """
       targets_1 = TARGETS_CHRISTIAN
       targets_2 = TARGETS_JEWISH
@@ -104,6 +102,7 @@ class SubspaceProjections:
       matrix = np.array(matrix)
       pca = PCA(n_components = round(len(T1)))
       pca.fit(matrix)
+      logging.info(pca.explained_variance_ratio_[0])
       if plot:
         plt.bar(np.arange(pca.n_components_), pca.explained_variance_ratio_)
         plt.show()
@@ -117,16 +116,20 @@ class SubspaceProjections:
       projections = {}
       for word in A1:
           projection = self.cosine(self.embedding_matrix[self.vocab[word]], race_direction) 
-          if slice in ('kaiserreich_1', 'weimar'):
+          if slice in ('kaiserreich_1', 'weimar', 'spd_1', 'cdu_2'):
               projections[word] = projection * (-1)
               logging.info(f'Projection for {word}: {projection}.')
           else:
               projections[word] = projection
               logging.info(f'Projection for {word}: {projection}.')
+
       return projections
 
 
   def plot_onto_bias_direction(self, projections_1, projections_2, style='ggplot', output_file=''):
+    # Sort projections
+    projections_1 = {k: v for k, v in sorted(projections_1.items(), key=lambda item: item[1], reverse=True)}
+    projections_2 = {k: v for k, v in sorted(projections_2.items(), key=lambda item: item[1])}
 
     with plt.style.context(style):
         fig, ax = plt.subplots(figsize=(FIG_DIM))
