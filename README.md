@@ -1,5 +1,5 @@
 # Investigating Antisemitic Bias in German Parliamentary Proceedings
-Explore ethno-religious biases within German parliamentary proceedings reaching from 1867 - 2020, based on word embeddings that are trained from scratch on eight different slices of proceedings, with each slice corresponding to a known historical period.
+Explore ethno-religious biases within German parliamentary proceedings reaching from 1867 - 2020, based on word embeddings that are trained from scratch on eight different slices of proceedings, with each slice corresponding to one of the following historical periods.
 
 |       | Kaiserreich I | Kaiserreich II | Weimar | NS   | CDU I  | SPD I  | CDU II | SPD II | CDU III |
 |-------|---------------|----------------|--------|------|--------|--------|--------|--------|---------|
