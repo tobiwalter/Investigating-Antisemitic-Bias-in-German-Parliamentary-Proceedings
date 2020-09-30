@@ -1,4 +1,5 @@
-# Detecting-Bias-In-German-Parliamentiary-Proceedings
+# Investigating Antisemitic Bias in German Parliamentary
+Proceedings
 Detect ethno-religious biases within German parliamentary proceedings reaching from 1867 - 2020, based on word embeddings trained from scratch on the corpora. The target dimensions are:
 
 * judaism
