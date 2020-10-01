@@ -44,14 +44,14 @@ python create_corpora.py -s [historic|balanced] (historic output will be saved i
 ```
 python process_protocols [slice_folder] [protocol_type] (output will be saved in ./data/kaiserreich_1_processed, etc.)
 ```
-4) Train an embedding space on the processed slices (model will be stored in ```./models``` , vocab in ```./data/vocab```)
+4) Train a word2vec embedding space on the processed slices (model will be stored in ```./models``` , vocab in ```./data/vocab```):
 ```
 bash train_embeddings.sh (--model_architecture [word2vec], --protocols [the processed slice, e.g. ./data/reichstag/kaiserreich_1_processed)
 ```
 
 ### Bundestag
 Bundestag protocols are already provided in a handy format, with separate folders for each legislatory period and protocols already separated into distinct text files.
-Thus, steps 1) and 2) are omitteded and the folders containing protocols of each legislatory period can be directly pre-processed. A sample of the original Bundestag protocols is provided under folder ```./data/slice_7```
+Thus, steps 1) and 2) are omitted and the folders containing protocols of each legislatory period can be directly pre-processed. A sample of the original Bundestag protocols is provided under folder ```./data/slice_7```
 
 ## Evaluation
 A range of bias evaluation tests can be run on the trained word2vec embedding spaces. All bash scripts for the bias experiments are contained in the ```./evaluation``` folder
@@ -75,7 +75,7 @@ The evaluation scripts on the provided USB stick should work with the pre-set ar
 
 ## Harmonic Function Label Propagation
 
-1) For HFLP, input representations based on Positive Pointwise Mutual Information (PPMI) are employed. The following command creates a PPMI matrix for the processed slice provided as an argument:
+1) For HFLP, input representations based on Positive Pointwise Mutual Information (PPMI) are employed. The following command creates a PPMI matrix for the processed slice fed as an argument:
 ```
 bash ppmi.sh (--protocols  [the processed slice, e.g. ./data/reichstag/kaiserreich_1_processed] -> matrix is stored in ./matrices/ppmi_kaiserreich_1.npz, index in ./ppmi_vocab/kaiserreich_1.json))
 ```
@@ -98,4 +98,4 @@ python closest_over_time_with_anns.py -w [word1 word2 etc.] -n [number of neighb
 
 # Publication Plots
 
-To reproduce the "Corpus Statistics" and "average RIPA over slices" plots, open the Jupyter notebook ```reproduce_plots.ipynb```
+To reproduce the "Corpus Statistics" and "average RIPA over slices" plots, use the Jupyter notebook ```reproduce_plots.ipynb```.
