@@ -26,7 +26,7 @@ def antisemitic_streams(domain: str, kind: str):
 	----------
 
 	domain: Semantic domain to be created
-  protocol_type: whether to process a collection of Reichstag or BRD protocols
+  	kind: whether to process a collection of Reichstag or BRD protocols
 	"""
 
 	if domain == 'sentiment':
